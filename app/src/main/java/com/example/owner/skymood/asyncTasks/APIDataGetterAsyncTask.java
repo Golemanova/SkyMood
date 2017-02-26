@@ -137,7 +137,7 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
             int hour = cal.get(Calendar.HOUR_OF_DAY);
             int id = 0;
             if (icon == null) {
-                weatherImage.setImageResource(R.drawable.nulll);
+                weatherImage.setImageResource(R.drawable.icon_not_available);
             } else {
                 if (hour >= 6 && hour <= 19) {
                     id = context.getResources().getIdentifier(icon, "drawable", con.getPackageName());
