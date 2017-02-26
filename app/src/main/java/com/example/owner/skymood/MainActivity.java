@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.menu_main_item_sky_mood:
-                //do nothing
+                //do nothing - we are already in this activity
                 return true;
             case R.id.menu_main_item_searched_locations:
                 intent = new Intent(this, SearchedLocationsActivity.class);
@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             handler.removeCallbacksAndMessages(null);
         }
     }
-
 
     public HourlyWeatherFragment getHourlyFragment() {
 
