@@ -1,0 +1,234 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/foreground"
+    android:layout_margin="10dp"
+    tools:context="com.example.owner.skymood.fragments.CurrentWeatherFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:visibility="gone"/>
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="match_parent"
+               android:visibility="gone"
+               android:textColor="@color/white"
+               android:textSize="20sp"
+               android:shadowColor="@color/veryDarkGrey"
+               android:shadowRadius="3"
+               android:shadowDx="2"
+               android:shadowDy="2"
+               android:id="@+id/chosenCity"/>
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:textColor="@color/white"
+               android:textSize="15sp"
+               android:shadowColor="@color/veryDarkGrey"
+               android:shadowRadius="3"
+               android:shadowDx="2"
+               android:shadowDy="2"
+               android:id="@+id/country"/>
+
+
+
+       </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:gravity="right"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/locationSpinner"></android.support.v7.widget.AppCompatSpinner>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/sync"
+                android:id="@+id/synchronize"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/gps"
+                android:id="@+id/gpsSearch"/>
+
+            <AutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Write a city \t \t \t \t \t \t"
+                android:imeOptions="actionGo"
+                android:singleLine="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:visibility="gone"
+                android:maxLength="30"
+                android:id="@+id/writeCityEditText"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:adjustViewBounds="true"
+                android:src="@drawable/search"
+                android:id="@+id/citySearch"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:orientation="vertical">
+
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:id="@+id/weatherImageView"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:textColor="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="70sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:shadowColor="@color/veryDarkGrey"
+                android:shadowRadius="3"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:id="@+id/temperatureTextView"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textSize="17sp"
+                    android:textColor="@color/red"
+                    android:shadowColor="@color/veryDarkGrey"
+                    android:shadowRadius="3"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:id="@+id/maxTemp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textSize="17sp"
+                    android:textColor="@color/blue"
+                    android:shadowColor="@color/veryDarkGrey"
+                    android:shadowRadius="3"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:id="@+id/minTemp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:shadowColor="@color/veryDarkGrey"
+            android:shadowRadius="3"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:id="@+id/conditionTextView"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:shadowColor="@color/veryDarkGrey"
+                android:shadowRadius="3"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:id="@+id/feelsLikeTextView"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:shadowColor="@color/veryDarkGrey"
+            android:shadowRadius="3"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:id="@+id/lastUpdateTextView"/>
+
+    </LinearLayout>
+
+</LinearLayout>

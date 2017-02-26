@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/sky_mood"
+        android:icon="@drawable/menu"
+        android:title="☁ Sky Mood"
+        />
+
+    <item
+        android:id="@+id/searched_locations"
+        android:icon="@drawable/menu"
+        android:title="☀ Last Searched"
+        />
+
+    <item
+        android:id="@+id/my_locations"
+        android:icon="@drawable/menu"
+        android:title="❄ My Locations"
+        />
+
+
+</menu>
