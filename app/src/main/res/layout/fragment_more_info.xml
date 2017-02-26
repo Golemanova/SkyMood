@@ -259,7 +259,7 @@
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
-                    android:id="@+id/more_sunset"
+                    android:id="@+id/fragment_more_info_tv_sunset_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"

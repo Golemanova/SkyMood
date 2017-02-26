@@ -36,6 +36,6 @@
     <string name="lbl_moon_age">moon age</string>
 
     <!-- Widged -->
-    <string name="lbl_what_is_the_sky_mood">What's the sky mood?</string>
+    <string name="lbl_what_is_the_sky_mood">What\'s the sky mood?</string>
 
 </resources>

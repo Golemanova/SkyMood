@@ -87,14 +87,14 @@ public class MoreInfoFragment extends Fragment  implements Swideable{
         this.humidity = (TextView) root.findViewById(R.id.fragment_more_info_tv_humidity_value);
         this.visibility = (TextView) root.findViewById(R.id.fragment_more_info_tv_visibility_value);
         this.sunrise = (TextView) root.findViewById(R.id.fragment_more_info_tv_sunrise_value);
-        this.sunset = (TextView) root.findViewById(R.id.more_sunset);
+        this.sunset = (TextView) root.findViewById(R.id.fragment_more_info_tv_sunset_value);
         this.moonIlluminated = (TextView) root.findViewById(R.id.fragment_more_info_tv_moon_value);
         this.moonAge = (TextView) root.findViewById(R.id.fragment_more_info_tv_moon_age_value);
         this.condition = (TextView) root.findViewById(R.id.fragment_more_info_tv_condition_value);
         this.windSpeed = (TextView) root.findViewById(R.id.fragment_more_info_tv_winds_speed_value);
         this.moonPhase = (TextView)root.findViewById(R.id.fragment_more_info_tv_phase_of_moon_value);
         this.progress = (ProgressBar) root.findViewById(R.id.fragment_more_info_view_progress_bar);
-        this.layout = (LinearLayout) root.findViewById(R.id.more_layout);
+        this.layout = (LinearLayout) root.findViewById(R.id.fragment_more_info_container);
         this.textCon = (TextView) root.findViewById(R.id.fragment_more_info_tv_condition);
 
         //root.findViewById(R.id.more_no_internet).setVisibility(View.GONE);

@@ -2,8 +2,9 @@ package com.example.owner.skymood;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,77 +16,57 @@ import com.example.owner.skymood.model.SearchedLocationManager;
 
 import java.util.ArrayList;
 
-public class SearchedLocationsActivity extends AppCompatActivity implements View.OnClickListener{
+public class SearchedLocationsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String CITY = "city";
-    public static final String COUNTRY = "fragment_current_weather_tv_country";
-    public static final String COUNTRY_CODE = "countryCode";
-    public static final String SEARCHED_LOCATION_OBJECT = "SearchedLocation object";
-    private Button location1;
-    private Button location2;
-    private Button location3;
-    private Button location4;
-    private Button location5;
-    private ArrayList<SearchedLocation> locations;
-    private SearchedLocationManager manager;
+    public static final String CITY_DATA_TAG = "city_data_tag";
+    public static final String COUNTRY_DATA_TAG = "country_data_tag";
+    public static final String COUNTRY_CODE_DATA_TAG = "country_code_data_tag";
+    public static final String SEARCHED_LOCATION_OBJECT_DATA_TAG = "searched_location_object_data_tag";
+    private static final int LOCATION_BUTTONS_NUMBER = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searched_locations);
 
-        manager = SearchedLocationManager.getInstance(this);
-        locations = manager.getAllSearchedLocations();
-        //setting view_toolbar
+        SearchedLocationManager manager = SearchedLocationManager.getInstance(this);
+        ArrayList<SearchedLocation> locations = manager.getAllSearchedLocations();
+
+        //setting toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_searched_locations_view_tool_bar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        int[] buttonIDs = new int[] {R.id.activity_searched_locations_btn_location_one,
-                R.id.activity_searched_locations_btn_location_two,
-                R.id.activity_searched_locations_btn_location_three,
-                R.id.activity_searched_locations_btn_location_four,
-                R.id.activity_searched_locations_btn_location_five };
-        //initializing buttons
-        for(int i=0; i<locations.size(); i++){
-            Button location = (Button) findViewById(buttonIDs[i]);
-            SearchedLocation loc = locations.get(i);
-            location.setVisibility(View.VISIBLE);
-            location.setText(loc.getCity() + ", " + loc.getCountry());
-            location.setTag(loc);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
         }
-        location1 = (Button) findViewById(R.id.activity_searched_locations_btn_location_one);
-        location1.setOnClickListener(this);
-        location2 = (Button) findViewById(R.id.activity_searched_locations_btn_location_two);
-        location2.setOnClickListener(this);
-        location3 = (Button) findViewById(R.id.activity_searched_locations_btn_location_three);
-        location3.setOnClickListener(this);
-        location4 = (Button) findViewById(R.id.activity_searched_locations_btn_location_four);
-        location4.setOnClickListener(this);
-        location5 = (Button) findViewById(R.id.activity_searched_locations_btn_location_five);
-        location5.setOnClickListener(this);
-    }
 
+        //initializing buttons
+        initializeLocationButtons(locations);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
-        switch (item.getItemId()) {
+
+        int itemId = item.getItemId();
+        switch (itemId) {
             case R.id.menu_main_item_sky_mood:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                Intent mainActivity = new Intent(this, MainActivity.class);
+                startActivity(mainActivity);
                 return true;
             case R.id.menu_main_item_searched_locations:
+                //do nothing = we are already in this activity
                 return true;
             case R.id.menu_main_item_my_locations:
-                intent = new Intent(this, MyLocationsActivity.class);
-                startActivity(intent);
+                Intent myLocationsActivity = new Intent(this, MyLocationsActivity.class);
+                startActivity(myLocationsActivity);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -93,20 +74,56 @@ public class SearchedLocationsActivity extends AppCompatActivity implements View
     }
 
     @Override
-    public void onClick(View v) {
-        SearchedLocation object = (SearchedLocation) v.getTag();
-        String city = object.getCity();
-        String country = object.getCountry();
-        String countryCode = object.getCode();
+    public void onClick(View locationButton) {
+
+        SearchedLocation location = (SearchedLocation) locationButton.getTag();
+        String city = location.getCity();
+        String country = location.getCountry();
+        String countryCode = location.getCode();
 
         Intent returnIntent = new Intent();
-        returnIntent.putExtra(CITY, city);
-        returnIntent.putExtra(COUNTRY, country);
-        returnIntent.putExtra(COUNTRY_CODE, countryCode);
-        returnIntent.putExtra(SEARCHED_LOCATION_OBJECT, object);
+        returnIntent.putExtra(CITY_DATA_TAG, city);
+        returnIntent.putExtra(COUNTRY_DATA_TAG, country);
+        returnIntent.putExtra(COUNTRY_CODE_DATA_TAG, countryCode);
+        returnIntent.putExtra(SEARCHED_LOCATION_OBJECT_DATA_TAG, location);
 
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
+    private void initializeLocationButtons(ArrayList<SearchedLocation> locations) {
+
+        ArrayList<Button> locationButtons = getLocationButtonsAndSetOnClickListener();
+
+        if (locations == null || locations.size() <= 0
+                || locationButtons == null || locationButtons.size() <= 0) {
+            return;
+        }
+        for (int i = 0; i < locations.size() && i < locationButtons.size(); i++) {
+            Button location = locationButtons.get(i);
+            SearchedLocation searchedLocation = locations.get(i);
+            location.setVisibility(View.VISIBLE);
+            location.setText(searchedLocation.getCity() + ", " + searchedLocation.getCountry());
+            location.setTag(searchedLocation);
+        }
+    }
+
+    private ArrayList<Button> getLocationButtonsAndSetOnClickListener() {
+
+        ArrayList<Button> locationButtons = new ArrayList<>(LOCATION_BUTTONS_NUMBER);
+        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_one);
+        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_two);
+        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_three);
+        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_four);
+        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_five);
+
+        return locationButtons;
+    }
+
+    private void setUpLocationButton(ArrayList<Button> locationButtons, int buttonId) {
+
+        Button locationBtn = (Button) findViewById(buttonId);
+        locationBtn.setOnClickListener(this);
+        locationButtons.add(locationBtn);
+    }
 }

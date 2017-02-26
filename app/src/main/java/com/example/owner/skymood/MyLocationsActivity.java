@@ -56,16 +56,15 @@ public class MyLocationsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Intent intent;
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.menu_main_item_sky_mood:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                Intent mainActivity = new Intent(this, MainActivity.class);
+                startActivity(mainActivity);
                 return true;
             case R.id.menu_main_item_searched_locations:
-                intent = new Intent(this, SearchedLocationsActivity.class);
-                startActivity(intent);
+                Intent searchedLocationsActivity = new Intent(this, SearchedLocationsActivity.class);
+                startActivity(searchedLocationsActivity);
                 return true;
             case R.id.menu_main_item_my_locations:
                 //do nothing - we are already in this activity

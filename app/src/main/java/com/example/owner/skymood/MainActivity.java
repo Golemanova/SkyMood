@@ -110,20 +110,18 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Intent intent;
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.menu_main_item_sky_mood:
                 //do nothing - we are already in this activity
                 return true;
             case R.id.menu_main_item_searched_locations:
-                intent = new Intent(this, SearchedLocationsActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_SEARCHED_LOCATIONS);
-                startActivity(intent);
+                Intent searchedLocationsActivity = new Intent(this, SearchedLocationsActivity.class);
+                startActivityForResult(searchedLocationsActivity, REQUEST_CODE_SEARCHED_LOCATIONS);
                 return true;
             case R.id.menu_main_item_my_locations:
-                intent = new Intent(this, MyLocationsActivity.class);
-                startActivity(intent);
+                Intent myLocationsActivity = new Intent(this, MyLocationsActivity.class);
+                startActivity(myLocationsActivity);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -196,10 +194,10 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
             return;
         }
 
-        String city = data.getStringExtra(SearchedLocationsActivity.CITY);
-        String country = data.getStringExtra(SearchedLocationsActivity.COUNTRY);
-        String countryCode = data.getStringExtra(SearchedLocationsActivity.COUNTRY_CODE);
-        SearchedLocation searchedLocation = data.getParcelableExtra(SearchedLocationsActivity.SEARCHED_LOCATION_OBJECT);
+        String city = data.getStringExtra(SearchedLocationsActivity.CITY_DATA_TAG);
+        String country = data.getStringExtra(SearchedLocationsActivity.COUNTRY_DATA_TAG);
+        String countryCode = data.getStringExtra(SearchedLocationsActivity.COUNTRY_CODE_DATA_TAG);
+        SearchedLocation searchedLocation = data.getParcelableExtra(SearchedLocationsActivity.SEARCHED_LOCATION_OBJECT_DATA_TAG);
 
         CurrentWeatherFragment fragment = (CurrentWeatherFragment) adapter.getItem(CURRENT_WEATHER_FRAGMENT_INDEX);
         if (fragment.isOnline()) {
