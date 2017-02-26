@@ -2,8 +2,6 @@
     <string name="app_name">SkyMood</string>
     <string name="google_app_id">AIzaSyAYLUz4SK-iwBw_37Ai7SNFyrZ7itHYwYU</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lbl_something_went_wrong">Something went wrong :(</string>
     <string name="lbl_press_back_btn_again_to_exit">Press back button again to exit</string>
 
