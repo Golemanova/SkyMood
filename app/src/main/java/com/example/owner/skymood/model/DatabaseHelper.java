@@ -17,7 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 13;
 
     //tables
-    public static final String MY_LOCATIONS = "my_locations";
+    public static final String MY_LOCATIONS = "menu_main_item_my_locations";
     public static final String LAST_SEARCHED = "last_searched";
 
     public static final String CITY = "city";
@@ -27,11 +27,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // last searched
     public static final String SEARCHED_ID = "id";
     public static final String TEMP = "temp";
-    public static final String CONDITION = "condition";
+    public static final String CONDITION = "widhet_layout_tv_condition";
     public static final String DATE = "date_time";
-    public static final String COUNTRY = "country";
+    public static final String COUNTRY = "fragment_current_weather_tv_country";
     public static final String COUNTRY_CODE = "country_code";
-    public static final String ICON = "icon";
+    public static final String ICON = "widget_layout_iv_icon";
     public static final String MAX_TEMP = "max_temp";
     public static final String MIN_TEMP = "min_temp";
     public static final String LAST_UPDATE = "last_update";

@@ -1,6 +1,5 @@
 package com.example.owner.skymood.model;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -8,11 +7,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -26,7 +22,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.Scanner;
 
 /**
@@ -81,7 +76,7 @@ public class MyWidgedProvider extends AppWidgetProvider {
                         0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 // request the AppWidgetManager object to update the app widget
-                remoteViews.setOnClickPendingIntent(R.id.syncWidget, pendingIntent);
+                remoteViews.setOnClickPendingIntent(R.id.widged_layout_btn_sync, pendingIntent);
 
                 appWidgetManager.updateAppWidget(widgetId, remoteViews);
             }
@@ -93,12 +88,12 @@ public class MyWidgedProvider extends AppWidgetProvider {
                 RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                         R.layout.widget_layout);
                 if(!pref.hasNull()) {
-                    remoteViews.setTextViewText(R.id.widget_city, city);
-                    remoteViews.setTextViewText(R.id.widget_country, country);
+                    remoteViews.setTextViewText(R.id.widget_layout_tv_city, city);
+                    remoteViews.setTextViewText(R.id.widget_layout_tv_country, country);
                     this.condition = pref.getCondition();
-                    remoteViews.setTextViewText(R.id.condition, this.condition);
+                    remoteViews.setTextViewText(R.id.widhet_layout_tv_condition, this.condition);
                     this.temp = pref.getTemperature();
-                    remoteViews.setTextViewText(R.id.degree, this.temp + "℃");
+                    remoteViews.setTextViewText(R.id.widged_layout_tv_degree, this.temp + "℃");
 
                     Field field = null;
                     try {
@@ -109,9 +104,9 @@ public class MyWidgedProvider extends AppWidgetProvider {
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
-                    remoteViews.setImageViewResource(R.id.icon, iconId);
+                    remoteViews.setImageViewResource(R.id.widget_layout_iv_icon, iconId);
                 } else {
-                    remoteViews.setTextViewText(R.id.condition, "No Internet Connection :(");
+                    remoteViews.setTextViewText(R.id.widhet_layout_tv_condition, "No Internet Connection :(");
                 }
 
                 //update when the update button is clicked
@@ -122,7 +117,7 @@ public class MyWidgedProvider extends AppWidgetProvider {
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                         0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 // request the AppWidgetManager object to update the app widget
-                remoteViews.setOnClickPendingIntent(R.id.syncWidget, pendingIntent);
+                remoteViews.setOnClickPendingIntent(R.id.widged_layout_btn_sync, pendingIntent);
                 appWidgetManager.updateAppWidget(widgetId, remoteViews);
             }
         }
@@ -158,18 +153,18 @@ public class MyWidgedProvider extends AppWidgetProvider {
                 JSONObject observation = (JSONObject) jsonData.get("current_observation");
                 String condition = observation.getString("weather");
                 String temp = observation.getString("temp_c");
-                String icon = observation.getString("icon");
+                String icon = observation.getString("widget_layout_iv_icon");
 
 
                 Field field = R.drawable.class.getDeclaredField(icon);
                 int iconId = field.getInt(this);
 
                 RemoteViews remoteV = new RemoteViews(this.getPackageName(), R.layout.widget_layout);
-                remoteV.setTextViewText(R.id.widget_city, city);
-                remoteV.setTextViewText(R.id.widget_country, country);
-                remoteV.setTextViewText(R.id.condition, condition);
-                remoteV.setTextViewText(R.id.degree, temp + "℃");
-                remoteV.setImageViewResource(R.id.icon, iconId);
+                remoteV.setTextViewText(R.id.widget_layout_tv_city, city);
+                remoteV.setTextViewText(R.id.widget_layout_tv_country, country);
+                remoteV.setTextViewText(R.id.widhet_layout_tv_condition, condition);
+                remoteV.setTextViewText(R.id.widged_layout_tv_degree, temp + "℃");
+                remoteV.setImageViewResource(R.id.widget_layout_iv_icon, iconId);
 
 
                 ComponentName thisWidget = new ComponentName(this, MyWidgedProvider.class);

@@ -2,15 +2,12 @@ package com.example.owner.skymood;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
 import android.widget.LinearLayout;
 
 import com.example.owner.skymood.adapters.CustomPagerAdapter;
@@ -24,7 +21,7 @@ import com.example.owner.skymood.fragments.ICommunicatior;
 import com.example.owner.skymood.fragments.MoreInfoFragment;
 import com.example.owner.skymood.model.SearchedLocation;
 
-public class SwipeViewActivity extends AppCompatActivity implements ICommunicatior{
+public class MainActivity extends AppCompatActivity implements ICommunicatior{
 
     public static final int NUMBER_OF_PAGES = 3;
     public static final String DAY = "day";
@@ -40,19 +37,19 @@ public class SwipeViewActivity extends AppCompatActivity implements ICommunicati
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swipe_view);
+        setContentView(R.layout.activity_main);
 
         //used for changing the background
-        layout = (LinearLayout) findViewById(R.id.swipe_view_activity);
+        layout = (LinearLayout) findViewById(R.id.activity_main_container);
 
-        //setting toolbar
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        //setting view_toolbar
+        toolbar = (Toolbar) findViewById(R.id.main_activity_view_tool_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        //setting pager adapter
+        //setting activity_main_view_pager adapter
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), this);
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = (ViewPager) findViewById(R.id.activity_main_view_pager);
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
     }
@@ -100,14 +97,14 @@ public class SwipeViewActivity extends AppCompatActivity implements ICommunicati
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = null;
         switch (item.getItemId()) {
-            case R.id.sky_mood:
+            case R.id.menu_main_item_sky_mood:
                 return true;
-            case R.id.searched_locations:
+            case R.id.menu_main_item_searched_locations:
                 intent = new Intent(this, SearchedLocationsActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_SEARCHED_LOCATIONS);
                 startActivity(intent);
                 return true;
-            case R.id.my_locations:
+            case R.id.menu_main_item_my_locations:
                 intent = new Intent(this, MyLocationsActivity.class);
                 startActivity(intent);
                 return true;
@@ -144,9 +141,9 @@ public class SwipeViewActivity extends AppCompatActivity implements ICommunicati
 
     public void changeBackground(String partOfDay){
         if(partOfDay == DAY){
-            layout.setBackgroundResource(R.drawable.backgr_day);
+            layout.setBackgroundResource(R.drawable.background_day);
         } else if(partOfDay == NIGHT){
-            layout.setBackgroundResource(R.drawable.night_backgr);
+            layout.setBackgroundResource(R.drawable.background_night);
         }
     }
 

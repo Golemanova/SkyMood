@@ -2,10 +2,9 @@ package com.example.owner.skymood.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.example.owner.skymood.SwipeViewActivity;
+import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.CurrentWeatherFragment;
 import com.example.owner.skymood.fragments.HourlyWeatherFragment;
 
@@ -75,7 +74,7 @@ public class FindLocationAsyncTask extends AsyncTask<Void, Void, Void> {
 
         //get current weather
         task.execute(countryCode, city, country);
-        HourlyWeatherFragment fr = ((SwipeViewActivity)context).getHourlyFragment();
+        HourlyWeatherFragment fr = ((MainActivity)context).getHourlyFragment();
 
         //get 24 hours forecast
         GetHourlyTask hourTask = new GetHourlyTask(context, fr, fr.getHourlyWeatherArray());

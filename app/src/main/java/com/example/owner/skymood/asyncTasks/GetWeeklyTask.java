@@ -6,9 +6,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 
-import com.example.owner.skymood.SwipeViewActivity;
+import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.HourlyWeatherFragment;
-import com.example.owner.skymood.model.HourlyWeather;
 import com.example.owner.skymood.model.WeeklyWeather;
 
 import org.json.JSONArray;
@@ -16,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,14 +28,14 @@ public class GetWeeklyTask extends AsyncTask<String, Void, Void> {
 
     private final static String API_KEY = "9d48021d05e97609";
     private Context context;
-    private SwipeViewActivity activity;
+    private MainActivity activity;
     private Fragment fragment;
     private ArrayList<WeeklyWeather> weeklyWeather;
 
     public GetWeeklyTask(Context context, Fragment fragment, ArrayList<WeeklyWeather> weeklyWeather) {
         this.context = context;
         this.fragment = fragment;
-        activity = (SwipeViewActivity)context;
+        activity = (MainActivity)context;
         this.weeklyWeather = weeklyWeather;
     }
 
@@ -77,7 +75,7 @@ public class GetWeeklyTask extends AsyncTask<String, Void, Void> {
                 JSONObject low = obj.getJSONObject("low");
                 String min = low.getString("celsius");
                 String condition = obj.getString("conditions");
-                String icon = obj.getString("icon");
+                String icon = obj.getString("widget_layout_iv_icon");
 
                 int id = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
                 Bitmap iconImage = BitmapFactory.decodeResource(context.getResources(), id);

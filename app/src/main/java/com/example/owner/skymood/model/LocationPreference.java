@@ -16,13 +16,13 @@ public class LocationPreference {
     int PRIVATE_MODE = 0;
     private static final String PREFER_NAME = "SkyModePreferences";
     public static final String CITY = "city";
-    public static final String COUNTRY = "country";
+    public static final String COUNTRY = "fragment_current_weather_tv_country";
     public static final String COUNTRY_CODE = "countryCode";
-    public static final String ICON = "icon";
+    public static final String ICON = "widget_layout_iv_icon";
     public static final String TEMPERATURE = "temperature";
-    public static final String MIN_TEMP = "minTemp";
-    public static final String MAX_TEMP = "maxTemp";
-    public static final String CONDITION = "condition";
+    public static final String MIN_TEMP = "fragment_current_weather_tv_min_temp";
+    public static final String MAX_TEMP = "fragment_current_weather_tv_max_temp";
+    public static final String CONDITION = "widhet_layout_tv_condition";
     public static final String FEELS_LIKE = "feelsLike";
     public static final String LAST_UPDATE = "lastUpdate";
 

@@ -5,14 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.owner.skymood.R;
 import com.example.owner.skymood.model.WeeklyWeather;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 /**
  * Created by owner on 05/04/2016.
@@ -31,7 +28,7 @@ public class WeeklyAdapter extends RecyclerView.Adapter<HourlyWeekViewHolder> {
     @Override
     public HourlyWeekViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.weekly_row, parent, false);
+        View view = inflater.inflate(R.layout.row_week, parent, false);
         return new HourlyWeekViewHolder(view);
     }
 

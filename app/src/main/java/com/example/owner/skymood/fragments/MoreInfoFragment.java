@@ -1,12 +1,8 @@
 package com.example.owner.skymood.fragments;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.owner.skymood.R;
-import com.example.owner.skymood.SwipeViewActivity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
-import java.util.Scanner;
+import com.example.owner.skymood.MainActivity;
 
 public class MoreInfoFragment extends Fragment  implements Swideable{
 
@@ -73,7 +59,7 @@ public class MoreInfoFragment extends Fragment  implements Swideable{
     private int moonAgeTxt;
     private int moonIllumitatedTxt;
     private static final String API_KEY = "7fc23227bbbc9a36";
-    private SwipeViewActivity activity;
+    private MainActivity activity;
 
     public MoreInfoFragment() {
     }
@@ -90,30 +76,30 @@ public class MoreInfoFragment extends Fragment  implements Swideable{
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_more_info, container, false);
 
-        this.day = (TextView) root.findViewById(R.id.more_day);
-        this.date = (TextView) root.findViewById(R.id.more_date);
-        this.temp = (TextView) root.findViewById(R.id.more_temp);
-        this.feels = (TextView) root.findViewById(R.id.more_realfeel);
-        this.min = (TextView) root.findViewById(R.id.more_min);
-        this.max = (TextView) root.findViewById(R.id.more_max);
-        this.uv = (TextView) root.findViewById(R.id.more_uv);
-        this.preassure = (TextView) root.findViewById(R.id.more_preassure);
-        this.humidity = (TextView) root.findViewById(R.id.more_humidity);
-        this.visibility = (TextView) root.findViewById(R.id.more_visibility);
-        this.sunrise = (TextView) root.findViewById(R.id.more_sunrize);
+        this.day = (TextView) root.findViewById(R.id.fragment_more_info_tv_day);
+        this.date = (TextView) root.findViewById(R.id.fragment_more_info_tv_date);
+        this.temp = (TextView) root.findViewById(R.id.fragment_more_info_tv_temp_value);
+        this.feels = (TextView) root.findViewById(R.id.fragment_more_info_tv_real_feel_value);
+        this.min = (TextView) root.findViewById(R.id.fragment_more_info_tv_min_value);
+        this.max = (TextView) root.findViewById(R.id.fragment_more_info_tv_max_value);
+        this.uv = (TextView) root.findViewById(R.id.fragment_more_info_tv_uv_index_value);
+        this.preassure = (TextView) root.findViewById(R.id.fragment_more_info_tv_preasure_value);
+        this.humidity = (TextView) root.findViewById(R.id.fragment_more_info_tv_humidity_value);
+        this.visibility = (TextView) root.findViewById(R.id.fragment_more_info_tv_visibility_value);
+        this.sunrise = (TextView) root.findViewById(R.id.fragment_more_info_tv_sunrise_value);
         this.sunset = (TextView) root.findViewById(R.id.more_sunset);
-        this.moonIlluminated = (TextView) root.findViewById(R.id.more_moonIllumitated);
-        this.moonAge = (TextView) root.findViewById(R.id.more_moonAge);
-        this.condition = (TextView) root.findViewById(R.id.more_condition);
-        this.windSpeed = (TextView) root.findViewById(R.id.more_windsSpeed);
-        this.moonPhase = (TextView)root.findViewById(R.id.more_phase_of_moon);
-        this.progress = (ProgressBar) root.findViewById(R.id.more_progress);
+        this.moonIlluminated = (TextView) root.findViewById(R.id.fragment_more_info_tv_moon_value);
+        this.moonAge = (TextView) root.findViewById(R.id.fragment_more_info_tv_moon_age_value);
+        this.condition = (TextView) root.findViewById(R.id.fragment_more_info_tv_condition_value);
+        this.windSpeed = (TextView) root.findViewById(R.id.fragment_more_info_tv_winds_speed_value);
+        this.moonPhase = (TextView)root.findViewById(R.id.fragment_more_info_tv_phase_of_moon_value);
+        this.progress = (ProgressBar) root.findViewById(R.id.fragment_more_info_view_progress_bar);
         this.layout = (LinearLayout) root.findViewById(R.id.more_layout);
-        this.textCon = (TextView) root.findViewById(R.id.text_condition);
+        this.textCon = (TextView) root.findViewById(R.id.fragment_more_info_tv_condition);
 
         //root.findViewById(R.id.more_no_internet).setVisibility(View.GONE);
             //new GetMoreInfoTask().execute();
-        activity = (SwipeViewActivity) context;
+        activity = (MainActivity) context;
         return root;
     }
 

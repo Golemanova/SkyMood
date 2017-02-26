@@ -1,18 +1,12 @@
 package com.example.owner.skymood.asyncTasks;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
 
-import com.example.owner.skymood.R;
-import com.example.owner.skymood.SwipeViewActivity;
+import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.HourlyWeatherFragment;
 import com.example.owner.skymood.model.HourlyWeather;
 
@@ -20,9 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,14 +28,14 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
 
     private final static String API_KEY = "9d48021d05e97609";
     private Context context;
-    private SwipeViewActivity activity;
+    private MainActivity activity;
     private HourlyWeatherFragment fragment;
     private ArrayList<HourlyWeather> hourlyWeather;
 
     public GetHourlyTask(Context context, Fragment fragment, ArrayList<HourlyWeather> hourlyWeather) {
         this.context = context;
         this.fragment = (HourlyWeatherFragment)fragment;
-        activity = (SwipeViewActivity)context;
+        activity = (MainActivity)context;
         this.hourlyWeather = hourlyWeather;
     }
 
@@ -77,9 +69,9 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
             for(int i = 0; i < hourlyArray.length(); i++){
                 JSONObject obj = hourlyArray.getJSONObject(i);
                 String hour = obj.getJSONObject("FCTTIME").getString("hour");
-                String condition = obj.getString("condition");
+                String condition = obj.getString("widhet_layout_tv_condition");
                 String temp = obj.getJSONObject("temp").getString("metric");
-                String icon = obj.getString("icon");
+                String icon = obj.getString("widget_layout_iv_icon");
 
                 Integer hourInt = Integer.parseInt(hour);
                 int id = 0;

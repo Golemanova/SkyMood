@@ -1,9 +1,39 @@
 <resources>
     <string name="app_name">SkyMood</string>
-
-
     <string name="google_app_id">AIzaSyAYLUz4SK-iwBw_37Ai7SNFyrZ7itHYwYU</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Toolbar -->
+    <string name="title_toolbar">SKY MOOD°</string>
+
+    <!-- Menu -->
+    <string name="lbl_menu_sky_mood">☁ Sky Mood</string>
+    <string name="lbl_menu_last_searched">☀ Last Searched</string>
+    <string name="lbl_menu_my_locations">❄ My Locations</string>
+
+    <!-- Current Weather Fragment -->
+    <string name="hint_write_city">Write a city \t \t \t \t \t \t</string>
+
+    <!-- More Info Fragment -->
+    <string name="lbl_temperature">temperature</string>
+    <string name="lbl_real_feel">real feel</string>
+    <string name="lbl_condition">condition</string>
+    <string name="lbl_max">max</string>
+    <string name="lbl_min">min</string>
+    <string name="lbl_uv_index">UV index</string>
+    <string name="lbl_humidity">humidity</string>
+    <string name="lbl_wind_speed">winds speed</string>
+    <string name="lbl_visibility">visibility</string>
+    <string name="lbl_pressure">pressure</string>
+    <string name="lbl_sunrise">sunrise</string>
+    <string name="lbl_sunset">sunset</string>
+    <string name="lbl_moon">moon</string>
+    <string name="lbl_phase_of_moon">phase of moon</string>
+    <string name="lbl_moon_age">moon age</string>
+
+    <!-- Widged -->
+    <string name="lbl_what_is_the_sky_mood">What's the sky mood?</string>
+
 </resources>

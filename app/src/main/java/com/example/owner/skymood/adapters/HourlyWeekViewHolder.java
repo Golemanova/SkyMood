@@ -19,10 +19,10 @@ public class HourlyWeekViewHolder extends RecyclerView.ViewHolder {
 
     public HourlyWeekViewHolder(View itemView) {
         super(itemView);
-        this.icon = (ImageView) itemView.findViewById(R.id.hour_icon);
-        this.hour = (TextView) itemView.findViewById(R.id.hour_hour);
-        this.condition = (TextView) itemView.findViewById(R.id.hour_condition);
-        this.temp = (TextView) itemView.findViewById(R.id.hour_temp);
+        this.icon = (ImageView) itemView.findViewById(R.id.row_hour_iv_icon);
+        this.hour = (TextView) itemView.findViewById(R.id.row_hour_tv_hour);
+        this.condition = (TextView) itemView.findViewById(R.id.row_week_tv_condition);
+        this.temp = (TextView) itemView.findViewById(R.id.row_hour_tv_temp);
     }
 
     public ImageView getIcon() {

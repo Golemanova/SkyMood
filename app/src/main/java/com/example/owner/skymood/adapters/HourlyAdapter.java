@@ -5,15 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.owner.skymood.R;
 import com.example.owner.skymood.model.HourlyWeather;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 /**
  * Created by owner on 04/04/2016.
@@ -32,7 +28,8 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyWeekViewHolder> {
     @Override
     public HourlyWeekViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View row = inflater.inflate(R.layout.hour_row, parent, false);
+        //TODO wtf?! see this layouts row_hour & row_week
+        View row = inflater.inflate(R.layout.row_hour, parent, false);
         return new HourlyWeekViewHolder(row);
     }
 

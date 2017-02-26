@@ -3,12 +3,10 @@ package com.example.owner.skymood.asyncTasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.example.owner.skymood.R;
-import com.example.owner.skymood.SwipeViewActivity;
+import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.CurrentWeatherFragment;
 import com.example.owner.skymood.model.LocationPreference;
 import com.example.owner.skymood.model.SearchedLocation;
@@ -48,7 +46,7 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
     private String country;
 
     SearchedLocationManager manager;
-    SwipeViewActivity activity;
+    MainActivity activity;
 
     public APIDataGetterAsyncTask(Fragment f, Context context, ImageView weatherImage){
         this.fragment = f;
@@ -56,7 +54,7 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
         this.weatherImage = weatherImage;
         this.locPref = LocationPreference.getInstance(context);
         this.manager = SearchedLocationManager.getInstance(context);
-        activity = (SwipeViewActivity) context;
+        activity = (MainActivity) context;
     }
 
     @Override
@@ -83,7 +81,7 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
             condition = observation.getString("weather");
             temp = observation.getString("temp_c");
             feelsLike = "Feels like: " + observation.getString("feelslike_c") + "℃";
-            icon = observation.getString("icon");
+            icon = observation.getString("widget_layout_iv_icon");
 
             //API 2
             URL url2 = new URL("http://api.wunderground.com/api/"+ CurrentWeatherFragment.API_KEY_TWO +"/forecast/q/" + countryCode + "/" + city + ".json");
@@ -106,10 +104,10 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
             JSONObject low = day.getJSONObject("low");
             minTemp = low.getString("celsius");
 
-//            if(Double.parseDouble(temp) > Double.parseDouble(maxTemp)){
+//            if(Double.parseDouble(temp) > Double.parseDouble(fragment_current_weather_tv_max_temp)){
 //                Double max = Math.ceil(Double.parseDouble(temp));
 //                Integer maxTempInt = max.intValue();
-//                maxTemp = maxTempInt.toString();
+//                fragment_current_weather_tv_max_temp = maxTempInt.toString();
 //            }
 
         } catch (MalformedURLException e) {
@@ -143,11 +141,11 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
             } else {
                 if (hour >= 6 && hour <= 19) {
                     id = context.getResources().getIdentifier(icon, "drawable", con.getPackageName());
-                    ((SwipeViewActivity)context).changeBackground(SwipeViewActivity.DAY);
+                    ((MainActivity)context).changeBackground(MainActivity.DAY);
                 } else {
                     icon = icon + "_night";
                     id = context.getResources().getIdentifier(icon, "drawable", con.getPackageName());
-                    ((SwipeViewActivity)context).changeBackground(SwipeViewActivity.NIGHT);
+                    ((MainActivity)context).changeBackground(MainActivity.NIGHT);
                 }
                 weatherImage.setImageResource(id);
             }

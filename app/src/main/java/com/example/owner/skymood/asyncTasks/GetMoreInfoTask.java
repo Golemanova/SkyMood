@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.example.owner.skymood.SwipeViewActivity;
+import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.MoreInfoFragment;
 
 import org.json.JSONException;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -26,7 +25,7 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
 
     private final static String API_KEY = "7fc23227bbbc9a36";
     private Context context;
-    private SwipeViewActivity activity;
+    private MainActivity activity;
     private MoreInfoFragment fragment;
 
     private String dayTxt;
@@ -49,7 +48,7 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
     public GetMoreInfoTask(Context context, Fragment fragment) {
         this.context = context;
         this.fragment = (MoreInfoFragment)fragment;
-        activity = (SwipeViewActivity)context;
+        activity = (MainActivity)context;
     }
 
     @Override

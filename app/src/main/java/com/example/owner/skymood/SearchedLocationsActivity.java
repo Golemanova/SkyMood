@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.owner.skymood.asyncTasks.APIDataGetterAsyncTask;
 import com.example.owner.skymood.model.SearchedLocation;
 import com.example.owner.skymood.model.SearchedLocationManager;
 
@@ -20,7 +18,7 @@ import java.util.ArrayList;
 public class SearchedLocationsActivity extends AppCompatActivity implements View.OnClickListener{
 
     public static final String CITY = "city";
-    public static final String COUNTRY = "country";
+    public static final String COUNTRY = "fragment_current_weather_tv_country";
     public static final String COUNTRY_CODE = "countryCode";
     public static final String SEARCHED_LOCATION_OBJECT = "SearchedLocation object";
     private Button location1;
@@ -38,12 +36,16 @@ public class SearchedLocationsActivity extends AppCompatActivity implements View
 
         manager = SearchedLocationManager.getInstance(this);
         locations = manager.getAllSearchedLocations();
-        //setting toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        //setting view_toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_searched_locations_view_tool_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        int[] buttonIDs = new int[] {R.id.location1, R.id.location2, R.id.location3, R.id.location4,R.id.location5 };
+        int[] buttonIDs = new int[] {R.id.activity_searched_locations_btn_location_one,
+                R.id.activity_searched_locations_btn_location_two,
+                R.id.activity_searched_locations_btn_location_three,
+                R.id.activity_searched_locations_btn_location_four,
+                R.id.activity_searched_locations_btn_location_five };
         //initializing buttons
         for(int i=0; i<locations.size(); i++){
             Button location = (Button) findViewById(buttonIDs[i]);
@@ -52,15 +54,15 @@ public class SearchedLocationsActivity extends AppCompatActivity implements View
             location.setText(loc.getCity() + ", " + loc.getCountry());
             location.setTag(loc);
         }
-        location1 = (Button) findViewById(R.id.location1);
+        location1 = (Button) findViewById(R.id.activity_searched_locations_btn_location_one);
         location1.setOnClickListener(this);
-        location2 = (Button) findViewById(R.id.location2);
+        location2 = (Button) findViewById(R.id.activity_searched_locations_btn_location_two);
         location2.setOnClickListener(this);
-        location3 = (Button) findViewById(R.id.location3);
+        location3 = (Button) findViewById(R.id.activity_searched_locations_btn_location_three);
         location3.setOnClickListener(this);
-        location4 = (Button) findViewById(R.id.location4);
+        location4 = (Button) findViewById(R.id.activity_searched_locations_btn_location_four);
         location4.setOnClickListener(this);
-        location5 = (Button) findViewById(R.id.location5);
+        location5 = (Button) findViewById(R.id.activity_searched_locations_btn_location_five);
         location5.setOnClickListener(this);
     }
 
@@ -75,13 +77,13 @@ public class SearchedLocationsActivity extends AppCompatActivity implements View
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = null;
         switch (item.getItemId()) {
-            case R.id.sky_mood:
-                intent = new Intent(this, SwipeViewActivity.class);
+            case R.id.menu_main_item_sky_mood:
+                intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.searched_locations:
+            case R.id.menu_main_item_searched_locations:
                 return true;
-            case R.id.my_locations:
+            case R.id.menu_main_item_my_locations:
                 intent = new Intent(this, MyLocationsActivity.class);
                 startActivity(intent);
                 return true;

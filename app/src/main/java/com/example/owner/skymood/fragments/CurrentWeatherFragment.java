@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.skymood.R;
-import com.example.owner.skymood.SwipeViewActivity;
+import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.asyncTasks.APIDataGetterAsyncTask;
 import com.example.owner.skymood.asyncTasks.AutoCompleteStringFillerAsyncTask;
 import com.example.owner.skymood.asyncTasks.FindLocationAsyncTask;
@@ -91,24 +90,24 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
                 R.layout.fragment_current_weather, container, false);
 
         //initializing components
-        syncButton = (ImageView) rootView.findViewById(R.id.synchronize);
-        locationSearchButton = (ImageView) rootView.findViewById(R.id.gpsSearch);
-        citySearchButton = (ImageView) rootView.findViewById(R.id.citySearch);
+        syncButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_sync);
+        locationSearchButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_gps_search);
+        citySearchButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_city_search);
         writeCityEditText = (AutoCompleteTextView) rootView.findViewById(R.id.writeCityEditText);
         writeCityEditText.setThreshold(3);
-        temperature = (TextView) rootView.findViewById(R.id.temperatureTextView);
-        countryTextView = (TextView) rootView.findViewById(R.id.country);
-        condition = (TextView) rootView.findViewById(R.id.conditionTextView);
-        minTempTextView = (TextView) rootView.findViewById(R.id.minTemp);
-        maxTempTextView = (TextView) rootView.findViewById(R.id.maxTemp);
-        feelsLike = (TextView) rootView.findViewById(R.id.feelsLikeTextView);
-        lastUpdate = (TextView) rootView.findViewById(R.id.lastUpdateTextView);
-        weatherImage = (ImageView) rootView.findViewById(R.id.weatherImageView);
-        chosenCityTextView = (TextView) rootView.findViewById(R.id.chosenCity);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        spinner = (Spinner) rootView.findViewById(R.id.locationSpinner);
-        Toolbar toolbar = ((SwipeViewActivity)context).getToolbar();
-        addImage = (ImageView) toolbar.findViewById(R.id.add_favourite1);
+        temperature = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_temperature);
+        countryTextView = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_country);
+        condition = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_condition);
+        minTempTextView = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_min_temp);
+        maxTempTextView = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_max_temp);
+        feelsLike = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_feels_like);
+        lastUpdate = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_last_update);
+        weatherImage = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_weather_state);
+        chosenCityTextView = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_chosen_city);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_current_weather_view_progress_bar);
+        spinner = (Spinner) rootView.findViewById(R.id.fragment_current_weather_view_spinner_location);
+        Toolbar toolbar = ((MainActivity)context).getToolbar();
+        addImage = (ImageView) toolbar.findViewById(R.id.view_toolbar_iv_add_favourite);
         cities = new HashMap<>();
 
         //shared prefs
@@ -122,7 +121,7 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
         citiesSpinner =  new ArrayList<>();
         citiesSpinner.add("My Locations");
         citiesSpinner.addAll(manager.getAllStringLocations());
-        final ArrayAdapter adapter = new ArrayAdapter(context, R.layout.custom_spinner, citiesSpinner);
+        final ArrayAdapter adapter = new ArrayAdapter(context, R.layout.view_spinner, citiesSpinner);
         spinner.setAdapter(adapter);
 
         //listeners
@@ -216,7 +215,7 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
                     keyboard.hideSoftInputFromWindow(writeCityEditText.getWindowToken(), 0);
                     changeVisibility(View.VISIBLE);
                 } else {
-                    Toast.makeText(getContext(), "You must specify a country", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "You must specify a fragment_current_weather_tv_country", Toast.LENGTH_SHORT).show();
                     writeCityEditText.setVisibility(View.GONE);
                     keyboard.hideSoftInputFromWindow(writeCityEditText.getWindowToken(), 0);
                     changeVisibility(View.VISIBLE);
@@ -247,7 +246,7 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
         //logic
         if(isOnline()){
             APIDataGetterAsyncTask task = new APIDataGetterAsyncTask(this, context, weatherImage);
-            HourlyWeatherFragment fr = ((SwipeViewActivity)context).getHourlyFragment();
+            HourlyWeatherFragment fr = ((MainActivity)context).getHourlyFragment();
             GetHourlyTask hourTask = new GetHourlyTask(context, fr, fr.getHourlyWeatherArray());
             GetWeeklyTask weeklyTask = new GetWeeklyTask(context, fr, fr.getWeeklyWeatherArray());
 
@@ -311,9 +310,9 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
         lastUpdate.setText(locPref.getLastUpdate());
 
         if(locPref.getIcon().contains("night")){
-            ((SwipeViewActivity)context).changeBackground(SwipeViewActivity.NIGHT);
+            ((MainActivity)context).changeBackground(MainActivity.NIGHT);
         } else {
-            ((SwipeViewActivity)context).changeBackground(SwipeViewActivity.DAY);
+            ((MainActivity)context).changeBackground(MainActivity.DAY);
         }
         Context con = weatherImage.getContext();
         weatherImage.setImageResource(context.getResources().getIdentifier(locPref.getIcon(), "drawable", con.getPackageName()));
@@ -407,9 +406,9 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
     private void setBackground(){
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         if (hour >= 6 && hour <= 19) {
-            ((SwipeViewActivity)context).changeBackground(SwipeViewActivity.DAY);
+            ((MainActivity)context).changeBackground(MainActivity.DAY);
         } else {
-            ((SwipeViewActivity)context).changeBackground(SwipeViewActivity.NIGHT);
+            ((MainActivity)context).changeBackground(MainActivity.NIGHT);
         }
     }
 

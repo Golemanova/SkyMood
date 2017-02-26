@@ -1,292 +1,292 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_more_info_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/foreground"
     android:layout_margin="10dp"
+    android:background="@color/foreground"
     android:gravity="center_horizontal"
-    android:id="@+id/fragment_more"
-    android:tag="mragment_more"
+    android:orientation="vertical"
+    android:tag="fragment_more"
     tools:context="com.example.owner.skymood.fragments.MoreInfoFragment">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/more_layout"
-    android:orientation="vertical">
+
     <ProgressBar
+        android:id="@+id/fragment_more_info_view_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/more_progress"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <TextView
-        android:id="@+id/more_day"
+        android:id="@+id/fragment_more_info_tv_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"
         android:shadowColor="@color/veryDarkGrey"
-        android:shadowRadius="3"
         android:shadowDx="2"
         android:shadowDy="2"
+        android:shadowRadius="3"
         android:textColor="@color/white"
-        android:layout_marginTop="4dp"
-        android:layout_gravity="center"
-        />
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
     <TextView
-        android:id="@+id/more_date"
+        android:id="@+id/fragment_more_info_tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
         android:layout_gravity="center"
-        android:textSize="20sp"/>
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            tools:ignore="ScrollViewSize">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:layout_marginTop="15dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:orientation="vertical"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1"
-        android:gravity="right"
-        android:paddingRight="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_temperature"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="temperature"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_real_feel"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-            android:text="realfeel"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_condition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_condition"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_max"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-            android:id="@+id/text_condition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="condition"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="max"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_min"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="min"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_uv_index"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UV index"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="humidity"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="winds speed"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="visibility"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="pressure"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="sunrise"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="sunset"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="moon"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="phase of moon"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="moon age"
-            android:textColor="@color/white"
-            android:textSize="20sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_humidity"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_wind_speed"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_visibility"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_pressure"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_sunrise"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-    </LinearLayout>
-    <View
-        android:layout_width="2dp"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF"/>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_sunset"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-            android:id="@+id/more_temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_moon"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-            android:id="@+id/more_realfeel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_phase_of_moon"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-            android:id="@+id/more_condition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_max"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_uv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_moon_age"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-        <TextView
-            android:id="@+id/more_humidity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/more_windsSpeed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_visibility"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_preassure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_sunrize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_sunset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="@color/white" />
 
-        <TextView
-            android:id="@+id/more_moonIllumitated"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_phase_of_moon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/more_moonAge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_temp_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_real_feel_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
-    </LinearLayout>
-</LinearLayout>
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_condition_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
 
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_max_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_min_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_uv_index_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_humidity_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_winds_speed_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_visibility_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_preasure_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_sunrise_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/more_sunset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_moon_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_phase_of_moon_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+                <TextView
+                    android:id="@+id/fragment_more_info_tv_moon_age_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_more_info_text_size" />
+
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
-
-
-</LinearLayout>
-
 </LinearLayout>

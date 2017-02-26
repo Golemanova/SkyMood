@@ -3,103 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background_searched_locations"
     android:orientation="vertical"
-    android:background="@drawable/grass"
+    android:padding="@dimen/activity_vertical_margin"
     tools:context="com.example.owner.skymood.SearchedLocationsActivity">
 
     <include
-        android:id="@+id/tool_bar"
-        layout="@layout/toolbar_main"
+        android:id="@+id/activity_searched_locations_view_tool_bar"
+        layout="@layout/view_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <Button
-
-        android:id="@+id/location1"
+        android:id="@+id/activity_searched_locations_btn_location_one"
+        style="@style/SearchedLocationsText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
-        android:drawableLeft="@drawable/searchedicon"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/button_last_searched"
-        android:gravity="center"
-        android:textSize="27dp"
-        style="@style/searched_locations_text"
-        android:clickable="true"
-        android:visibility="invisible"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:text="Location, Blahblah"/>
+        android:visibility="gone" />
 
     <Button
-        android:id="@+id/location2"
+        android:id="@+id/activity_searched_locations_btn_location_two"
+        style="@style/SearchedLocationsText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:drawableLeft="@drawable/searchedicon"
-        android:background="@drawable/button_last_searched"
-        android:gravity="center"
-        style="@style/searched_locations_text"
-        android:textSize="27dp"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        android:textColor="@color/white"
-        android:text="Location, Blahblah"/>
+        android:visibility="gone" />
 
     <Button
-        android:id="@+id/location3"
+        android:id="@+id/activity_searched_locations_btn_location_three"
+        style="@style/SearchedLocationsText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="5dp"
-        style="@style/searched_locations_text"
-        android:background="@drawable/button_last_searched"
-        android:drawableLeft="@drawable/searchedicon"
-        android:gravity="center"
-        android:textSize="27dp"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        android:textColor="@color/white"
-        android:text="Location, Blahblah"/>
+        android:visibility="gone" />
 
     <Button
-        android:id="@+id/location4"
+        android:id="@+id/activity_searched_locations_btn_location_four"
+        style="@style/SearchedLocationsText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="5dp"
-        style="@style/searched_locations_text"
-        android:background="@drawable/button_last_searched"
-        android:drawableLeft="@drawable/searchedicon"
-        android:gravity="center"
-        android:textSize="27dp"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        android:textColor="@color/white"
-        android:text="Location, Blahblah"/>
+        android:visibility="gone" />
 
     <Button
-        android:id="@+id/location5"
+        android:id="@+id/activity_searched_locations_btn_location_five"
+        style="@style/SearchedLocationsText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="5dp"
-        style="@style/searched_locations_text"
-        android:background="@drawable/button_last_searched"
-        android:drawableLeft="@drawable/searchedicon"
-        android:gravity="center"
-        android:textSize="27dp"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        android:textColor="@color/white"
-        android:text="Location, Blahblah"/>
+        android:visibility="gone" />
 
 </LinearLayout>

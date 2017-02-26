@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/sky_mood"
-        android:icon="@drawable/menu"
-        android:title="☁ Sky Mood"
-        />
+        android:id="@+id/menu_main_item_sky_mood"
+        android:title="@string/lbl_menu_sky_mood" />
 
     <item
-        android:id="@+id/searched_locations"
-        android:icon="@drawable/menu"
-        android:title="☀ Last Searched"
-        />
+        android:id="@+id/menu_main_item_searched_locations"
+        android:title="@string/lbl_menu_last_searched" />
 
     <item
-        android:id="@+id/my_locations"
-        android:icon="@drawable/menu"
-        android:title="❄ My Locations"
-        />
-
+        android:id="@+id/menu_main_item_my_locations"
+        android:title="@string/lbl_menu_my_locations" />
 
 </menu>

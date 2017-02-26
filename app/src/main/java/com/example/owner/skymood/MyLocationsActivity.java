@@ -15,7 +15,6 @@ import com.example.owner.skymood.model.MyLocation;
 import com.example.owner.skymood.model.MyLocationManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MyLocationsActivity extends AppCompatActivity {
 
@@ -30,13 +29,13 @@ public class MyLocationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_locations);
         manager = MyLocationManager.getInstance(this);
 
-        //setting toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        //setting view_toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_my_locations_view_tool_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         data = manager.getAllMyLocations();
-        this.recycler = (RecyclerView) findViewById(R.id.mylocation_recycler);
+        this.recycler = (RecyclerView) findViewById(R.id.activity_my_locations_rv_recycler);
         this.recycler.setLayoutManager(new LinearLayoutManager(this));
         MyCardViewAdapter adapter = new MyCardViewAdapter(this, data);
         recycler.setAdapter(adapter);
@@ -53,15 +52,15 @@ public class MyLocationsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = null;
         switch (item.getItemId()) {
-            case R.id.sky_mood:
-                intent = new Intent(this, SwipeViewActivity.class);
+            case R.id.menu_main_item_sky_mood:
+                intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.searched_locations:
+            case R.id.menu_main_item_searched_locations:
                 intent = new Intent(this, SearchedLocationsActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.my_locations:
+            case R.id.menu_main_item_my_locations:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

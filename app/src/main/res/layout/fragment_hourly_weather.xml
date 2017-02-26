@@ -1,30 +1,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_hourly_weather_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/foreground"
     android:layout_margin="10dp"
-    android:id="@+id/fragment_hourly"
+    android:background="@color/foreground"
     android:orientation="vertical"
     tools:context="com.example.owner.skymood.fragments.HourlyWeatherFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_hourly"
+        android:id="@+id/fragment_hourly_weather_rv_recycler_hourly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:layout_marginTop="10dp">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="10dp" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_hourly_weather_rv_recycler_weekly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recycler_weekly"
-        android:layout_below="@+id/recycler_hourly"
-        android:layout_marginTop="10dp"
-        >
-    </android.support.v7.widget.RecyclerView>
-
+        android:layout_marginTop="10dp" />
 
 </LinearLayout>

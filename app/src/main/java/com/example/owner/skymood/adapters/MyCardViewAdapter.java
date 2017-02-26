@@ -16,8 +16,6 @@ import com.example.owner.skymood.model.MyLocation;
 import com.example.owner.skymood.model.MyLocationManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.zip.Inflater;
 
 /**
  * Created by owner on 08/04/2016.
@@ -41,7 +39,7 @@ public class MyCardViewAdapter extends RecyclerView.Adapter<MyCardViewAdapter.Ca
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View root = inflater.inflate(R.layout.my_locations_row, parent, false);
+        View root = inflater.inflate(R.layout.row_my_location, parent, false);
         return new CardViewHolder(root);
     }
 
@@ -76,11 +74,11 @@ public class MyCardViewAdapter extends RecyclerView.Adapter<MyCardViewAdapter.Ca
         public CardViewHolder(View itemView) {
             super(itemView);
 
-            this.city = (TextView) itemView.findViewById(R.id.mylocations_city);
-            this.country = (TextView) itemView.findViewById(R.id.mylocations_country);
-            this.code = (TextView) itemView.findViewById(R.id.mylocations_code);
-            this.erase = (ImageView) itemView.findViewById(R.id.erase);
-            this.radio = (RadioButton) itemView.findViewById(R.id.my_location_radio);
+            this.city = (TextView) itemView.findViewById(R.id.row_my_location_tv_city);
+            this.country = (TextView) itemView.findViewById(R.id.row_my_location_tv_country);
+            this.code = (TextView) itemView.findViewById(R.id.row_my_location_tv_code);
+            this.erase = (ImageView) itemView.findViewById(R.id.row_my_location_iv_delete);
+            this.radio = (RadioButton) itemView.findViewById(R.id.row_my_location_view_radio_btn);
 
             // onclick for setting location as default
             radio.setOnClickListener(new View.OnClickListener() {

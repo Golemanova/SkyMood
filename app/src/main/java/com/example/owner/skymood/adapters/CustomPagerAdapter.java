@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
-import com.example.owner.skymood.SwipeViewActivity;
+import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.CurrentWeatherFragment;
 import com.example.owner.skymood.fragments.HourlyWeatherFragment;
 import com.example.owner.skymood.fragments.MoreInfoFragment;
@@ -58,7 +58,7 @@ public class CustomPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return SwipeViewActivity.NUMBER_OF_PAGES;
+        return MainActivity.NUMBER_OF_PAGES;
     }
 
     @Override
