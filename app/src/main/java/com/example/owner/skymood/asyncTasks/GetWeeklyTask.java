@@ -75,7 +75,7 @@ public class GetWeeklyTask extends AsyncTask<String, Void, Void> {
                 JSONObject low = obj.getJSONObject("low");
                 String min = low.getString("celsius");
                 String condition = obj.getString("conditions");
-                String icon = obj.getString("widget_layout_iv_icon");
+                String icon = obj.getString("icon");
 
                 int id = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
                 Bitmap iconImage = BitmapFactory.decodeResource(context.getResources(), id);

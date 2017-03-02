@@ -69,9 +69,9 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
             for(int i = 0; i < hourlyArray.length(); i++){
                 JSONObject obj = hourlyArray.getJSONObject(i);
                 String hour = obj.getJSONObject("FCTTIME").getString("hour");
-                String condition = obj.getString("widhet_layout_tv_condition");
+                String condition = obj.getString("condition");
                 String temp = obj.getJSONObject("temp").getString("metric");
-                String icon = obj.getString("widget_layout_iv_icon");
+                String icon = obj.getString("icon");
 
                 Integer hourInt = Integer.parseInt(hour);
                 int id = 0;

@@ -81,7 +81,7 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
             condition = observation.getString("weather");
             temp = observation.getString("temp_c");
             feelsLike = "Feels like: " + observation.getString("feelslike_c") + "℃";
-            icon = observation.getString("widget_layout_iv_icon");
+            icon = observation.getString("icon");
 
             //API 2
             URL url2 = new URL("http://api.wunderground.com/api/"+ CurrentWeatherFragment.API_KEY_TWO +"/forecast/q/" + countryCode + "/" + city + ".json");
@@ -104,10 +104,10 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
             JSONObject low = day.getJSONObject("low");
             minTemp = low.getString("celsius");
 
-//            if(Double.parseDouble(temp) > Double.parseDouble(fragment_current_weather_tv_max_temp)){
+//            if(Double.parseDouble(temp) > Double.parseDouble(maxTemp)){
 //                Double max = Math.ceil(Double.parseDouble(temp));
 //                Integer maxTempInt = max.intValue();
-//                fragment_current_weather_tv_max_temp = maxTempInt.toString();
+//                maxTemp = maxTempInt.toString();
 //            }
 
         } catch (MalformedURLException e) {
