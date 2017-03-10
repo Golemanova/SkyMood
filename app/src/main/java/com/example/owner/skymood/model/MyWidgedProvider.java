@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.owner.skymood.R;
@@ -51,18 +50,17 @@ public class MyWidgedProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        Log.e("VVV", "on update called");
         LocationPreference pref = LocationPreference.getInstance(context);
-        this.city = pref.getCity();
-        this.country = pref.getCountry();
-        this.countryCode = pref.getCountryCode();
+        city = pref.getCity();
+        country = pref.getCountry();
+        countryCode = pref.getCountryCode();
 
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 
-                for(int widgetId : appWidgetIds){
+            for (int widgetId : appWidgetIds) {
                 RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                         R.layout.widget_layout);
 
@@ -81,7 +79,7 @@ public class MyWidgedProvider extends AppWidgetProvider {
             }
         } else {
             // iterate through all of our widgets (in case the user has placed multiple widgets)
-            for(int widgetId : appWidgetIds){
+            for (int widgetId : appWidgetIds) {
                 RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                         R.layout.widget_layout);
                 if (!pref.hasNull()) {

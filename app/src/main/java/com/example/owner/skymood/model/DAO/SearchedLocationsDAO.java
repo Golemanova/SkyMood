@@ -37,24 +37,24 @@ public class SearchedLocationsDAO implements ISearchedLocations {
     public ArrayList<SearchedLocation> getAllSearchedLocations() {
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        String[] columns = new String[]{helper.SEARCHED_ID, helper.CITY, helper.TEMP, helper.CONDITION, helper.DATE, helper.COUNTRY,
-                helper.COUNTRY_CODE, helper.MAX_TEMP, helper.MIN_TEMP, helper.LAST_UPDATE, helper.ICON, helper.FEELS_LIKE};
-        Cursor c = db.query(helper.LAST_SEARCHED, columns, null, null, null, null, null);
+        String[] columns = new String[]{DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY, DatabaseHelper.TEMP, DatabaseHelper.CONDITION, DatabaseHelper.DATE, DatabaseHelper.COUNTRY,
+                DatabaseHelper.COUNTRY_CODE, DatabaseHelper.MAX_TEMP, DatabaseHelper.MIN_TEMP, DatabaseHelper.LAST_UPDATE, DatabaseHelper.ICON, DatabaseHelper.FEELS_LIKE};
+        Cursor c = db.query(DatabaseHelper.LAST_SEARCHED, columns, null, null, null, null, null);
         ArrayList<SearchedLocation> cities = new ArrayList<>();
         if (c.moveToFirst())
             do {
-                long id = c.getLong(c.getColumnIndex(helper.SEARCHED_ID));
-                String city = c.getString(c.getColumnIndex(helper.CITY));
-                String temp = c.getString(c.getColumnIndex(helper.TEMP));
-                String condition = c.getString(c.getColumnIndex(helper.CONDITION));
-                String date = c.getString(c.getColumnIndex(helper.DATE));
-                String country = c.getString(c.getColumnIndex(helper.COUNTRY));
-                String code = c.getString(c.getColumnIndex(helper.COUNTRY_CODE));
-                String max = c.getString(c.getColumnIndex(helper.MAX_TEMP));
-                String min = c.getString(c.getColumnIndex(helper.MIN_TEMP));
-                String lastUpdate = c.getString(c.getColumnIndex(helper.LAST_UPDATE));
-                String icon = c.getString(c.getColumnIndex(helper.ICON));
-                String feelsLike = c.getString(c.getColumnIndex(helper.FEELS_LIKE));
+                long id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID));
+                String city = c.getString(c.getColumnIndex(DatabaseHelper.CITY));
+                String temp = c.getString(c.getColumnIndex(DatabaseHelper.TEMP));
+                String condition = c.getString(c.getColumnIndex(DatabaseHelper.CONDITION));
+                String date = c.getString(c.getColumnIndex(DatabaseHelper.DATE));
+                String country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY));
+                String code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE));
+                String max = c.getString(c.getColumnIndex(DatabaseHelper.MAX_TEMP));
+                String min = c.getString(c.getColumnIndex(DatabaseHelper.MIN_TEMP));
+                String lastUpdate = c.getString(c.getColumnIndex(DatabaseHelper.LAST_UPDATE));
+                String icon = c.getString(c.getColumnIndex(DatabaseHelper.ICON));
+                String feelsLike = c.getString(c.getColumnIndex(DatabaseHelper.FEELS_LIKE));
 
                 SearchedLocation location = new SearchedLocation(id, city, temp, condition, country, code, max, min, lastUpdate, icon, feelsLike, date);
                 cities.add(location);
@@ -84,24 +84,24 @@ public class SearchedLocationsDAO implements ISearchedLocations {
 
         SQLiteDatabase db = helper.getReadableDatabase();
 
-        String[] columns = new String[]{helper.SEARCHED_ID, helper.CITY, helper.TEMP, helper.CONDITION, helper.DATE, helper.COUNTRY,
-                helper.COUNTRY_CODE, helper.MAX_TEMP, helper.MIN_TEMP, helper.LAST_UPDATE, helper.ICON, helper.FEELS_LIKE};
-        Cursor c = db.query(helper.LAST_SEARCHED, columns, null, null, null, null, "datetime(" + helper.DATE + ")", "1");
+        String[] columns = new String[]{DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY, DatabaseHelper.TEMP, DatabaseHelper.CONDITION, DatabaseHelper.DATE, DatabaseHelper.COUNTRY,
+                DatabaseHelper.COUNTRY_CODE, DatabaseHelper.MAX_TEMP, DatabaseHelper.MIN_TEMP, DatabaseHelper.LAST_UPDATE, DatabaseHelper.ICON, DatabaseHelper.FEELS_LIKE};
+        Cursor c = db.query(DatabaseHelper.LAST_SEARCHED, columns, null, null, null, null, "datetime(" + DatabaseHelper.DATE + ")", "1");
         SearchedLocation location = null;
         if (c.moveToFirst())
             do {
-                long id = c.getLong(c.getColumnIndex(helper.SEARCHED_ID));
-                String city = c.getString(c.getColumnIndex(helper.CITY));
-                String temp = c.getString(c.getColumnIndex(helper.TEMP));
-                String condition = c.getString(c.getColumnIndex(helper.CONDITION));
-                String date = c.getString(c.getColumnIndex(helper.DATE));
-                String country = c.getString(c.getColumnIndex(helper.COUNTRY));
-                String code = c.getString(c.getColumnIndex(helper.COUNTRY_CODE));
-                String max = c.getString(c.getColumnIndex(helper.MAX_TEMP));
-                String min = c.getString(c.getColumnIndex(helper.MIN_TEMP));
-                String lastUpdate = c.getString(c.getColumnIndex(helper.LAST_UPDATE));
-                String icon = c.getString(c.getColumnIndex(helper.ICON));
-                String feelsLike = c.getString(c.getColumnIndex(helper.FEELS_LIKE));
+                long id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID));
+                String city = c.getString(c.getColumnIndex(DatabaseHelper.CITY));
+                String temp = c.getString(c.getColumnIndex(DatabaseHelper.TEMP));
+                String condition = c.getString(c.getColumnIndex(DatabaseHelper.CONDITION));
+                String date = c.getString(c.getColumnIndex(DatabaseHelper.DATE));
+                String country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY));
+                String code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE));
+                String max = c.getString(c.getColumnIndex(DatabaseHelper.MAX_TEMP));
+                String min = c.getString(c.getColumnIndex(DatabaseHelper.MIN_TEMP));
+                String lastUpdate = c.getString(c.getColumnIndex(DatabaseHelper.LAST_UPDATE));
+                String icon = c.getString(c.getColumnIndex(DatabaseHelper.ICON));
+                String feelsLike = c.getString(c.getColumnIndex(DatabaseHelper.FEELS_LIKE));
 
                 location = new SearchedLocation(id, city, temp, condition, date, country, code, max, min, lastUpdate, icon, feelsLike);
 
@@ -115,7 +115,7 @@ public class SearchedLocationsDAO implements ISearchedLocations {
     public long getCount() {
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        String query = "SELECT COUNT(*) FROM " + helper.LAST_SEARCHED;
+        String query = "SELECT COUNT(*) FROM " + DatabaseHelper.LAST_SEARCHED;
         SQLiteStatement statement = db.compileStatement(query);
         long count = statement.simpleQueryForLong();
         db.close();
@@ -128,10 +128,10 @@ public class SearchedLocationsDAO implements ISearchedLocations {
         SQLiteDatabase db = helper.getReadableDatabase();
 
 
-        String selection = helper.CITY + " = ?";
-        Cursor c = db.query(helper.LAST_SEARCHED, new String[]{helper.SEARCHED_ID, helper.CITY}, selection, new String[]{city}, null, null, null);
+        String selection = DatabaseHelper.CITY + " = ?";
+        Cursor c = db.query(DatabaseHelper.LAST_SEARCHED, new String[]{DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY}, selection, new String[]{city}, null, null, null);
         if (c.moveToFirst()) {
-            long id = c.getLong(c.getColumnIndex(helper.SEARCHED_ID));
+            long id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID));
             c.close();
             db.close();
             return id;
@@ -147,20 +147,20 @@ public class SearchedLocationsDAO implements ISearchedLocations {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(helper.CITY, location.getCity());
-        values.put(helper.TEMP, location.getTemp());
-        values.put(helper.CONDITION, location.getCondition());
-        values.put(helper.COUNTRY, location.getCountry());
-        values.put(helper.COUNTRY_CODE, location.getCode());
-        values.put(helper.MAX_TEMP, location.getMax());
-        values.put(helper.MIN_TEMP, location.getMin());
-        values.put(helper.LAST_UPDATE, location.getLastUpdate());
+        values.put(DatabaseHelper.CITY, location.getCity());
+        values.put(DatabaseHelper.TEMP, location.getTemp());
+        values.put(DatabaseHelper.CONDITION, location.getCondition());
+        values.put(DatabaseHelper.COUNTRY, location.getCountry());
+        values.put(DatabaseHelper.COUNTRY_CODE, location.getCode());
+        values.put(DatabaseHelper.MAX_TEMP, location.getMax());
+        values.put(DatabaseHelper.MIN_TEMP, location.getMin());
+        values.put(DatabaseHelper.LAST_UPDATE, location.getLastUpdate());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = sdf.format(new Date());
-        values.put(helper.DATE, strDate);
-        values.put(helper.ICON, location.getIcon());
-        values.put(helper.FEELS_LIKE, location.getFeelsLike());
-        long id = db.insert(helper.LAST_SEARCHED, null, values);
+        values.put(DatabaseHelper.DATE, strDate);
+        values.put(DatabaseHelper.ICON, location.getIcon());
+        values.put(DatabaseHelper.FEELS_LIKE, location.getFeelsLike());
+        long id = db.insert(DatabaseHelper.LAST_SEARCHED, null, values);
 
         db.close();
         return id;
@@ -171,20 +171,20 @@ public class SearchedLocationsDAO implements ISearchedLocations {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(helper.CITY, location.getCity());
-        values.put(helper.TEMP, location.getTemp());
-        values.put(helper.CONDITION, location.getCondition());
-        values.put(helper.COUNTRY, location.getCountry());
-        values.put(helper.COUNTRY_CODE, location.getCode());
-        values.put(helper.MAX_TEMP, location.getMax());
-        values.put(helper.MIN_TEMP, location.getMin());
-        values.put(helper.LAST_UPDATE, location.getLastUpdate());
+        values.put(DatabaseHelper.CITY, location.getCity());
+        values.put(DatabaseHelper.TEMP, location.getTemp());
+        values.put(DatabaseHelper.CONDITION, location.getCondition());
+        values.put(DatabaseHelper.COUNTRY, location.getCountry());
+        values.put(DatabaseHelper.COUNTRY_CODE, location.getCode());
+        values.put(DatabaseHelper.MAX_TEMP, location.getMax());
+        values.put(DatabaseHelper.MIN_TEMP, location.getMin());
+        values.put(DatabaseHelper.LAST_UPDATE, location.getLastUpdate());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = sdf.format(new Date());
-        values.put(helper.DATE, strDate);
-        values.put(helper.ICON, location.getIcon());
-        values.put(helper.FEELS_LIKE, location.getFeelsLike());
-        long result = db.update(helper.LAST_SEARCHED, values, helper.SEARCHED_ID + " = ? ", new String[]{"" + id});
+        values.put(DatabaseHelper.DATE, strDate);
+        values.put(DatabaseHelper.ICON, location.getIcon());
+        values.put(DatabaseHelper.FEELS_LIKE, location.getFeelsLike());
+        long result = db.update(DatabaseHelper.LAST_SEARCHED, values, DatabaseHelper.SEARCHED_ID + " = ? ", new String[]{"" + id});
 
         db.close();
         return result;
