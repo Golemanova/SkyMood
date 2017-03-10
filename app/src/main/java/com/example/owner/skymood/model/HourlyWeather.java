@@ -2,8 +2,6 @@ package com.example.owner.skymood.model;
 
 import android.graphics.Bitmap;
 
-import java.sql.Time;
-
 /**
  * Created by owner on 04/04/2016.
  */
@@ -15,6 +13,7 @@ public class HourlyWeather {
     private Bitmap icon;
 
     public HourlyWeather(String hour, String condition, String temp, Bitmap icon) {
+
         this.hour = hour;
         this.condition = condition;
         this.temp = temp;
@@ -22,18 +21,22 @@ public class HourlyWeather {
     }
 
     public String getHour() {
+
         return hour;
     }
 
     public Bitmap getIcon() {
+
         return icon;
     }
 
     public String getCondition() {
+
         return condition;
     }
 
     public String getTemp() {
+
         return temp;
     }
 }

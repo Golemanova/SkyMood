@@ -10,7 +10,7 @@ import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.CurrentWeatherFragment;
 import com.example.owner.skymood.fragments.HourlyWeatherFragment;
 import com.example.owner.skymood.fragments.MoreInfoFragment;
-import com.example.owner.skymood.fragments.Swideable;
+import com.example.owner.skymood.fragments.Slidable;
 
 /**
  * Created by Golemanovaa on 4.4.2016 г..
@@ -19,7 +19,7 @@ public class CustomPagerAdapter extends FragmentStatePagerAdapter {
 
     private Context context;
     private FragmentManager mFragmentManager;
-    private Swideable[] fragmentsArray = new Swideable[getCount()];
+    private Slidable[] fragmentsArray = new Slidable[getCount()];
 
     public CustomPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -33,7 +33,7 @@ public class CustomPagerAdapter extends FragmentStatePagerAdapter {
             return (Fragment) fragmentsArray[position];
         }
 
-        Swideable fragment = null;
+        Slidable fragment = null;
         switch(position){
             case 0:
                 //CurrentWeatherConditionFragment();
@@ -42,7 +42,7 @@ public class CustomPagerAdapter extends FragmentStatePagerAdapter {
                 break;
 
             case 1:
-                //HorlyWeatherFragment();
+                //HourlyWeatherFragment();
                 fragment = new HourlyWeatherFragment();
                 fragment.setContext(context);
                 break;

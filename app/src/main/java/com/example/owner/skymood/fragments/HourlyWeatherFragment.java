@@ -19,12 +19,12 @@ import com.example.owner.skymood.model.WeeklyWeather;
 
 import java.util.ArrayList;
 
-public class HourlyWeatherFragment extends Fragment implements Swideable{
+public class HourlyWeatherFragment extends Fragment implements Slidable {
 
     private ArrayList<HourlyWeather> hourlyWeather;
     private ArrayList<WeeklyWeather> weatherArray;
     private RecyclerView hourlyRecycler;
-    private RecyclerView weerklyRecycler;
+    private RecyclerView weeklyRecycler;
     private Context context;
     private LinearLayout layout;
     private TextView text;
@@ -53,10 +53,10 @@ public class HourlyWeatherFragment extends Fragment implements Swideable{
             hourlyRecycler.setAdapter(adapter);
 
             //weekly recycler
-            weerklyRecycler = (RecyclerView) view.findViewById(R.id.fragment_hourly_weather_rv_recycler_weekly);
-            weerklyRecycler.setLayoutManager(new LinearLayoutManager(context));
-            WeeklyAdapter weeklyAdapte = new WeeklyAdapter(weatherArray, context);
-            weerklyRecycler.setAdapter(weeklyAdapte);
+            weeklyRecycler = (RecyclerView) view.findViewById(R.id.fragment_hourly_weather_rv_recycler_weekly);
+            weeklyRecycler.setLayoutManager(new LinearLayoutManager(context));
+            WeeklyAdapter weeklyAdapter = new WeeklyAdapter(weatherArray, context);
+            weeklyRecycler.setAdapter(weeklyAdapter);
 
 
         return view;
@@ -71,7 +71,7 @@ public class HourlyWeatherFragment extends Fragment implements Swideable{
     }
 
     public WeeklyAdapter getWeekAdapter(){
-        return (WeeklyAdapter)this.weerklyRecycler.getAdapter();
+        return (WeeklyAdapter)this.weeklyRecycler.getAdapter();
     }
 
     public ArrayList<HourlyWeather> getHourlyWeatherArray() {

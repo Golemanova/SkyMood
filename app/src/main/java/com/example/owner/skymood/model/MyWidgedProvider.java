@@ -37,12 +37,12 @@ public class MyWidgedProvider extends AppWidgetProvider {
     private String icon;
     private String condition;
     private int iconId;
-    private static Context context;
 
     private static MyWidgedProvider instance = null;
 
-    public static MyWidgedProvider getInstance(){
-        if(instance == null){
+    public static MyWidgedProvider getInstance() {
+
+        if (instance == null) {
             instance = new MyWidgedProvider();
         }
         return instance;
@@ -50,21 +50,20 @@ public class MyWidgedProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
         Log.e("VVV", "on update called");
         LocationPreference pref = LocationPreference.getInstance(context);
         this.city = pref.getCity();
         this.country = pref.getCountry();
         this.countryCode = pref.getCountryCode();
-        this.context = context;
 
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if(netInfo != null && netInfo.isConnectedOrConnecting()){
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
 
-         for (int i = 0; i < appWidgetIds.length; i++) {
-             int widgetId = appWidgetIds[i];
-             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+                for(int widgetId : appWidgetIds){
+                RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                         R.layout.widget_layout);
 
                 Intent intent = new Intent(context, MyWidgedProvider.WidgedService.class);
@@ -82,31 +81,27 @@ public class MyWidgedProvider extends AppWidgetProvider {
             }
         } else {
             // iterate through all of our widgets (in case the user has placed multiple widgets)
-            for (int i = 0; i < appWidgetIds.length; i++) {
-                int widgetId = appWidgetIds[i];
-
+            for(int widgetId : appWidgetIds){
                 RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                         R.layout.widget_layout);
-                if(!pref.hasNull()) {
+                if (!pref.hasNull()) {
                     remoteViews.setTextViewText(R.id.widget_layout_tv_city, city);
                     remoteViews.setTextViewText(R.id.widget_layout_tv_country, country);
                     this.condition = pref.getCondition();
-                    remoteViews.setTextViewText(R.id.widhet_layout_tv_condition, this.condition);
+                    remoteViews.setTextViewText(R.id.widget_layout_tv_condition, this.condition);
                     this.temp = pref.getTemperature();
                     remoteViews.setTextViewText(R.id.widged_layout_tv_degree, this.temp + "℃");
 
-                    Field field = null;
+                    Field field;
                     try {
                         field = R.drawable.class.getDeclaredField(pref.getIcon());
                         iconId = field.getInt(this);
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                     remoteViews.setImageViewResource(R.id.widget_layout_iv_icon, iconId);
                 } else {
-                    remoteViews.setTextViewText(R.id.widhet_layout_tv_condition, "No Internet Connection :(");
+                    remoteViews.setTextViewText(R.id.widget_layout_tv_condition, "No Internet Connection :(");
                 }
 
                 //update when the update button is clicked
@@ -123,20 +118,23 @@ public class MyWidgedProvider extends AppWidgetProvider {
         }
     }
 
-    public void setInfo(String city, String country, String countryCode){
-        this.city = city;
-        this.country = country;
-        this.countryCode = countryCode;
+    public void setInfo(String city, String country, String countryCode) {
+
+        MyWidgedProvider.city = city;
+        MyWidgedProvider.country = country;
+        MyWidgedProvider.countryCode = countryCode;
     }
 
     public static class WidgedService extends IntentService {
 
         public WidgedService() {
+
             super("WidgedService");
         }
 
         @Override
         protected void onHandleIntent(Intent intent) {
+
             try {
                 URL url = new URL("http://api.wunderground.com/api/" + CurrentWeatherFragment.API_KEY + "/conditions/q/" + countryCode + "/" + city + ".json");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -144,7 +142,7 @@ public class MyWidgedProvider extends AppWidgetProvider {
 
                 Scanner sc = new Scanner(connection.getInputStream());
                 StringBuilder body = new StringBuilder();
-                while(sc.hasNextLine()){
+                while (sc.hasNextLine()) {
                     body.append(sc.nextLine());
                 }
                 String info = body.toString();
@@ -162,7 +160,7 @@ public class MyWidgedProvider extends AppWidgetProvider {
                 RemoteViews remoteV = new RemoteViews(this.getPackageName(), R.layout.widget_layout);
                 remoteV.setTextViewText(R.id.widget_layout_tv_city, city);
                 remoteV.setTextViewText(R.id.widget_layout_tv_country, country);
-                remoteV.setTextViewText(R.id.widhet_layout_tv_condition, condition);
+                remoteV.setTextViewText(R.id.widget_layout_tv_condition, condition);
                 remoteV.setTextViewText(R.id.widged_layout_tv_degree, temp + "℃");
                 remoteV.setImageViewResource(R.id.widget_layout_iv_icon, iconId);
 
@@ -172,13 +170,7 @@ public class MyWidgedProvider extends AppWidgetProvider {
 
                 appWidgetManager.updateAppWidget(thisWidget, remoteV);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
+            } catch (IOException | JSONException | IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
         }

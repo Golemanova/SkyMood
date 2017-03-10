@@ -13,6 +13,6 @@ public interface IMyLocationDAO {
     long insertMyLocation(MyLocation location);
     MyLocation selectMyLocation(MyLocation location);
     long deleteMyLocation(MyLocation location);
-    String selectCuntryCode(String city, String country);
+    String selectCountryCode(String city, String country);
     ArrayList<String> getAllStringLocations();
 }

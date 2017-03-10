@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -33,40 +32,41 @@ public class GetWeeklyTask extends AsyncTask<String, Void, Void> {
     private ArrayList<WeeklyWeather> weeklyWeather;
 
     public GetWeeklyTask(Context context, Fragment fragment, ArrayList<WeeklyWeather> weeklyWeather) {
+
         this.context = context;
         this.fragment = fragment;
-        activity = (MainActivity)context;
+        activity = (MainActivity) context;
         this.weeklyWeather = weeklyWeather;
     }
 
     protected Void doInBackground(String... params) {
-        try{
+
+        try {
             String city = params[0];
             String code = params[1];
-            URL url = new URL("http://api.wunderground.com/api/"+API_KEY+"/forecast7day/q/"+code+"/"+city+".json");
+            URL url = new URL("http://api.wunderground.com/api/" + API_KEY + "/forecast7day/q/" + code + "/" + city + ".json");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
             Scanner sc = new Scanner(connection.getInputStream());
             StringBuilder body = new StringBuilder();
-            while(sc.hasNextLine()){
+            while (sc.hasNextLine()) {
                 body.append(sc.nextLine());
             }
             String info = body.toString();
             JSONObject jsonData = new JSONObject(info);
             JSONObject forecast = jsonData.getJSONObject("forecast");
-            JSONObject simpleforecast = forecast.getJSONObject("simpleforecast");
-            JSONArray forecastdayArray = (JSONArray) simpleforecast.get("forecastday");
+            JSONObject simpleForecast = forecast.getJSONObject("simpleforecast");
+            JSONArray forecastDayArray = (JSONArray) simpleForecast.get("forecastday");
 
-            weeklyWeather = ((HourlyWeatherFragment)fragment).getWeeklyWeatherArray();
-            if(weeklyWeather == null){
+            weeklyWeather = ((HourlyWeatherFragment) fragment).getWeeklyWeatherArray();
+            if (weeklyWeather == null) {
                 Thread.sleep(1000);
             }
 
-            weeklyWeather.removeAll(weeklyWeather);
-            weeklyWeather.removeAll(weeklyWeather);
-            for(int i = 0; i < forecastdayArray.length(); i++) {
-                JSONObject obj = forecastdayArray.getJSONObject(i);
+            weeklyWeather.clear();
+            for (int i = 0; i < forecastDayArray.length(); i++) {
+                JSONObject obj = forecastDayArray.getJSONObject(i);
                 JSONObject date = obj.getJSONObject("date");
 
                 String day = date.getString("weekday");
@@ -82,13 +82,7 @@ public class GetWeeklyTask extends AsyncTask<String, Void, Void> {
 
                 weeklyWeather.add(new WeeklyWeather(day, min, max, condition, iconImage));
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | JSONException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -96,6 +90,7 @@ public class GetWeeklyTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        ((HourlyWeatherFragment)fragment).getWeekAdapter().notifyDataSetChanged();
+
+        ((HourlyWeatherFragment) fragment).getWeekAdapter().notifyDataSetChanged();
     }
 }

@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -33,25 +32,27 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
     private ArrayList<HourlyWeather> hourlyWeather;
 
     public GetHourlyTask(Context context, Fragment fragment, ArrayList<HourlyWeather> hourlyWeather) {
+
         this.context = context;
-        this.fragment = (HourlyWeatherFragment)fragment;
-        activity = (MainActivity)context;
+        this.fragment = (HourlyWeatherFragment) fragment;
+        activity = (MainActivity) context;
         this.hourlyWeather = hourlyWeather;
     }
 
     protected Void doInBackground(String... params) {
+
         try {
 
             String city = params[0];
             String code = params[1];
 
-            URL url = new URL("http://api.wunderground.com/api/"+API_KEY+"/hourly/q/"+code+"/"+city+".json");
+            URL url = new URL("http://api.wunderground.com/api/" + API_KEY + "/hourly/q/" + code + "/" + city + ".json");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
             Scanner sc = new Scanner(connection.getInputStream());
             StringBuilder body = new StringBuilder();
-            while(sc.hasNextLine()){
+            while (sc.hasNextLine()) {
                 body.append(sc.nextLine());
             }
             String info = body.toString();
@@ -60,13 +61,13 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
 
 
             hourlyWeather = fragment.getHourlyWeatherArray();
-            if(hourlyWeather == null){
+            if (hourlyWeather == null) {
                 Thread.sleep(1000);
                 hourlyWeather = fragment.getHourlyWeatherArray();
             }
-            hourlyWeather.removeAll(hourlyWeather);
+            hourlyWeather.clear();
 
-            for(int i = 0; i < hourlyArray.length(); i++){
+            for (int i = 0; i < hourlyArray.length(); i++) {
                 JSONObject obj = hourlyArray.getJSONObject(i);
                 String hour = obj.getJSONObject("FCTTIME").getString("hour");
                 String condition = obj.getString("condition");
@@ -74,7 +75,7 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
                 String icon = obj.getString("icon");
 
                 Integer hourInt = Integer.parseInt(hour);
-                int id = 0;
+                int id;
                 if (hourInt >= 6 && hourInt <= 19) {
                     id = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
                 } else {
@@ -87,13 +88,7 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
                 hourlyWeather.add(new HourlyWeather(hour, condition, temp, iconImage));
             }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | JSONException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -102,7 +97,8 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-       fragment.getAdapter().notifyDataSetChanged();
+
+        fragment.getAdapter().notifyDataSetChanged();
 
     }
 }

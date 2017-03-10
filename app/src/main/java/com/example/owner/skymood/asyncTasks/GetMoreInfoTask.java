@@ -33,17 +33,15 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
     private String feelsTxt;
     private String uvTxt;
     private String  humidityTxt;
-    private String  preassureTxt;
-    private String windsSpeedtxt;
+    private String pressureTxt;
+    private String windsSpeedTxt;
     private String visibilityTxt;
     private String sunriseTxt;
     private String sunsetTxt;
     private String conditionTxt;
     private String moonPhaseTxt;
     private int moonAgeTxt;
-    private int moonIllumitatedTxt;
-
-
+    private int moonIlluminatedTxt;
 
     public GetMoreInfoTask(Context context, Fragment fragment) {
         this.context = context;
@@ -81,23 +79,19 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
             feelsTxt = observation.getString("feelslike_c");
             uvTxt = observation.getString("UV");
             humidityTxt = observation.getString("relative_humidity");
-            windsSpeedtxt = observation.getString("wind_kph");
+            windsSpeedTxt = observation.getString("wind_kph");
             visibilityTxt = observation.getString("visibility_km");
-            preassureTxt = observation.getString("pressure_mb");
+            pressureTxt = observation.getString("pressure_mb");
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
         try {
             URL astronomyUrl = new URL("http://api.wunderground.com/api/" + API_KEY + "/astronomy/q/" + code + "/" + city + ".json");
-            HttpURLConnection secontConnection = (HttpURLConnection) astronomyUrl.openConnection();
-            secontConnection.connect();
-            Scanner sc2 = new Scanner(secontConnection.getInputStream());
+            HttpURLConnection secondConnection = (HttpURLConnection) astronomyUrl.openConnection();
+            secondConnection.connect();
+            Scanner sc2 = new Scanner(secondConnection.getInputStream());
             StringBuilder bodyBuilder = new StringBuilder();
             while (sc2.hasNextLine()) {
                 bodyBuilder.append(sc2.nextLine());
@@ -111,7 +105,7 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
             JSONObject sun_rise = sun.getJSONObject("sunrise");
             JSONObject sun_set = sun.getJSONObject("sunset");
             moonAgeTxt = Integer.valueOf(moon.getString("ageOfMoon"));
-            moonIllumitatedTxt = Integer.valueOf(moon.getString("percentIlluminated"));
+            moonIlluminatedTxt = Integer.valueOf(moon.getString("percentIlluminated"));
             moonPhaseTxt = moon.getString("phaseofMoon");
             sunriseTxt = sun_rise.get("hour") + ":" + sun_rise.get("minute");
 
@@ -119,11 +113,7 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
             Date d = new Date();
             dayTxt = (String) android.text.format.DateFormat.format("EEEE", d);
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;
@@ -132,7 +122,7 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        fragment.setTaskInfo(dayTxt, tempTxt, feelsTxt, uvTxt, humidityTxt, preassureTxt, windsSpeedtxt, visibilityTxt, sunriseTxt, sunsetTxt, conditionTxt, moonPhaseTxt, moonAgeTxt, moonIllumitatedTxt);
+        fragment.setTaskInfo(dayTxt, tempTxt, feelsTxt, uvTxt, humidityTxt, pressureTxt, windsSpeedTxt, visibilityTxt, sunriseTxt, sunsetTxt, conditionTxt, moonPhaseTxt, moonAgeTxt, moonIlluminatedTxt);
         fragment.setData();
         fragment.getProgress().setVisibility(View.GONE);
         fragment.getLayout().setVisibility(View.VISIBLE);

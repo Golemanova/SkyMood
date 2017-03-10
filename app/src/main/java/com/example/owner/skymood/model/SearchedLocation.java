@@ -3,12 +3,10 @@ package com.example.owner.skymood.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 /**
  * Created by owner on 05/04/2016.
  */
-public class SearchedLocation implements Parcelable{
+public class SearchedLocation implements Parcelable {
     private long id;
     private String city;
     private String temp;
@@ -24,6 +22,7 @@ public class SearchedLocation implements Parcelable{
 
 
     public SearchedLocation(String city, String temp, String condition, String country, String code, String max, String min, String lastUpdate, String icon, String feelsLike) {
+
         this.city = city;
         this.temp = temp;
         this.condition = condition;
@@ -36,17 +35,20 @@ public class SearchedLocation implements Parcelable{
         this.feelsLike = feelsLike;
     }
 
-    public SearchedLocation( String city, String temp, String condition, String country, String code, String max, String min, String lastUpdate, String icon, String feelsLike, String date) {
+    public SearchedLocation(String city, String temp, String condition, String country, String code, String max, String min, String lastUpdate, String icon, String feelsLike, String date) {
+
         this(city, temp, condition, country, code, max, min, lastUpdate, icon, feelsLike);
         this.date = date;
     }
 
     public SearchedLocation(long id, String city, String temp, String condition, String country, String code, String max, String min, String lastUpdate, String icon, String feelsLike, String date) {
+
         this(city, temp, condition, country, code, max, min, lastUpdate, icon, feelsLike, date);
         this.id = id;
     }
 
-    public SearchedLocation(Parcel p){
+    public SearchedLocation(Parcel p) {
+
         this.city = p.readString();
         this.country = p.readString();
         this.condition = p.readString();
@@ -59,64 +61,79 @@ public class SearchedLocation implements Parcelable{
     }
 
     public long getId() {
+
         return id;
     }
 
     public String getCity() {
+
         return city;
     }
 
     public String getTemp() {
+
         return temp;
     }
 
     public String getCondition() {
+
         return condition;
     }
 
     public String getDate() {
+
         return date;
     }
 
     public void setId(long id) {
+
         this.id = id;
     }
 
     public String getCountry() {
+
         return country;
     }
 
     public String getCode() {
+
         return code;
     }
 
     public String getMax() {
+
         return max;
     }
 
     public String getMin() {
+
         return min;
     }
 
     public String getLastUpdate() {
+
         return lastUpdate;
     }
 
     public String getIcon() {
+
         return icon;
     }
 
     public String getFeelsLike() {
+
         return feelsLike;
     }
 
     @Override
     public int describeContents() {
+
         return 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         dest.writeString(city);
         dest.writeString(country);
         dest.writeString(condition);
@@ -134,11 +151,13 @@ public class SearchedLocation implements Parcelable{
 
         @Override
         public SearchedLocation createFromParcel(Parcel source) {
+
             return new SearchedLocation(source);
         }
 
         @Override
         public SearchedLocation[] newArray(int size) {
+
             return new SearchedLocation[size];
         }
     };

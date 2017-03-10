@@ -40,7 +40,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 
-public class CurrentWeatherFragment extends Fragment implements Swideable {
+public class CurrentWeatherFragment extends Fragment implements Slidable {
 
     public static final String API_KEY =  "9226ced37cb70c78";
     public static final String API_KEY_TWO =  "f340bd0448a4dba2";
@@ -70,7 +70,7 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
     private String maxTemp;
     private String dateAndTime;
     private HashMap<String, String> cities;
-    private ArrayList<String> autoCopleteNames;
+    private ArrayList<String> autoCompleteNames;
     private ArrayAdapter adapterAutoComplete;
     ArrayList<String> citiesSpinner;
 
@@ -128,14 +128,14 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!((String) parent.getItemAtPosition(position)).equals("My Locations")) {
+                if (!(parent.getItemAtPosition(position)).equals("My Locations")) {
                     if (isOnline()) {
                         String[] location = ((String) parent.getItemAtPosition(position)).split(",");
                         setCity(location[0]);
                         country = location[1].trim();
                         //countryCode from  DB
                         APIDataGetterAsyncTask task = new APIDataGetterAsyncTask(CurrentWeatherFragment.this, context, weatherImage);
-                        countryCode = manager.selectCuntryCode(city, country);
+                        countryCode = manager.selectCountryCode(city, country);
                         task.execute(countryCode, city, country);
                     } else {
                         Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show();
@@ -278,9 +278,9 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
             @Override
             public void onClick(View v) {
                 if(city != null && country != null) {
-                    MyLocation myloc = new MyLocation(city, countryCode, country, city + ", " + country);
-                    if (manager.selectMyLocation(myloc) == null) {
-                        manager.insertMyLocation(myloc);
+                    MyLocation myLoc = new MyLocation(city, countryCode, country, city + ", " + country);
+                    if (manager.selectMyLocation(myLoc) == null) {
+                        manager.insertMyLocation(myLoc);
                         citiesSpinner.add(city + ", " + country);
                         adapter.notifyDataSetChanged();
                         Toast.makeText(context, "location inserted to MyLocations", Toast.LENGTH_SHORT).show();
@@ -327,7 +327,7 @@ public class CurrentWeatherFragment extends Fragment implements Swideable {
 
     public void setCity(String city){
         this.city = city.replace(" ", "_");
-        this.city.toLowerCase();
+        this.city = this.city.toLowerCase();
         this.cityToDisplay = city.toUpperCase();
     }
 

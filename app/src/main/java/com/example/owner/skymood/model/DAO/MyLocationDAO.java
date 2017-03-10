@@ -16,11 +16,9 @@ import java.util.ArrayList;
 public class MyLocationDAO implements IMyLocationDAO{
 
     private static MyLocationDAO instance;
-    private Context context;
     private DatabaseHelper helper;
 
     private MyLocationDAO(Context context){
-        this.context = context;
         this.helper = DatabaseHelper.getInstance(context);
     }
 
@@ -37,7 +35,7 @@ public class MyLocationDAO implements IMyLocationDAO{
 
         String[] columns = new String[] {helper.LOCATION_ID, helper.CITY, helper.COUNTRY, helper.COUNTRY_CODE, helper.LOCATION};
         Cursor c = db.query(helper.MY_LOCATIONS, columns, null, null, null, null, null);
-        ArrayList<MyLocation> cities = new ArrayList<MyLocation>();
+        ArrayList<MyLocation> cities = new ArrayList<>();
         if(c.moveToFirst()) {
             do {
                 long id = c.getLong(c.getColumnIndex(helper.LOCATION_ID));
@@ -103,7 +101,7 @@ public class MyLocationDAO implements IMyLocationDAO{
     }
 
     @Override
-    public String selectCuntryCode(String city, String country) {
+    public String selectCountryCode(String city, String country) {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         String selection = helper.CITY + " = ? AND " + helper.COUNTRY + " = ?";

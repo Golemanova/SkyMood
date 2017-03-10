@@ -1,7 +1,6 @@
 package com.example.owner.skymood.model;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.owner.skymood.model.DAO.SearchedLocationsDAO;
 
@@ -22,13 +21,17 @@ public class SearchedLocationManager {
     }
 
     private SearchedLocationManager(Context context) {
+
         locationsDAO = SearchedLocationsDAO.getInstance(context);
     }
 
-    public ArrayList<SearchedLocation> getAllSearchedLocations(){
+    public ArrayList<SearchedLocation> getAllSearchedLocations() {
+
         return locationsDAO.getAllSearchedLocations();
     }
-    public long insertSearchedLocation(SearchedLocation location){
+
+    public long insertSearchedLocation(SearchedLocation location) {
+
         return locationsDAO.insertSearchedLocation(location);
     }
 }
