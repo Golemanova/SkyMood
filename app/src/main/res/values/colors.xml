@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
 
-    <color name="white">#ffffff</color>
-    <color name="whitish">#e9ffffff</color>
-    <color name="notSoWhite">#c3eae8e8</color>
-    <color name="foreground">#5d000000</color>
-    <color name="grey">#b3000000</color>
+    <color name="colorPrimary">#03A9F4</color>
+    <color name="colorPrimaryDark">#0275b4</color>
+    <color name="colorPrimaryLight">#B3E5FC</color>
+    <color name="colorAccent">#FF5252</color>
+    <color name="colorPrimaryText">#FFFFFF</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorDivider">#BDBDBD</color>
+
+    <color name="foreground">#55000000</color>
     <color name="veryDarkGrey">#454141</color>
     <color name="black">#000000</color>
-    <color name="red">#e4f7101f</color>
-    <color name="blue">#e25a6af7</color>
-
-    <color name="toolbar">#8eb1b1b6</color>
-    <color name="searchedLocations">#bb000000</color>
-    <color name="searchedLoc">#6d000dff</color>
-    <color name="spinner">#45000000</color>
+    <color name="spinner">#00000000</color>
 
 </resources>

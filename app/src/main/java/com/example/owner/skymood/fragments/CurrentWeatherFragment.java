@@ -24,8 +24,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.owner.skymood.R;
 import com.example.owner.skymood.MainActivity;
+import com.example.owner.skymood.R;
 import com.example.owner.skymood.asyncTasks.APIDataGetterAsyncTask;
 import com.example.owner.skymood.asyncTasks.AutoCompleteStringFillerAsyncTask;
 import com.example.owner.skymood.asyncTasks.FindLocationAsyncTask;
@@ -42,15 +42,14 @@ import java.util.HashMap;
 
 public class CurrentWeatherFragment extends Fragment implements Slidable {
 
-    public static final String API_KEY =  "9226ced37cb70c78";
-    public static final String API_KEY_TWO =  "f340bd0448a4dba2";
+    public static final String API_KEY = "9226ced37cb70c78";
+    public static final String API_KEY_TWO = "f340bd0448a4dba2";
 
     private ProgressBar progressBar;
     private TextView chosenCityTextView;
     private Spinner spinner;
     private ImageView syncButton;
     private ImageView locationSearchButton;
-    private ImageView citySearchButton;
     private AutoCompleteTextView writeCityEditText;
     private TextView temperature;
     private TextView condition;
@@ -86,13 +85,14 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_current_weather, container, false);
 
         //initializing components
         syncButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_sync);
         locationSearchButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_gps_search);
-        citySearchButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_city_search);
+        ImageView citySearchButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_city_search);
         writeCityEditText = (AutoCompleteTextView) rootView.findViewById(R.id.writeCityEditText);
         writeCityEditText.setThreshold(3);
         temperature = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_temperature);
@@ -106,7 +106,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         chosenCityTextView = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_chosen_city);
         progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_current_weather_view_progress_bar);
         spinner = (Spinner) rootView.findViewById(R.id.fragment_current_weather_view_spinner_location);
-        Toolbar toolbar = ((MainActivity)context).getToolbar();
+        Toolbar toolbar = ((MainActivity) context).getToolbar();
         addImage = (ImageView) toolbar.findViewById(R.id.view_toolbar_iv_add_favourite);
         cities = new HashMap<>();
 
@@ -118,7 +118,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         setBackground();
 
         //setting adapter to spinner
-        citiesSpinner =  new ArrayList<>();
+        citiesSpinner = new ArrayList<>();
         citiesSpinner.add("My Locations");
         citiesSpinner.addAll(manager.getAllStringLocations());
         final ArrayAdapter adapter = new ArrayAdapter(context, R.layout.view_spinner, citiesSpinner);
@@ -128,6 +128,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                 if (!(parent.getItemAtPosition(position)).equals("My Locations")) {
                     if (isOnline()) {
                         String[] location = ((String) parent.getItemAtPosition(position)).split(",");
@@ -146,12 +147,14 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
         citySearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (isOnline()) {
                     if (writeCityEditText.getVisibility() == View.GONE) {
                         changeVisibility(View.GONE);
@@ -179,6 +182,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         syncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (isOnline()) {
                     APIDataGetterAsyncTask task = new APIDataGetterAsyncTask(CurrentWeatherFragment.this, context, weatherImage);
                     task.execute(countryCode, city, country);
@@ -191,6 +195,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         locationSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (isOnline()) {
                     findLocation();
                 } else {
@@ -202,6 +207,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         writeCityEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
                 if (writeCityEditText != null && !writeCityEditText.getText().toString().isEmpty()
                         && writeCityEditText.getText().toString().contains(",")) {
                     String location = writeCityEditText.getText().toString();
@@ -210,7 +216,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
                     String city = parts[0];
                     country = parts[1].trim();
                     getWeatherInfoByCity(city);
-                }else if(writeCityEditText.getText().toString().equals("")){
+                } else if (writeCityEditText.getText().toString().equals("")) {
                     writeCityEditText.setVisibility(View.GONE);
                     keyboard.hideSoftInputFromWindow(writeCityEditText.getWindowToken(), 0);
                     changeVisibility(View.VISIBLE);
@@ -228,15 +234,19 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         writeCityEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 int chars = writeCityEditText.getText().toString().length();
-                if(chars >= 3){
+                if (chars >= 3) {
                     AutoCompleteStringFillerAsyncTask filler = new AutoCompleteStringFillerAsyncTask(CurrentWeatherFragment.this, context);
                     filler.execute(writeCityEditText.getText().toString());
                 }
@@ -244,14 +254,14 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         });
 
         //logic
-        if(isOnline()){
+        if (isOnline()) {
             APIDataGetterAsyncTask task = new APIDataGetterAsyncTask(this, context, weatherImage);
-            HourlyWeatherFragment fr = ((MainActivity)context).getHourlyFragment();
+            HourlyWeatherFragment fr = ((MainActivity) context).getHourlyFragment();
             GetHourlyTask hourTask = new GetHourlyTask(context, fr, fr.getHourlyWeatherArray());
             GetWeeklyTask weeklyTask = new GetWeeklyTask(context, fr, fr.getWeeklyWeatherArray());
 
             //first: check shared prefs
-            if(locPref.isSetLocation()){
+            if (locPref.isSetLocation()) {
                 setCity(locPref.getCity());
                 countryCode = locPref.getCountryCode();
                 country = locPref.getCountry();
@@ -263,7 +273,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
                 findLocation();
             }
         } else {
-            if(locPref.isSetLocation() && !locPref.hasNull()){
+            if (locPref.isSetLocation() && !locPref.hasNull()) {
                 Toast.makeText(context, "NO INTERNET CONNECTION\nFor up to date info connect to Internet", Toast.LENGTH_LONG).show();
                 setCity(locPref.getCity());
                 country = locPref.getCountry();
@@ -277,7 +287,8 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(city != null && country != null) {
+
+                if (city != null && country != null) {
                     MyLocation myLoc = new MyLocation(city, countryCode, country, city + ", " + country);
                     if (manager.selectMyLocation(myLoc) == null) {
                         manager.insertMyLocation(myLoc);
@@ -295,10 +306,12 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
 
     @Override
     public void setContext(Context context) {
+
         this.context = context;
     }
 
-    public void getWeatherInfoFromSharedPref(){
+    public void getWeatherInfoFromSharedPref() {
+
         chosenCityTextView.setVisibility(View.VISIBLE);
         chosenCityTextView.setText(locPref.getCity());
         countryTextView.setText(country);
@@ -309,30 +322,33 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         feelsLike.setText(locPref.getFeelsLike());
         lastUpdate.setText(locPref.getLastUpdate());
 
-        if(locPref.getIcon().contains("night")){
-            ((MainActivity)context).changeBackground(MainActivity.NIGHT);
+        if (locPref.getIcon().contains("night")) {
+            ((MainActivity) context).changeBackground(MainActivity.NIGHT);
         } else {
-            ((MainActivity)context).changeBackground(MainActivity.DAY);
+            ((MainActivity) context).changeBackground(MainActivity.DAY);
         }
         Context con = weatherImage.getContext();
         weatherImage.setImageResource(context.getResources().getIdentifier(locPref.getIcon(), "drawable", con.getPackageName()));
     }
 
     public boolean isOnline() {
+
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    public void setCity(String city){
+    public void setCity(String city) {
+
         this.city = city.replace(" ", "_");
         this.city = this.city.toLowerCase();
         this.cityToDisplay = city.toUpperCase();
     }
 
-    public void getWeatherInfoByCity(String city){
-        if(city != null && !city.isEmpty()) {
+    public void getWeatherInfoByCity(String city) {
+
+        if (city != null && !city.isEmpty()) {
             setCity(city);
             writeCityEditText.setText("");
             writeCityEditText.setVisibility(View.GONE);
@@ -344,14 +360,16 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         }
     }
 
-    public void apiDataGetterAsyncTaskOnPreExecute(){
+    public void apiDataGetterAsyncTaskOnPreExecute() {
+
         chosenCityTextView.setVisibility(View.GONE);
         countryTextView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
     }
 
     public void apiDataGetterAsyncTaskOnPostExecute(String temp, String condition, String feelsLike,
-                                    String minTemp, String maxTemp, String dateAndTime, String lastUpdate, String cityToDisplay, String country){
+                                                    String minTemp, String maxTemp, String dateAndTime, String lastUpdate, String cityToDisplay, String country) {
+
         this.progressBar.setVisibility(View.GONE);
         this.chosenCityTextView.setVisibility(View.VISIBLE);
         this.chosenCityTextView.setText(cityToDisplay);
@@ -359,7 +377,7 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         this.countryTextView.setText(country);
         this.addImage.setVisibility(View.VISIBLE);
 
-        if(temp != null) {
+        if (temp != null) {
             this.temperature.setText(temp + "°");
             this.condition.setText(condition);
             this.feelsLike.setText(feelsLike);
@@ -382,42 +400,48 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         }
     }
 
-    public void autoCompleteStringFillerAsyncTaskOnPostExecute(ArrayAdapter adapterAutoComplete){
+    public void autoCompleteStringFillerAsyncTaskOnPostExecute(ArrayAdapter adapterAutoComplete) {
+
         this.writeCityEditText.setAdapter(adapterAutoComplete);
         this.adapterAutoComplete = adapterAutoComplete;
     }
 
-    public void setCities(HashMap<String, String> cities){
+    public void setCities(HashMap<String, String> cities) {
+
         this.cities = cities;
     }
 
-    public void findLocation(){
+    public void findLocation() {
+
         FindLocationAsyncTask findLocation = new FindLocationAsyncTask(this, context, weatherImage);
         findLocation.execute();
     }
 
-    public void changeVisibility(int visibility){
+    public void changeVisibility(int visibility) {
+
         spinner.setVisibility(visibility);
         syncButton.setVisibility(visibility);
         locationSearchButton.setVisibility(visibility);
         weatherImage.setAdjustViewBounds(true);
     }
 
-    private void setBackground(){
+    private void setBackground() {
+
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         if (hour >= 6 && hour <= 19) {
-            ((MainActivity)context).changeBackground(MainActivity.DAY);
+            ((MainActivity) context).changeBackground(MainActivity.DAY);
         } else {
-            ((MainActivity)context).changeBackground(MainActivity.NIGHT);
+            ((MainActivity) context).changeBackground(MainActivity.NIGHT);
         }
     }
 
-    public ImageView getWeatherImage(){
+    public ImageView getWeatherImage() {
+
         return this.weatherImage;
     }
 
     public void setInfoData(String city, String country, String icon, String temp, String minTemp, String maxTemp,
-                            String condition, String feelsLike, String lastUpdate){
+                            String condition, String feelsLike, String lastUpdate) {
 
         this.chosenCityTextView.setVisibility(View.VISIBLE);
         this.chosenCityTextView.setText(city);

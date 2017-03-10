@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Scanner;
@@ -32,7 +31,7 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
     private String tempTxt;
     private String feelsTxt;
     private String uvTxt;
-    private String  humidityTxt;
+    private String humidityTxt;
     private String pressureTxt;
     private String windsSpeedTxt;
     private String visibilityTxt;
@@ -44,13 +43,15 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
     private int moonIlluminatedTxt;
 
     public GetMoreInfoTask(Context context, Fragment fragment) {
+
         this.context = context;
-        this.fragment = (MoreInfoFragment)fragment;
-        activity = (MainActivity)context;
+        this.fragment = (MoreInfoFragment) fragment;
+        activity = (MainActivity) context;
     }
 
     @Override
     protected void onPreExecute() {
+
         super.onPreExecute();
         fragment.getProgress().setVisibility(View.VISIBLE);
         fragment.getLayout().setVisibility(View.GONE);
@@ -58,6 +59,7 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... params) {
+
         String city = params[0];
         String code = params[1];
         try {
@@ -121,6 +123,7 @@ public class GetMoreInfoTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
+
         super.onPostExecute(aVoid);
         fragment.setTaskInfo(dayTxt, tempTxt, feelsTxt, uvTxt, humidityTxt, pressureTxt, windsSpeedTxt, visibilityTxt, sunriseTxt, sunsetTxt, conditionTxt, moonPhaseTxt, moonAgeTxt, moonIlluminatedTxt);
         fragment.setData();

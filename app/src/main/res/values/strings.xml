@@ -14,7 +14,7 @@
     <string name="lbl_menu_my_locations">❄ My Locations</string>
 
     <!-- Current Weather Fragment -->
-    <string name="hint_write_city">Write a city \t \t \t \t \t \t</string>
+    <string name="hint_write_city">Write a city</string>
 
     <!-- More Info Fragment -->
     <string name="lbl_temperature">temperature</string>
