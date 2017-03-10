@@ -157,11 +157,9 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     public void changeBackground(String partOfDay) {
 
-        if (partOfDay.equals(DAY)) {
-            layout.setBackgroundResource(R.drawable.background_day);
-        } else if (partOfDay.equals(NIGHT)) {
-            layout.setBackgroundResource(R.drawable.background_night);
-        }
+        boolean isNight = partOfDay.equals(NIGHT);
+        int background = isNight ? R.drawable.background_night : R.drawable.background_day;
+        layout.setBackgroundResource(background);
     }
 
     private void onBack() {

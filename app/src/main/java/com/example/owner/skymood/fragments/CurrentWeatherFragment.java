@@ -45,12 +45,9 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
     public static final String API_KEY = "9226ced37cb70c78";
     public static final String API_KEY_TWO = "f340bd0448a4dba2";
 
-    private ProgressBar progressBar;
-    private TextView chosenCityTextView;
-    private Spinner spinner;
-    private ImageView syncButton;
-    private ImageView locationSearchButton;
-    private AutoCompleteTextView writeCityEditText;
+    private static final int MORNING_HOUR = 6;
+    private static final int NIGHT_HOUR = 19;
+
     private TextView temperature;
     private TextView condition;
     private TextView feelsLike;
@@ -60,21 +57,22 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
     private TextView maxTempTextView;
     private ImageView weatherImage;
     private ImageView addImage;
+    private ImageView syncButton;
+    private ImageView locationSearchButton;
+    private ImageView citySearchButton;
+    private AutoCompleteTextView writeCityEditText;
+    private ProgressBar progressBar;
+    private TextView chosenCityTextView;
+    private Spinner spinner;
 
     private String city;
     private String country;
     private String countryCode;
-    private String cityToDisplay;
-    private String minTemp;
-    private String maxTemp;
-    private String dateAndTime;
     private HashMap<String, String> cities;
-    private ArrayList<String> autoCompleteNames;
-    private ArrayAdapter adapterAutoComplete;
-    ArrayList<String> citiesSpinner;
+    private ArrayList<String> citiesSpinner;
 
-    private InputMethodManager keyboard;
     private Context context;
+    private InputMethodManager keyboard;
     private LocationPreference locPref;
     private MyLocationManager manager;
 
@@ -82,19 +80,13 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         // Required empty public constructor
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_current_weather, container, false);
+    private void initViews(ViewGroup rootView) {
 
-        //initializing components
         syncButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_sync);
         locationSearchButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_gps_search);
-        ImageView citySearchButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_city_search);
-        writeCityEditText = (AutoCompleteTextView) rootView.findViewById(R.id.writeCityEditText);
-        writeCityEditText.setThreshold(3);
+        citySearchButton = (ImageView) rootView.findViewById(R.id.fragment_current_weather_iv_city_search);
+        writeCityEditText = (AutoCompleteTextView) rootView.findViewById(R.id.fragment_current_weather_actv_search_city);
         temperature = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_temperature);
         countryTextView = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_country);
         condition = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_condition);
@@ -106,8 +98,20 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         chosenCityTextView = (TextView) rootView.findViewById(R.id.fragment_current_weather_tv_chosen_city);
         progressBar = (ProgressBar) rootView.findViewById(R.id.fragment_current_weather_view_progress_bar);
         spinner = (Spinner) rootView.findViewById(R.id.fragment_current_weather_view_spinner_location);
+
         Toolbar toolbar = ((MainActivity) context).getToolbar();
         addImage = (ImageView) toolbar.findViewById(R.id.view_toolbar_iv_add_favourite);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_current_weather, container, false);
+
+        //initializing components
+        initViews(rootView);
+
         cities = new HashMap<>();
 
         //shared prefs
@@ -120,36 +124,41 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
         //setting adapter to spinner
         citiesSpinner = new ArrayList<>();
         citiesSpinner.add("My Locations");
+        citiesSpinner.add("Sofia");
+        citiesSpinner.add("Burgas");
+        citiesSpinner.add("Varna");
+        citiesSpinner.add("Plovdiv");
         citiesSpinner.addAll(manager.getAllStringLocations());
         final ArrayAdapter adapter = new ArrayAdapter(context, R.layout.view_spinner, citiesSpinner);
         spinner.setAdapter(adapter);
+        spinner.setSelection(1);
 
-        //listeners
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if (!(parent.getItemAtPosition(position)).equals("My Locations")) {
-                    if (isOnline()) {
-                        String[] location = ((String) parent.getItemAtPosition(position)).split(",");
-                        setCity(location[0]);
-                        country = location[1].trim();
-                        //countryCode from  DB
-                        APIDataGetterAsyncTask task = new APIDataGetterAsyncTask(CurrentWeatherFragment.this, context, weatherImage);
-                        countryCode = manager.selectCountryCode(city, country);
-                        task.execute(countryCode, city, country);
-                    } else {
-                        Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                spinner.setSelection(0);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        //listeners
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//
+////                if (!(parent.getItemAtPosition(position)).equals("My Locations")) {
+////                    if (isOnline()) {
+////                        String[] location = ((String) parent.getItemAtPosition(position)).split(",");
+////                        setCity(location[0]);
+////                        country = location[1].trim();
+////                        //countryCode from  DB
+////                        APIDataGetterAsyncTask task = new APIDataGetterAsyncTask(CurrentWeatherFragment.this, context, weatherImage);
+////                        countryCode = manager.selectCountryCode(city, country);
+////                        task.execute(countryCode, city, country);
+////                    } else {
+////                        Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show();
+////                    }
+////                }
+//                spinner.setSelection(0);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         citySearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -343,7 +352,6 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
 
         this.city = city.replace(" ", "_");
         this.city = this.city.toLowerCase();
-        this.cityToDisplay = city.toUpperCase();
     }
 
     public void getWeatherInfoByCity(String city) {
@@ -382,12 +390,8 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
             this.condition.setText(condition);
             this.feelsLike.setText(feelsLike);
             this.minTempTextView.setText("⬇" + minTemp + "°");
-            this.minTemp = minTemp;
             this.maxTempTextView.setText("⬆" + maxTemp + "°");
-            this.maxTemp = maxTemp;
             this.lastUpdate.setText(lastUpdate);
-            this.dateAndTime = dateAndTime;
-
 
         } else {
             this.temperature.setText("");
@@ -403,7 +407,6 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
     public void autoCompleteStringFillerAsyncTaskOnPostExecute(ArrayAdapter adapterAutoComplete) {
 
         this.writeCityEditText.setAdapter(adapterAutoComplete);
-        this.adapterAutoComplete = adapterAutoComplete;
     }
 
     public void setCities(HashMap<String, String> cities) {
@@ -428,11 +431,9 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
     private void setBackground() {
 
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        if (hour >= 6 && hour <= 19) {
-            ((MainActivity) context).changeBackground(MainActivity.DAY);
-        } else {
-            ((MainActivity) context).changeBackground(MainActivity.NIGHT);
-        }
+        boolean isDay = hour >= MORNING_HOUR && hour <= NIGHT_HOUR;
+        String partOfDay = isDay ? MainActivity.DAY : MainActivity.NIGHT;
+        ((MainActivity) context).changeBackground(partOfDay);
     }
 
     public ImageView getWeatherImage() {

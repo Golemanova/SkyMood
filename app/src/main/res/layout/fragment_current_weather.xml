@@ -61,7 +61,8 @@
             android:gravity="end"
             android:orientation="horizontal">
 
-            <Spinner
+            <android.support.v7.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/fragment_current_weather_view_spinner_location"
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"
@@ -95,9 +96,10 @@
                 android:src="@drawable/icon_search"/>
 
             <AutoCompleteTextView
-                android:id="@+id/writeCityEditText"
+                android:id="@+id/fragment_current_weather_actv_search_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:completionThreshold="3"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:hint="@string/hint_write_city"
