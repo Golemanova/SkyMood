@@ -21,19 +21,22 @@
             android:visibility="gone"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/fragment_current_weather_tv_chosen_city"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:shadowColor="@color/veryDarkGrey"
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="3"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="20sp"
                 android:visibility="gone"/>
 
@@ -41,31 +44,36 @@
                 android:id="@+id/fragment_current_weather_tv_country"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:shadowColor="@color/veryDarkGrey"
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="3"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="15sp"/>
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:gravity="end"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatSpinner
+            <Spinner
                 android:id="@+id/fragment_current_weather_view_spinner_location"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"/>
+                android:layout_height="26dp"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/fragment_current_weather_iv_sync"
+                android:gravity="start"/>
 
             <ImageView
                 android:id="@+id/fragment_current_weather_iv_sync"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/fragment_current_weather_iv_gps_search"
                 android:clickable="true"
                 android:src="@drawable/icon_sync"/>
 
@@ -73,8 +81,18 @@
                 android:id="@+id/fragment_current_weather_iv_gps_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/fragment_current_weather_iv_city_search"
                 android:clickable="true"
-                android:src="@drawable/icon_gps"/>
+                android:src="@drawable/icon_location"/>
+
+            <ImageView
+                android:id="@+id/fragment_current_weather_iv_city_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:src="@drawable/icon_search"/>
 
             <AutoCompleteTextView
                 android:id="@+id/writeCityEditText"
@@ -88,15 +106,7 @@
                 android:maxLength="30"
                 android:visibility="gone"/>
 
-            <ImageView
-                android:id="@+id/fragment_current_weather_iv_city_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:clickable="true"
-                android:src="@drawable/icon_search"/>
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -113,7 +123,7 @@
         android:layout_weight="1"
         android:gravity="top"
         android:orientation="vertical"
-        android:textColor="@color/white">
+        android:textColor="@color/colorPrimaryText">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -131,7 +141,7 @@
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="3"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="70sp"
                 android:textStyle="bold"/>
 
@@ -150,7 +160,7 @@
                     android:shadowDx="2"
                     android:shadowDy="2"
                     android:shadowRadius="3"
-                    android:textColor="@color/red"
+                    android:textColor="@color/colorAccent"
                     android:textSize="17sp"/>
 
                 <TextView
@@ -162,7 +172,7 @@
                     android:shadowDx="2"
                     android:shadowDy="2"
                     android:shadowRadius="3"
-                    android:textColor="@color/blue"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="17sp"/>
 
             </LinearLayout>
@@ -178,7 +188,7 @@
             android:shadowDx="2"
             android:shadowDy="2"
             android:shadowRadius="3"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimaryText"
             android:textSize="30sp"/>
 
         <TextView
@@ -190,7 +200,7 @@
             android:shadowDx="2"
             android:shadowDy="2"
             android:shadowRadius="3"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimaryText"
             android:textSize="20sp"/>
 
     </LinearLayout>
@@ -205,6 +215,6 @@
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="3"
-        android:textColor="@color/white"/>
+        android:textColor="@color/colorPrimaryText"/>
 
 </LinearLayout>

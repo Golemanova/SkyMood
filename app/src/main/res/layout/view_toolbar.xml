@@ -6,7 +6,7 @@
     android:background="@color/foreground"
     android:elevation="4dp"
     android:minHeight="?attr/actionBarSize"
-    android:titleTextColor="@color/white"
+    android:titleTextColor="@color/colorPrimaryText"
     tools:ignore="UnusedAttribute">
 
     <TextView
@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_toolbar"
-        android:textColor="@color/white"
+        android:textColor="@color/colorPrimaryText"
         android:textStyle="bold" />
 
     <ImageView

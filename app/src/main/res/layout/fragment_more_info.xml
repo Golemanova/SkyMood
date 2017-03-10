@@ -27,7 +27,7 @@
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="3"
-        android:textColor="@color/white"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
 
     <ScrollView
@@ -64,14 +64,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_temperature"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_real_feel"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
@@ -79,35 +79,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_condition"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_max"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_min"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_uv_index"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_humidity"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
 
@@ -115,56 +115,56 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_wind_speed"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_visibility"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_pressure"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_sunrise"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_sunset"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_moon"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_phase_of_moon"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_moon_age"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
             </LinearLayout>
@@ -172,7 +172,7 @@
             <View
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
-                android:background="@color/white" />
+                android:background="@color/colorPrimaryText" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -185,105 +185,105 @@
                     android:id="@+id/fragment_more_info_tv_temp_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_real_feel_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_condition_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_max_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_min_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_uv_index_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_humidity_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_winds_speed_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_visibility_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_pressure_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_sunrise_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_sunset_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_moon_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_phase_of_moon_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
                 <TextView
                     android:id="@+id/fragment_more_info_tv_moon_age_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/fragment_more_info_text_size" />
 
             </LinearLayout>

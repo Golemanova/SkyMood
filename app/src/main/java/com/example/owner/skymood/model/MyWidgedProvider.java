@@ -33,7 +33,6 @@ public class MyWidgedProvider extends AppWidgetProvider {
     private static String country;
     private static String countryCode;
     private String temp;
-    private String icon;
     private String condition;
     private int iconId;
 
