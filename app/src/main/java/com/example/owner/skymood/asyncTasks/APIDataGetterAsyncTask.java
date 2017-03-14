@@ -3,6 +3,7 @@ package com.example.owner.skymood.asyncTasks;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.owner.skymood.MainActivity;
@@ -76,6 +77,7 @@ public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
                 body.append(sc.nextLine());
             }
             String info = body.toString();
+            Log.d("RESPONSE", "APIDataGetter response: " + info);
 
             JSONObject jsonData = new JSONObject(info);
             JSONObject observation = (JSONObject) jsonData.get("current_observation");

@@ -2,6 +2,7 @@ package com.example.owner.skymood.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.owner.skymood.MainActivity;
@@ -49,6 +50,7 @@ public class FindLocationAsyncTask extends AsyncTask<Void, Void, Void> {
                 body.append(sc.nextLine());
             }
             String info = body.toString();
+            Log.d("RESPONSE", "FindLocation response: " + info);
 
             JSONObject data = new JSONObject(info);
             JSONObject location = data.getJSONObject("location");

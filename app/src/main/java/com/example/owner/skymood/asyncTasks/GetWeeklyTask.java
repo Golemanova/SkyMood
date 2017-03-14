@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.HourlyWeatherFragment;
@@ -54,6 +55,8 @@ public class GetWeeklyTask extends AsyncTask<String, Void, Void> {
                 body.append(sc.nextLine());
             }
             String info = body.toString();
+            Log.d("RESPONSE", "GetMoreInfoTask response: " + info);
+
             JSONObject jsonData = new JSONObject(info);
             JSONObject forecast = jsonData.getJSONObject("forecast");
             JSONObject simpleForecast = forecast.getJSONObject("simpleforecast");

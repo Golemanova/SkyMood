@@ -92,19 +92,19 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
         //start get hourly task
         GetHourlyTask getHour = new GetHourlyTask(this, fragment, fragment.getHourlyWeatherArray());
-//        getHour.execute(city, code);
+        getHour.execute(city, code);
 
         // start get weekly task
         GetWeeklyTask getWeek = new GetWeeklyTask(this, fragment, fragment.getWeeklyWeatherArray());
-//        getWeek.execute(city, code);
+        getWeek.execute(city, code);
 
         // third fragment
         MoreInfoFragment moreInfoFragment = (MoreInfoFragment) adapter.getItem(MORE_INFO_FRAGMENT_INDEX);
-//        moreInfoFragment.setExternalInfo(city, code, date, min, max);
+        moreInfoFragment.setExternalInfo(city, code, date, min, max);
 
         //start get more info
         GetMoreInfoTask infoTask = new GetMoreInfoTask(this, moreInfoFragment);
-//        infoTask.execute(city, code);
+        infoTask.execute(city, code);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.owner.skymood.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.example.owner.skymood.fragments.CurrentWeatherFragment;
@@ -47,6 +48,7 @@ public class AutoCompleteStringFillerAsyncTask extends AsyncTask<String, Void, V
                 body.append(sc.nextLine());
             }
             String info = body.toString();
+            Log.d("RESPONSE", "AutoCompleteFiller response: " + info);
 
             JSONObject jsonObj = new JSONObject(info);
             JSONArray results = jsonObj.getJSONArray("RESULTS");
