@@ -4,8 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.util.Log;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.HourlyWeatherFragment;
@@ -28,7 +29,6 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
 
     private final static String API_KEY = "9d48021d05e97609";
     private Context context;
-    private MainActivity activity;
     private HourlyWeatherFragment fragment;
     private ArrayList<HourlyWeather> hourlyWeather;
 
@@ -36,7 +36,6 @@ public class GetHourlyTask extends AsyncTask<String, Void, Void> {
 
         this.context = context;
         this.fragment = (HourlyWeatherFragment) fragment;
-        activity = (MainActivity) context;
         this.hourlyWeather = hourlyWeather;
     }
 

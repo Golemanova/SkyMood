@@ -2,7 +2,6 @@ package com.example.owner.skymood.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.owner.skymood.R;
 import com.example.owner.skymood.MainActivity;
 
-public class MoreInfoFragment extends Fragment  implements Slidable {
+public class MoreInfoFragment extends Fragment implements Slidable {
 
     private Context context;
     private String city;
