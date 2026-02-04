@@ -8,14 +8,14 @@
     android:orientation="vertical"
     tools:context="com.example.owner.skymood.fragments.HourlyWeatherFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_hourly_weather_rv_recycler_hourly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="10dp" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_hourly_weather_rv_recycler_weekly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
