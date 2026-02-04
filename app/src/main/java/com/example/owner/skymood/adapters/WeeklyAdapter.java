@@ -1,7 +1,5 @@
 package com.example.owner.skymood.adapters;
 
-package com.example.owner.skymood.adapters;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
