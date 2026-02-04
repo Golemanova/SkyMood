@@ -4,8 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -23,6 +21,9 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.R;
@@ -349,9 +350,10 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
     }
 
     public void setCity(String city) {
-
-        this.city = city.replace(" ", "_");
-        this.city = this.city.toLowerCase();
+        if(city != null) {
+            this.city = city.replace(" ", "_");
+            this.city = this.city.toLowerCase();
+        }
     }
 
     public void getWeatherInfoByCity(String city) {
@@ -460,4 +462,3 @@ public class CurrentWeatherFragment extends Fragment implements Slidable {
     }
 
 }
-
