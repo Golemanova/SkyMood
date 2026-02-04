@@ -3,13 +3,14 @@ package com.example.owner.skymood;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.owner.skymood.model.SearchedLocation;
 import com.example.owner.skymood.model.SearchedLocationManager;
@@ -56,20 +57,19 @@ public class SearchedLocationsActivity extends AppCompatActivity implements View
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.menu_main_item_sky_mood:
-                Intent mainActivity = new Intent(this, MainActivity.class);
-                startActivity(mainActivity);
-                return true;
-            case R.id.menu_main_item_searched_locations:
-                //do nothing = we are already in this activity
-                return true;
-            case R.id.menu_main_item_my_locations:
-                Intent myLocationsActivity = new Intent(this, MyLocationsActivity.class);
-                startActivity(myLocationsActivity);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (itemId == R.id.menu_main_item_sky_mood) {
+            Intent mainActivity = new Intent(this, MainActivity.class);
+            startActivity(mainActivity);
+            return true;
+        } else if (itemId == R.id.menu_main_item_searched_locations) {
+            //do nothing = we are already in this activity
+            return true;
+        } else if (itemId == R.id.menu_main_item_my_locations) {
+            Intent myLocationsActivity = new Intent(this, MyLocationsActivity.class);
+            startActivity(myLocationsActivity);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
