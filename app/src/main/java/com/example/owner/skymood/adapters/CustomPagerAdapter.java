@@ -1,10 +1,11 @@
 package com.example.owner.skymood.adapters;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.fragments.CurrentWeatherFragment;
