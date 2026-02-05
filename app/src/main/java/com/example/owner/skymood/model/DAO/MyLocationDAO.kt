@@ -1,139 +1,137 @@
-package com.example.owner.skymood.model.DAO;
+package com.example.owner.skymood.model.DAO
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.example.owner.skymood.model.DatabaseHelper;
-import com.example.owner.skymood.model.MyLocation;
-
-import java.util.ArrayList;
+import android.content.ContentValues
+import android.content.Context
+import com.example.owner.skymood.model.DatabaseHelper
+import com.example.owner.skymood.model.MyLocation
 
 /**
  * Created by owner on 05/04/2016.
  */
-public class MyLocationDAO implements IMyLocationDAO{
+class MyLocationDAO private constructor(context: Context) : IMyLocationDAO {
+    private val helper: DatabaseHelper = DatabaseHelper.getInstance(context)
 
-    private static MyLocationDAO instance;
-    private DatabaseHelper helper;
+    override val allMyLocations: ArrayList<MyLocation>
+        get() {
+            val db = helper.readableDatabase
 
-    private MyLocationDAO(Context context){
-        this.helper = DatabaseHelper.getInstance(context);
-    }
-
-    public static MyLocationDAO getInstance(Context context){
-        if(instance == null)
-            instance = new MyLocationDAO(context);
-        return instance;
-    }
-
-
-    @Override
-    public ArrayList<MyLocation> getAllMyLocations() {
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        String[] columns = new String[] {DatabaseHelper.LOCATION_ID, DatabaseHelper.CITY, DatabaseHelper.COUNTRY, DatabaseHelper.COUNTRY_CODE, DatabaseHelper.LOCATION};
-        Cursor c = db.query(DatabaseHelper.MY_LOCATIONS, columns, null, null, null, null, null);
-        ArrayList<MyLocation> cities = new ArrayList<>();
-        if(c.moveToFirst()) {
-            do {
-                long id = c.getLong(c.getColumnIndex(DatabaseHelper.LOCATION_ID));
-                String city = c.getString(c.getColumnIndex(DatabaseHelper.CITY));
-                String code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE));
-                String country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY));
-                String location = c.getString(c.getColumnIndex(DatabaseHelper.LOCATION));
-                cities.add(new MyLocation(id, city, code, country, location));
+            val columns: Array<String> = arrayOf(
+                DatabaseHelper.LOCATION_ID,
+                DatabaseHelper.CITY,
+                DatabaseHelper.COUNTRY,
+                DatabaseHelper.COUNTRY_CODE,
+                DatabaseHelper.LOCATION
+            )
+            val c = db.query(DatabaseHelper.MY_LOCATIONS, columns, null, null, null, null, null)
+            val cities = ArrayList<MyLocation>()
+            if (c.moveToFirst()) {
+                do {
+                    cities.add(
+                        MyLocation(
+                            id = c.getLong(c.getColumnIndex(DatabaseHelper.LOCATION_ID)),
+                            city = c.getString(c.getColumnIndex(DatabaseHelper.CITY)),
+                            code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE)),
+                            country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY)),
+                            location = c.getString(c.getColumnIndex(DatabaseHelper.LOCATION))
+                        )
+                    )
+                } while (c.moveToNext())
             }
-            while (c.moveToNext());
+            c.close()
+            db.close()
+            return cities
         }
-        c.close();
-        db.close();
-        return cities;
+
+    override fun insertMyLocation(location: MyLocation): Long {
+        val db = helper.writableDatabase
+        val values = ContentValues()
+        values.put(DatabaseHelper.CITY, location.city)
+        values.put(DatabaseHelper.COUNTRY, location.country)
+        values.put(DatabaseHelper.COUNTRY_CODE, location.code)
+        values.put(DatabaseHelper.LOCATION, location.location)
+        var id: Long = -1
+
+        if (selectMyLocation(location) == null)
+            id = db.insert(DatabaseHelper.MY_LOCATIONS, null, values)
+
+        db.close()
+        return id
     }
 
-    @Override
-    public long insertMyLocation(MyLocation location) {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.CITY, location.getCity());
-        values.put(DatabaseHelper.COUNTRY, location.getCountry());
-        values.put(DatabaseHelper.COUNTRY_CODE, location.getCode());
-        values.put(DatabaseHelper.LOCATION, location.getLocation());
-        long id = -1;
+    override fun selectMyLocation(location: MyLocation): MyLocation? {
+        val db = helper.readableDatabase
 
-        if(selectMyLocation(location) == null)
-            id = db.insert(DatabaseHelper.MY_LOCATIONS, null, values);
+        val columns: Array<String> = arrayOf(
+            DatabaseHelper.LOCATION_ID,
+            DatabaseHelper.CITY,
+            DatabaseHelper.COUNTRY,
+            DatabaseHelper.COUNTRY_CODE,
+            DatabaseHelper.LOCATION
+        )
+        val selection = DatabaseHelper.CITY + " = ? AND " + DatabaseHelper.COUNTRY + " = ?"
+        val c = db.query(
+            DatabaseHelper.MY_LOCATIONS,
+            columns,
+            selection,
+            arrayOf(location.city, location.country),
+            null,
+            null,
+            null
+        )
 
-        db.close();
-        return id;
-    }
-
-    @Override
-    public MyLocation selectMyLocation(MyLocation location) {
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        String[] columns = new String[] {DatabaseHelper.LOCATION_ID, DatabaseHelper.CITY, DatabaseHelper.COUNTRY, DatabaseHelper.COUNTRY_CODE, DatabaseHelper.LOCATION};
-        String selection = DatabaseHelper.CITY + " = ? AND " + DatabaseHelper.COUNTRY + " = ?";
-        Cursor c = db.query(DatabaseHelper.MY_LOCATIONS, columns, selection, new String[]{location.getCity(), location.getCountry()}, null, null, null);
-
-        if(c.moveToFirst()) {
-            long id = c.getLong(c.getColumnIndex(DatabaseHelper.LOCATION_ID));
-            String city = c.getString(c.getColumnIndex(DatabaseHelper.CITY));
-            String code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE));
-            String country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY));
-            String loc = c.getString(c.getColumnIndex(DatabaseHelper.LOCATION));
-
-            return new MyLocation(id, city, code, country, loc);
-        }
-        else{
-            return null;
-        }
-    }
-
-    @Override
-    public long deleteMyLocation(MyLocation location) {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        long id =  db.delete(DatabaseHelper.MY_LOCATIONS, DatabaseHelper.CITY + " = ? AND " + DatabaseHelper.COUNTRY + " = ?",
-                new String[] {location.getCity(), location.getCountry()});
-        db.close();
-        return id;
-    }
-
-    @Override
-    public String selectCountryCode(String city, String country) {
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        String selection = DatabaseHelper.CITY + " = ? AND " + DatabaseHelper.COUNTRY + " = ?";
-        Cursor c = db.query(DatabaseHelper.MY_LOCATIONS, new String[]{DatabaseHelper.COUNTRY_CODE}, selection, new String[]{city, country}, null, null, null);
-        if(c.moveToFirst()){
-            String s = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE));
-            c.close();
-            db.close();
-            return s;
-        }
-        else {
-            c.close();
-            db.close();
-            return null;
+        return if (c.moveToFirst()) {
+            MyLocation(
+                id = c.getLong(c.getColumnIndex(DatabaseHelper.LOCATION_ID)),
+                city = c.getString(c.getColumnIndex(DatabaseHelper.CITY)),
+                code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE)),
+                country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY)),
+                location = c.getString(c.getColumnIndex(DatabaseHelper.LOCATION))
+            )
+        } else {
+            null
         }
     }
 
-    @Override
-    public ArrayList<String> getAllStringLocations() {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.query(DatabaseHelper.MY_LOCATIONS,new String[]{DatabaseHelper.LOCATION}, null, null, null, null, null);
-        ArrayList<String> locations = new ArrayList<>();
-        if(c.moveToFirst()){
-            do{
-                locations.add(c.getString(c.getColumnIndex(DatabaseHelper.LOCATION)));
+    override fun deleteMyLocation(location: MyLocation): Long {
+        val db = helper.readableDatabase
+        val id = db.delete(
+            DatabaseHelper.MY_LOCATIONS,
+            DatabaseHelper.CITY + " = ? AND " + DatabaseHelper.COUNTRY + " = ?",
+            arrayOf<String?>(location.city, location.country)
+        ).toLong()
+        db.close()
+        return id
+    }
+
+    override val allStringLocations: ArrayList<String>
+        get() {
+            val db = helper.readableDatabase
+            val c = db.query(
+                DatabaseHelper.MY_LOCATIONS,
+                arrayOf<String>(DatabaseHelper.LOCATION),
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+            val locations = ArrayList<String>()
+            if (c.moveToFirst()) {
+                do {
+                    locations.add(c.getString(c.getColumnIndex(DatabaseHelper.LOCATION)))
+                } while (c.moveToNext())
             }
-            while(c.moveToNext());
+            c.close()
+            db.close()
+            return locations
         }
-        c.close();
-        db.close();
-        return locations;
+
+
+    companion object {
+        private var instance: MyLocationDAO? = null
+        fun getInstance(context: Context): MyLocationDAO {
+            if (instance == null) instance = MyLocationDAO(context)
+            return instance!!
+        }
     }
-
-
 }

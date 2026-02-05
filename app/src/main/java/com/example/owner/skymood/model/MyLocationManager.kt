@@ -1,59 +1,40 @@
-package com.example.owner.skymood.model;
+package com.example.owner.skymood.model
 
-import android.content.Context;
-
-import com.example.owner.skymood.model.DAO.MyLocationDAO;
-
-import java.util.ArrayList;
+import android.content.Context
+import com.example.owner.skymood.model.DAO.MyLocationDAO
 
 /**
  * Created by owner on 05/04/2016.
  */
-public class MyLocationManager {
-    private static MyLocationManager ourInstance;
-    private MyLocationDAO locationDAO;
+class MyLocationManager private constructor(context: Context) {
+    private val locationDAO: MyLocationDAO = MyLocationDAO.getInstance(context)
 
-    private MyLocationManager(Context context) {
+    val allMyLocations: ArrayList<MyLocation>
+        get() = locationDAO.allMyLocations
 
-        this.locationDAO = MyLocationDAO.getInstance(context);
+    fun insertMyLocation(location: MyLocation): Long {
+        return locationDAO.insertMyLocation(location)
     }
 
-    public static MyLocationManager getInstance(Context context) {
+    fun selectMyLocation(location: MyLocation): MyLocation? {
+        return locationDAO.selectMyLocation(location)
+    }
 
-        if (ourInstance == null) {
-            ourInstance = new MyLocationManager(context);
+    fun deleteMyLocation(location: MyLocation): Long {
+        return locationDAO.deleteMyLocation(location)
+    }
+
+    val allStringLocations: ArrayList<String>
+        get() = locationDAO.allStringLocations
+
+    companion object {
+        private var ourInstance: MyLocationManager? = null
+        @JvmStatic
+        fun getInstance(context: Context): MyLocationManager {
+            if (ourInstance == null) {
+                ourInstance = MyLocationManager(context)
+            }
+            return ourInstance!!
         }
-        return ourInstance;
     }
-
-    public ArrayList<MyLocation> getAllMyLocations() {
-
-        return locationDAO.getAllMyLocations();
-    }
-
-    public long insertMyLocation(MyLocation location) {
-
-        return locationDAO.insertMyLocation(location);
-    }
-
-    public MyLocation selectMyLocation(MyLocation location) {
-
-        return locationDAO.selectMyLocation(location);
-    }
-
-    public long deleteMyLocation(MyLocation location) {
-
-        return locationDAO.deleteMyLocation(location);
-    }
-
-    public ArrayList<String> getAllStringLocations() {
-
-        return locationDAO.getAllStringLocations();
-    }
-
-    public String selectCountryCode(String city, String country) {
-
-        return locationDAO.selectCountryCode(city, country);
-    }
-
 }

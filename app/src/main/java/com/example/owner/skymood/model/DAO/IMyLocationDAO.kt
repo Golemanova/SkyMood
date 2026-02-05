@@ -1,18 +1,14 @@
-package com.example.owner.skymood.model.DAO;
+package com.example.owner.skymood.model.DAO
 
-import com.example.owner.skymood.model.MyLocation;
-
-import java.util.ArrayList;
+import com.example.owner.skymood.model.MyLocation
 
 /**
  * Created by owner on 05/04/2016.
  */
-public interface IMyLocationDAO {
-
-    ArrayList<MyLocation> getAllMyLocations();
-    long insertMyLocation(MyLocation location);
-    MyLocation selectMyLocation(MyLocation location);
-    long deleteMyLocation(MyLocation location);
-    String selectCountryCode(String city, String country);
-    ArrayList<String> getAllStringLocations();
+interface IMyLocationDAO {
+    val allMyLocations: ArrayList<MyLocation>?
+    fun insertMyLocation(location: MyLocation): Long
+    fun selectMyLocation(location: MyLocation): MyLocation?
+    fun deleteMyLocation(location: MyLocation): Long
+    val allStringLocations: ArrayList<String>?
 }

@@ -1,83 +1,71 @@
-package com.example.owner.skymood.asyncTasks;
+package com.example.owner.skymood.asyncTasks
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-
-import com.example.owner.skymood.fragments.CurrentWeatherFragment;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import android.R
+import android.content.Context
+import android.os.AsyncTask
+import android.util.Log
+import android.widget.ArrayAdapter
+import com.example.owner.skymood.fragments.CurrentWeatherFragment
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.Scanner
 
 /**
  * Created by Golemanovaa on 7.4.2016 г..
  */
-public class AutoCompleteStringFillerAsyncTask extends AsyncTask<String, Void, Void> {
+class AutoCompleteStringFillerAsyncTask(
+    private val fragment: CurrentWeatherFragment,
+    private val context: Context
+) : AsyncTask<String?, Void?, Void?>() {
+    private var cities: HashMap<String?, String?> = hashMapOf()
+    private var autoCompleteNames: ArrayList<String?> = arrayListOf()
 
-    private HashMap<String, String> cities;
-    private Context context;
-    private ArrayList<String> autoCompleteNames;
-    private CurrentWeatherFragment fragment;
-
-    public AutoCompleteStringFillerAsyncTask(CurrentWeatherFragment fragment, Context context) {
-
-        this.context = context;
-        this.fragment = fragment;
-    }
-
-    @Override
-    protected Void doInBackground(String... params) {
-
+    @Deprecated("Deprecated in Java")
+    override fun doInBackground(vararg params: String?): Void? {
         try {
-            URL url = new URL("http://autocomplete.wunderground.com/aq?query=" + params[0]);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.connect();
+            val url = URL("http://autocomplete.wunderground.com/aq?query=" + params[0])
+            val con = url.openConnection() as HttpURLConnection
+            con.connect()
 
-            Scanner sc = new Scanner(con.getInputStream());
-            StringBuilder body = new StringBuilder();
+            val sc = Scanner(con.getInputStream())
+            val body = StringBuilder()
             while (sc.hasNextLine()) {
-                body.append(sc.nextLine());
+                body.append(sc.nextLine())
             }
-            String info = body.toString();
-            Log.d("RESPONSE", "AutoCompleteFiller response: " + info);
+            val info = body.toString()
+            Log.d("RESPONSE", "AutoCompleteFiller response: $info")
 
-            JSONObject jsonObj = new JSONObject(info);
-            JSONArray results = jsonObj.getJSONArray("RESULTS");
-            this.cities = new HashMap<>();
-            for (int i = 0; i < results.length(); i++) {
-                JSONObject location = (JSONObject) results.get(i);
-                String name = location.getString("name");
-                String country = location.getString("c");
-                cities.put(name, country);
-            }
-
-            autoCompleteNames = new ArrayList<>();
-            for (String name : cities.keySet()) {
-                autoCompleteNames.add(name);
+            val jsonObj = JSONObject(info)
+            val results = jsonObj.getJSONArray("RESULTS")
+            this.cities = HashMap()
+            for (i in 0..<results.length()) {
+                val location = results.get(i) as JSONObject
+                val name = location.getString("name")
+                val country = location.getString("c")
+                cities[name] = country
             }
 
-            fragment.setCities(cities);
+            autoCompleteNames = ArrayList()
+            for (name in cities.keys) {
+                autoCompleteNames.add(name)
+            }
 
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            fragment.setCities(cities)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
-        return null;
+        return null
     }
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
-
-        ArrayAdapter adapterAutoComplete = new ArrayAdapter(context, android.R.layout.simple_list_item_1, autoCompleteNames);
-        fragment.autoCompleteStringFillerAsyncTaskOnPostExecute(adapterAutoComplete);
+    @Deprecated("Deprecated in Java")
+    override fun onPostExecute(aVoid: Void?) {
+        val adapterAutoComplete: ArrayAdapter<String> =
+            ArrayAdapter(context, R.layout.simple_list_item_1, autoCompleteNames.toList())
+        fragment.autoCompleteStringFillerAsyncTaskOnPostExecute(adapterAutoComplete)
     }
-
 }

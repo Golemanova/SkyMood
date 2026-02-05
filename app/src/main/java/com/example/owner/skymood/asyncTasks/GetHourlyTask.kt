@@ -1,106 +1,93 @@
-package com.example.owner.skymood.asyncTasks;
+package com.example.owner.skymood.asyncTasks
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import androidx.fragment.app.Fragment;
-
-import com.example.owner.skymood.MainActivity;
-import com.example.owner.skymood.fragments.HourlyWeatherFragment;
-import com.example.owner.skymood.model.HourlyWeather;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Scanner;
+import android.content.Context
+import android.graphics.BitmapFactory
+import android.os.AsyncTask
+import android.util.Log
+import androidx.fragment.app.Fragment
+import com.example.owner.skymood.fragments.HourlyWeatherFragment
+import com.example.owner.skymood.model.HourlyWeather
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.Scanner
 
 /**
  * Created by owner on 09/04/2016.
  */
-public class GetHourlyTask extends AsyncTask<String, Void, Void> {
+class GetHourlyTask(
+    private val context: Context,
+    fragment: Fragment?,
+    private var hourlyWeather: ArrayList<HourlyWeather>
+) : AsyncTask<String?, Void?, Void?>() {
+    private val fragment: HourlyWeatherFragment = fragment as HourlyWeatherFragment
 
-    private final static String API_KEY = "9d48021d05e97609";
-    private Context context;
-    private HourlyWeatherFragment fragment;
-    private ArrayList<HourlyWeather> hourlyWeather;
-
-    public GetHourlyTask(Context context, Fragment fragment, ArrayList<HourlyWeather> hourlyWeather) {
-
-        this.context = context;
-        this.fragment = (HourlyWeatherFragment) fragment;
-        this.hourlyWeather = hourlyWeather;
-    }
-
-    protected Void doInBackground(String... params) {
-
+    @Deprecated("Deprecated in Java")
+    override fun doInBackground(vararg params: String?): Void? {
         try {
+            val city: String? = params[0]
+            val code: String? = params[1]
 
-            String city = params[0];
-            String code = params[1];
+            val url =
+                URL("http://api.wunderground.com/api/$API_KEY/hourly/q/$code/$city.json")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.connect()
 
-            URL url = new URL("http://api.wunderground.com/api/" + API_KEY + "/hourly/q/" + code + "/" + city + ".json");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            Scanner sc = new Scanner(connection.getInputStream());
-            StringBuilder body = new StringBuilder();
+            val sc = Scanner(connection.getInputStream())
+            val body = StringBuilder()
             while (sc.hasNextLine()) {
-                body.append(sc.nextLine());
+                body.append(sc.nextLine())
             }
-            String info = body.toString();
-            Log.d("RESPONSE", "GetHourlyTask response: " + info);
+            val info = body.toString()
+            Log.d("RESPONSE", "GetHourlyTask response: $info")
 
-            JSONObject jsonData = new JSONObject(info);
-            JSONArray hourlyArray = (JSONArray) jsonData.get("hourly_forecast");
+            val jsonData = JSONObject(info)
+            val hourlyArray = jsonData.get("hourly_forecast") as JSONArray
 
 
-            hourlyWeather = fragment.getHourlyWeatherArray();
-            if (hourlyWeather == null) {
-                Thread.sleep(1000);
-                hourlyWeather = fragment.getHourlyWeatherArray();
-            }
-            hourlyWeather.clear();
+            hourlyWeather = fragment.hourlyWeatherArray
+            hourlyWeather.clear()
 
-            for (int i = 0; i < hourlyArray.length(); i++) {
-                JSONObject obj = hourlyArray.getJSONObject(i);
-                String hour = obj.getJSONObject("FCTTIME").getString("hour");
-                String condition = obj.getString("condition");
-                String temp = obj.getJSONObject("temp").getString("metric");
-                String icon = obj.getString("icon");
+            for (i in 0..<hourlyArray.length()) {
+                val obj = hourlyArray.getJSONObject(i)
+                val hour = obj.getJSONObject("FCTTIME").getString("hour")
+                val condition = obj.getString("condition")
+                val temp = obj.getJSONObject("temp").getString("metric")
+                var icon = obj.getString("icon")
 
-                Integer hourInt = Integer.parseInt(hour);
-                int id;
-                if (hourInt >= 6 && hourInt <= 19) {
-                    id = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
+                val hourInt = hour.toInt()
+                val id: Int
+                if (hourInt in 6..19) {
+                    id = context.resources.getIdentifier(icon, "drawable", context.packageName)
                 } else {
-                    icon = icon + "_night";
-                    id = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
+                    icon += "_night"
+                    id = context.resources.getIdentifier(icon, "drawable", context.packageName)
                 }
 
-                Bitmap iconImage = BitmapFactory.decodeResource(context.getResources(), id);
+                val iconImage = BitmapFactory.decodeResource(context.resources, id)
 
-                hourlyWeather.add(new HourlyWeather(hour, condition, temp, iconImage));
+                hourlyWeather.add(HourlyWeather(hour, condition, temp, iconImage))
             }
-
-        } catch (IOException | JSONException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
         }
 
-        return null;
+        return null
     }
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
+    @Deprecated("Deprecated in Java")
+    override fun onPostExecute(aVoid: Void?) {
+        fragment.adapter?.notifyDataSetChanged()
+    }
 
-        fragment.getAdapter().notifyDataSetChanged();
-
+    companion object {
+        private const val API_KEY = "9d48021d05e97609"
     }
 }

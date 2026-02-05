@@ -1,42 +1,13 @@
-package com.example.owner.skymood.model;
+package com.example.owner.skymood.model
 
-import android.graphics.Bitmap;
+import android.graphics.Bitmap
 
 /**
  * Created by owner on 04/04/2016.
  */
-public class HourlyWeather {
-
-    private String hour;
-    private String condition;
-    private String temp;
-    private Bitmap icon;
-
-    public HourlyWeather(String hour, String condition, String temp, Bitmap icon) {
-
-        this.hour = hour;
-        this.condition = condition;
-        this.temp = temp;
-        this.icon = icon;
-    }
-
-    public String getHour() {
-
-        return hour;
-    }
-
-    public Bitmap getIcon() {
-
-        return icon;
-    }
-
-    public String getCondition() {
-
-        return condition;
-    }
-
-    public String getTemp() {
-
-        return temp;
-    }
-}
+data class HourlyWeather(
+    val hour: String?,
+    val condition: String?,
+    val temp: String?,
+    val icon: Bitmap?
+)

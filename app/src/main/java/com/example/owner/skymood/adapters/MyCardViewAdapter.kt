@@ -1,121 +1,106 @@
-package com.example.owner.skymood.adapters;
+package com.example.owner.skymood.adapters
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.owner.skymood.R;
-import com.example.owner.skymood.model.LocationPreference;
-import com.example.owner.skymood.model.MyLocation;
-import com.example.owner.skymood.model.MyLocationManager;
-
-import java.util.ArrayList;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.owner.skymood.R
+import com.example.owner.skymood.adapters.MyCardViewAdapter.CardViewHolder
+import com.example.owner.skymood.model.LocationPreference
+import com.example.owner.skymood.model.MyLocation
+import com.example.owner.skymood.model.MyLocationManager
+import com.example.owner.skymood.model.MyLocationManager.Companion.getInstance
 
 /**
  * Created by owner on 08/04/2016.
  */
-public class MyCardViewAdapter extends RecyclerView.Adapter<MyCardViewAdapter.CardViewHolder>{
+class MyCardViewAdapter(
+    private val context: Context,
+    private val data: ArrayList<MyLocation>
+) : RecyclerView.Adapter<CardViewHolder?>() {
 
-    private Context context;
-    private ArrayList<MyLocation> data;
-    private int lastCheckedPosition;
-    LocationPreference pref;
-    MyLocationManager manager;
+    private var lastCheckedPosition: Int = -1
+    var pref: LocationPreference = LocationPreference.getInstance(context)
+    var manager: MyLocationManager = getInstance(context)
 
-    public MyCardViewAdapter(Context context, ArrayList<MyLocation> data) {
-        this.context = context;
-        this.data = data;
-        lastCheckedPosition = -1;
-        pref = LocationPreference.getInstance(context);
-        manager = MyLocationManager.getInstance(context);
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
+        val inflater = LayoutInflater.from(context)
+        val root = inflater.inflate(R.layout.row_my_location, parent, false)
+        return CardViewHolder(root)
     }
 
-    @Override
-    public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View root = inflater.inflate(R.layout.row_my_location, parent, false);
-        return new CardViewHolder(root);
-    }
-
-    @Override
-    public void onBindViewHolder(CardViewHolder holder, int position) {
-
-        MyLocation location = data.get(position);
-        holder.city.setText(location.getCity());
-        holder.country.setText(location.getCountry());
-        holder.code.setText(location.getCode());
+    override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
+        val location = data[position]
+        holder.city.text = location.city
+        holder.country.text = location.country
+        holder.code.text = location.code
 
 
-        if(pref.getCity() != null && location.getCity().equals(pref.getCity()) && location.getCountry().equals(pref.getCountry()))
-            holder.radio.setChecked(true);
-        else
-            holder.radio.setChecked(position == lastCheckedPosition);
-    }
-
-    @Override
-    public int getItemCount() {
-        return data.size();
-    }
-
-    public class CardViewHolder extends RecyclerView.ViewHolder{
-
-        TextView city;
-        TextView country;
-        TextView code;
-        RadioButton radio;
-        ImageView erase;
-
-        public CardViewHolder(View itemView) {
-            super(itemView);
-
-            this.city = (TextView) itemView.findViewById(R.id.row_my_location_tv_city);
-            this.country = (TextView) itemView.findViewById(R.id.row_my_location_tv_country);
-            this.code = (TextView) itemView.findViewById(R.id.row_my_location_tv_code);
-            this.erase = (ImageView) itemView.findViewById(R.id.row_my_location_iv_delete);
-            this.radio = (RadioButton) itemView.findViewById(R.id.row_my_location_view_radio_btn);
-
-            // onclick for setting location as default
-            radio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    lastCheckedPosition = getAdapterPosition();
-                    notifyItemRangeChanged(0, data.size());
-                    String cityTxt = city.getText().toString();
-                    String countryTxt = country.getText().toString();
-                    String codeTxt = code.getText().toString();
-                    pref.setPreferredLocation(cityTxt, countryTxt, codeTxt, null, null, null, null, null, null, null);
-                    Toast.makeText(context, cityTxt + " was set as default location", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            erase.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    manager.deleteMyLocation(data.get(position));
-                    removeAt(position);
-                    if (position < lastCheckedPosition) {
-                        lastCheckedPosition--;
-                    }
-                    else if(position == lastCheckedPosition){
-                        pref.removeInfo();
-                    }
-
-                }
-            });
+        if (pref.city != null && location.city == pref.city && location.country == pref.country) {
+            holder.radio.isChecked = true
+        } else {
+            holder.radio.isChecked = position == lastCheckedPosition
         }
     }
 
-    public void removeAt(int position) {
-        data.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, data.size());
+    override fun getItemCount(): Int {
+        return data.size
+    }
+
+    inner class CardViewHolder(itemView: View) : ViewHolder(itemView) {
+        var city: TextView = itemView.findViewById<View?>(R.id.row_my_location_tv_city) as TextView
+        var country: TextView =
+            itemView.findViewById<View?>(R.id.row_my_location_tv_country) as TextView
+        var code: TextView = itemView.findViewById<View?>(R.id.row_my_location_tv_code) as TextView
+        var radio: RadioButton =
+            itemView.findViewById<View?>(R.id.row_my_location_view_radio_btn) as RadioButton
+        var erase: ImageView =
+            itemView.findViewById<View?>(R.id.row_my_location_iv_delete) as ImageView
+
+        init {
+            // onclick for setting location as default
+            radio.setOnClickListener {
+                lastCheckedPosition = adapterPosition
+                notifyItemRangeChanged(0, data.size)
+                val city = city.text.toString()
+                pref.setPreferredLocation(
+                    city = city,
+                    country = country.text.toString(),
+                    countryCode = code.text.toString(),
+                    icon = null,
+                    temperature = null,
+                    minTemp = null,
+                    maxTemp = null,
+                    condition = null,
+                    feelsLike = null,
+                    lastUpdate = null
+                )
+                Toast.makeText(context, "$city was set as default location", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            erase.setOnClickListener {
+                val position = adapterPosition
+                manager.deleteMyLocation(data.get(position))
+                removeAt(position)
+                if (position < lastCheckedPosition) {
+                    lastCheckedPosition--
+                } else if (position == lastCheckedPosition) {
+                    pref.removeInfo()
+                }
+            }
+        }
+    }
+
+    fun removeAt(position: Int) {
+        data.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, data.size)
     }
 }

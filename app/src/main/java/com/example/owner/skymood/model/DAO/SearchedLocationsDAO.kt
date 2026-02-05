@@ -1,194 +1,209 @@
-package com.example.owner.skymood.model.DAO;
+package com.example.owner.skymood.model.DAO
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
-
-import com.example.owner.skymood.model.DatabaseHelper;
-import com.example.owner.skymood.model.SearchedLocation;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import android.content.ContentValues
+import android.content.Context
+import com.example.owner.skymood.model.DatabaseHelper
+import com.example.owner.skymood.model.SearchedLocation
+import java.text.SimpleDateFormat
+import java.util.Date
 
 /**
  * Created by owner on 05/04/2016.
  */
-public class SearchedLocationsDAO implements ISearchedLocations {
-    private static SearchedLocationsDAO ourInstance;
-    DatabaseHelper helper;
+class SearchedLocationsDAO private constructor(context: Context) : ISearchedLocations {
+    var helper: DatabaseHelper = DatabaseHelper.getInstance(context)
 
-    private SearchedLocationsDAO(Context context) {
+    override val allSearchedLocations: ArrayList<SearchedLocation>
+        get() {
+            val db = helper.readableDatabase
+            val columns: Array<String> = arrayOf(
+                DatabaseHelper.SEARCHED_ID,
+                DatabaseHelper.CITY,
+                DatabaseHelper.TEMP,
+                DatabaseHelper.CONDITION,
+                DatabaseHelper.DATE,
+                DatabaseHelper.COUNTRY,
+                DatabaseHelper.COUNTRY_CODE,
+                DatabaseHelper.MAX_TEMP,
+                DatabaseHelper.MIN_TEMP,
+                DatabaseHelper.LAST_UPDATE,
+                DatabaseHelper.ICON,
+                DatabaseHelper.FEELS_LIKE
+            )
+            val c = db.query(DatabaseHelper.LAST_SEARCHED, columns, null, null, null, null, null)
+            val cities = ArrayList<SearchedLocation>()
+            if (c.moveToFirst()) do {
+                val location = SearchedLocation(
+                    id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID)),
+                    city = c.getString(c.getColumnIndex(DatabaseHelper.CITY)),
+                    temp = c.getString(c.getColumnIndex(DatabaseHelper.TEMP)),
+                    condition = c.getString(c.getColumnIndex(DatabaseHelper.CONDITION)),
+                    date = c.getString(c.getColumnIndex(DatabaseHelper.DATE)),
+                    country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY)),
+                    code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE)),
+                    max = c.getString(c.getColumnIndex(DatabaseHelper.MAX_TEMP)),
+                    min = c.getString(c.getColumnIndex(DatabaseHelper.MIN_TEMP)),
+                    lastUpdate = c.getString(c.getColumnIndex(DatabaseHelper.LAST_UPDATE)),
+                    icon = c.getString(c.getColumnIndex(DatabaseHelper.ICON)),
+                    feelsLike = c.getString(c.getColumnIndex(DatabaseHelper.FEELS_LIKE))
+                )
+                cities.add(location)
+            } while (c.moveToNext())
+            c.close()
+            db.close()
+            return cities
+        }
 
-        helper = DatabaseHelper.getInstance(context);
-    }
-
-    public static SearchedLocationsDAO getInstance(Context context) {
-
-        if (ourInstance == null)
-            ourInstance = new SearchedLocationsDAO(context);
-        return ourInstance;
-    }
-
-
-    @Override
-    public ArrayList<SearchedLocation> getAllSearchedLocations() {
-
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String[] columns = new String[]{DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY, DatabaseHelper.TEMP, DatabaseHelper.CONDITION, DatabaseHelper.DATE, DatabaseHelper.COUNTRY,
-                DatabaseHelper.COUNTRY_CODE, DatabaseHelper.MAX_TEMP, DatabaseHelper.MIN_TEMP, DatabaseHelper.LAST_UPDATE, DatabaseHelper.ICON, DatabaseHelper.FEELS_LIKE};
-        Cursor c = db.query(DatabaseHelper.LAST_SEARCHED, columns, null, null, null, null, null);
-        ArrayList<SearchedLocation> cities = new ArrayList<>();
-        if (c.moveToFirst())
-            do {
-                long id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID));
-                String city = c.getString(c.getColumnIndex(DatabaseHelper.CITY));
-                String temp = c.getString(c.getColumnIndex(DatabaseHelper.TEMP));
-                String condition = c.getString(c.getColumnIndex(DatabaseHelper.CONDITION));
-                String date = c.getString(c.getColumnIndex(DatabaseHelper.DATE));
-                String country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY));
-                String code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE));
-                String max = c.getString(c.getColumnIndex(DatabaseHelper.MAX_TEMP));
-                String min = c.getString(c.getColumnIndex(DatabaseHelper.MIN_TEMP));
-                String lastUpdate = c.getString(c.getColumnIndex(DatabaseHelper.LAST_UPDATE));
-                String icon = c.getString(c.getColumnIndex(DatabaseHelper.ICON));
-                String feelsLike = c.getString(c.getColumnIndex(DatabaseHelper.FEELS_LIKE));
-
-                SearchedLocation location = new SearchedLocation(id, city, temp, condition, country, code, max, min, lastUpdate, icon, feelsLike, date);
-                cities.add(location);
-            }
-            while (c.moveToNext());
-        c.close();
-        db.close();
-        return cities;
-    }
-
-    @Override
-    public long insertSearchedLocation(SearchedLocation location) {
-
-        long id = checkCity(location.getCity());
-        if (id != -1) {
-            return updateLocation(id, location);
-        } else if (getCount() < 5) {
-            return insertLocation(location);
+    override fun insertSearchedLocation(location: SearchedLocation): Long {
+        var id = checkCity(location.city)
+        if (id != -1L) {
+            return updateLocation(id, location)
+        } else if (count < 5) {
+            return insertLocation(location)
         } else {
-            id = selectFirstSearchedCity().getId();
-            return updateLocation(id, location);
+            id = selectFirstSearchedCity()!!.id
+            return updateLocation(id, location)
         }
     }
 
-    @Override
-    public SearchedLocation selectFirstSearchedCity() {
+    override fun selectFirstSearchedCity(): SearchedLocation? {
+        val db = helper.readableDatabase
 
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        String[] columns = new String[]{DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY, DatabaseHelper.TEMP, DatabaseHelper.CONDITION, DatabaseHelper.DATE, DatabaseHelper.COUNTRY,
-                DatabaseHelper.COUNTRY_CODE, DatabaseHelper.MAX_TEMP, DatabaseHelper.MIN_TEMP, DatabaseHelper.LAST_UPDATE, DatabaseHelper.ICON, DatabaseHelper.FEELS_LIKE};
-        Cursor c = db.query(DatabaseHelper.LAST_SEARCHED, columns, null, null, null, null, "datetime(" + DatabaseHelper.DATE + ")", "1");
-        SearchedLocation location = null;
-        if (c.moveToFirst())
-            do {
-                long id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID));
-                String city = c.getString(c.getColumnIndex(DatabaseHelper.CITY));
-                String temp = c.getString(c.getColumnIndex(DatabaseHelper.TEMP));
-                String condition = c.getString(c.getColumnIndex(DatabaseHelper.CONDITION));
-                String date = c.getString(c.getColumnIndex(DatabaseHelper.DATE));
-                String country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY));
-                String code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE));
-                String max = c.getString(c.getColumnIndex(DatabaseHelper.MAX_TEMP));
-                String min = c.getString(c.getColumnIndex(DatabaseHelper.MIN_TEMP));
-                String lastUpdate = c.getString(c.getColumnIndex(DatabaseHelper.LAST_UPDATE));
-                String icon = c.getString(c.getColumnIndex(DatabaseHelper.ICON));
-                String feelsLike = c.getString(c.getColumnIndex(DatabaseHelper.FEELS_LIKE));
-
-                location = new SearchedLocation(id, city, temp, condition, date, country, code, max, min, lastUpdate, icon, feelsLike);
-
-            }
-            while (c.moveToNext());
-        c.close();
-        db.close();
-        return location;
+        val columns: Array<String> = arrayOf(
+            DatabaseHelper.SEARCHED_ID,
+            DatabaseHelper.CITY,
+            DatabaseHelper.TEMP,
+            DatabaseHelper.CONDITION,
+            DatabaseHelper.DATE,
+            DatabaseHelper.COUNTRY,
+            DatabaseHelper.COUNTRY_CODE,
+            DatabaseHelper.MAX_TEMP,
+            DatabaseHelper.MIN_TEMP,
+            DatabaseHelper.LAST_UPDATE,
+            DatabaseHelper.ICON,
+            DatabaseHelper.FEELS_LIKE
+        )
+        val c = db.query(
+            DatabaseHelper.LAST_SEARCHED,
+            columns,
+            null,
+            null,
+            null,
+            null,
+            "datetime(" + DatabaseHelper.DATE + ")",
+            "1"
+        )
+        var location: SearchedLocation? = null
+        if (c.moveToFirst()) do {
+            location = SearchedLocation(
+                id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID)),
+                city = c.getString(c.getColumnIndex(DatabaseHelper.CITY)),
+                temp = c.getString(c.getColumnIndex(DatabaseHelper.TEMP)),
+                condition = c.getString(c.getColumnIndex(DatabaseHelper.CONDITION)),
+                date = c.getString(c.getColumnIndex(DatabaseHelper.DATE)),
+                country = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY)),
+                code = c.getString(c.getColumnIndex(DatabaseHelper.COUNTRY_CODE)),
+                max = c.getString(c.getColumnIndex(DatabaseHelper.MAX_TEMP)),
+                min = c.getString(c.getColumnIndex(DatabaseHelper.MIN_TEMP)),
+                lastUpdate = c.getString(c.getColumnIndex(DatabaseHelper.LAST_UPDATE)),
+                icon = c.getString(c.getColumnIndex(DatabaseHelper.ICON)),
+                feelsLike = c.getString(c.getColumnIndex(DatabaseHelper.FEELS_LIKE))
+            )
+        } while (c.moveToNext())
+        c.close()
+        db.close()
+        return location
     }
 
-    public long getCount() {
+    override val count: Long
+        get() {
+            val db = helper.readableDatabase
+            val query = "SELECT COUNT(*) FROM " + DatabaseHelper.LAST_SEARCHED
+            val statement = db.compileStatement(query)
+            val count = statement.simpleQueryForLong()
+            db.close()
+            return count
+        }
 
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String query = "SELECT COUNT(*) FROM " + DatabaseHelper.LAST_SEARCHED;
-        SQLiteStatement statement = db.compileStatement(query);
-        long count = statement.simpleQueryForLong();
-        db.close();
-        return count;
-    }
-
-    @Override
-    public long checkCity(String city) {
-
-        SQLiteDatabase db = helper.getReadableDatabase();
+    override fun checkCity(city: String?): Long {
+        val db = helper.readableDatabase
 
 
-        String selection = DatabaseHelper.CITY + " = ?";
-        Cursor c = db.query(DatabaseHelper.LAST_SEARCHED, new String[]{DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY}, selection, new String[]{city}, null, null, null);
+        val selection = DatabaseHelper.CITY + " = ?"
+        val c = db.query(
+            DatabaseHelper.LAST_SEARCHED,
+            arrayOf<String>(DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY),
+            selection,
+            arrayOf<String?>(city),
+            null,
+            null,
+            null
+        )
         if (c.moveToFirst()) {
-            long id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID));
-            c.close();
-            db.close();
-            return id;
+            val id = c.getLong(c.getColumnIndex(DatabaseHelper.SEARCHED_ID))
+            c.close()
+            db.close()
+            return id
         } else {
-            c.close();
-            db.close();
-            return -1;
+            c.close()
+            db.close()
+            return -1
         }
     }
 
-    @Override
-    public long insertLocation(SearchedLocation location) {
+    override fun insertLocation(location: SearchedLocation): Long {
+        val db = helper.writableDatabase
+        val values = ContentValues()
+        values.put(DatabaseHelper.CITY, location.city)
+        values.put(DatabaseHelper.TEMP, location.temp)
+        values.put(DatabaseHelper.CONDITION, location.condition)
+        values.put(DatabaseHelper.MAX_TEMP, location.max)
+        values.put(DatabaseHelper.MIN_TEMP, location.min)
+        values.put(DatabaseHelper.LAST_UPDATE, location.lastUpdate)
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val strDate = sdf.format(Date())
+        values.put(DatabaseHelper.DATE, strDate)
+        values.put(DatabaseHelper.ICON, location.icon)
+        values.put(DatabaseHelper.FEELS_LIKE, location.feelsLike)
+        val id = db.insert(DatabaseHelper.LAST_SEARCHED, null, values)
 
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.CITY, location.getCity());
-        values.put(DatabaseHelper.TEMP, location.getTemp());
-        values.put(DatabaseHelper.CONDITION, location.getCondition());
-        values.put(DatabaseHelper.COUNTRY, location.getCountry());
-        values.put(DatabaseHelper.COUNTRY_CODE, location.getCode());
-        values.put(DatabaseHelper.MAX_TEMP, location.getMax());
-        values.put(DatabaseHelper.MIN_TEMP, location.getMin());
-        values.put(DatabaseHelper.LAST_UPDATE, location.getLastUpdate());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String strDate = sdf.format(new Date());
-        values.put(DatabaseHelper.DATE, strDate);
-        values.put(DatabaseHelper.ICON, location.getIcon());
-        values.put(DatabaseHelper.FEELS_LIKE, location.getFeelsLike());
-        long id = db.insert(DatabaseHelper.LAST_SEARCHED, null, values);
-
-        db.close();
-        return id;
+        db.close()
+        return id
     }
 
-    @Override
-    public long updateLocation(long id, SearchedLocation location) {
+    override fun updateLocation(id: Long, location: SearchedLocation): Long {
+        val db = helper.getWritableDatabase()
+        val values = ContentValues()
+        values.put(DatabaseHelper.CITY, location.city)
+        values.put(DatabaseHelper.TEMP, location.temp)
+        values.put(DatabaseHelper.CONDITION, location.condition)
+        values.put(DatabaseHelper.COUNTRY, location.country)
+        values.put(DatabaseHelper.COUNTRY_CODE, location.code)
+        values.put(DatabaseHelper.MAX_TEMP, location.max)
+        values.put(DatabaseHelper.MIN_TEMP, location.min)
+        values.put(DatabaseHelper.LAST_UPDATE, location.lastUpdate)
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val strDate = sdf.format(Date())
+        values.put(DatabaseHelper.DATE, strDate)
+        values.put(DatabaseHelper.ICON, location.icon)
+        values.put(DatabaseHelper.FEELS_LIKE, location.feelsLike)
+        val result = db.update(
+            DatabaseHelper.LAST_SEARCHED,
+            values,
+            DatabaseHelper.SEARCHED_ID + " = ? ",
+            arrayOf("" + id)
+        ).toLong()
 
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.CITY, location.getCity());
-        values.put(DatabaseHelper.TEMP, location.getTemp());
-        values.put(DatabaseHelper.CONDITION, location.getCondition());
-        values.put(DatabaseHelper.COUNTRY, location.getCountry());
-        values.put(DatabaseHelper.COUNTRY_CODE, location.getCode());
-        values.put(DatabaseHelper.MAX_TEMP, location.getMax());
-        values.put(DatabaseHelper.MIN_TEMP, location.getMin());
-        values.put(DatabaseHelper.LAST_UPDATE, location.getLastUpdate());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String strDate = sdf.format(new Date());
-        values.put(DatabaseHelper.DATE, strDate);
-        values.put(DatabaseHelper.ICON, location.getIcon());
-        values.put(DatabaseHelper.FEELS_LIKE, location.getFeelsLike());
-        long result = db.update(DatabaseHelper.LAST_SEARCHED, values, DatabaseHelper.SEARCHED_ID + " = ? ", new String[]{"" + id});
-
-        db.close();
-        return result;
+        db.close()
+        return result
     }
 
 
+    companion object {
+        private var instance: SearchedLocationsDAO? = null
+        fun getInstance(context: Context): SearchedLocationsDAO {
+            if (instance == null) instance = SearchedLocationsDAO(context)
+            return instance!!
+        }
+    }
 }

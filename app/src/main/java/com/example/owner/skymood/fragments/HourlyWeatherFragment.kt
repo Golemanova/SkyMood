@@ -1,93 +1,60 @@
-package com.example.owner.skymood.fragments;
+package com.example.owner.skymood.fragments
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.owner.skymood.R
+import com.example.owner.skymood.adapters.HourlyAdapter
+import com.example.owner.skymood.adapters.WeeklyAdapter
+import com.example.owner.skymood.model.HourlyWeather
+import com.example.owner.skymood.model.WeeklyWeather
 
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+class HourlyWeatherFragment : Fragment() {
 
-import com.example.owner.skymood.R;
-import com.example.owner.skymood.adapters.HourlyAdapter;
-import com.example.owner.skymood.adapters.WeeklyAdapter;
-import com.example.owner.skymood.model.HourlyWeather;
-import com.example.owner.skymood.model.WeeklyWeather;
+    var hourlyWeatherArray: ArrayList<HourlyWeather> = arrayListOf()
 
-import java.util.ArrayList;
+    var weeklyWeatherArray: ArrayList<WeeklyWeather> = arrayListOf()
 
-public class HourlyWeatherFragment extends Fragment implements Slidable {
+    private  var hourlyRecycler: RecyclerView? = null
+    private  var weeklyRecycler: RecyclerView? = null
+    lateinit var layout: LinearLayout
+    lateinit var text: TextView
 
-    private ArrayList<HourlyWeather> hourlyWeather;
-    private ArrayList<WeeklyWeather> weatherArray;
-    private RecyclerView hourlyRecycler;
-    private RecyclerView weeklyRecycler;
-    private Context context;
-    private LinearLayout layout;
-    private TextView text;
-
-    public HourlyWeatherFragment() {
-        // Required empty public constructor
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_hourly_weather, container, false)
+        this.setRetainInstance(true)
 
-        View view =  inflater.inflate(R.layout.fragment_hourly_weather, container, false);
-        this.setRetainInstance(true);
+        // hourly recycler
+        hourlyRecycler =
+            view.findViewById<View?>(R.id.fragment_hourly_weather_rv_recycler_hourly) as RecyclerView
+        hourlyRecycler?.setLayoutManager(
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        )
+        val adapter = HourlyAdapter(context, this.hourlyWeatherArray)
+        hourlyRecycler?.setAdapter(adapter)
 
-        //layout = (LinearLayout) view.findViewById(R.id.hourlyLayout);
-        hourlyWeather = new ArrayList<>();
-        weatherArray = new ArrayList<>();
+        //weekly recycler
+        weeklyRecycler =
+            view.findViewById<View?>(R.id.fragment_hourly_weather_rv_recycler_weekly) as RecyclerView
+        weeklyRecycler?.setLayoutManager(LinearLayoutManager(context))
+        val weeklyAdapter = WeeklyAdapter(this.weeklyWeatherArray, context)
+        weeklyRecycler?.setAdapter(weeklyAdapter)
 
-           // text = (TextView) view.findViewById(R.id.hour_no_internet);
-            // hourly recycler
-            hourlyRecycler = (RecyclerView) view.findViewById(R.id.fragment_hourly_weather_rv_recycler_hourly);
-            hourlyRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-            HourlyAdapter adapter = new HourlyAdapter(context, hourlyWeather);
-            hourlyRecycler.setAdapter(adapter);
-
-            //weekly recycler
-            weeklyRecycler = (RecyclerView) view.findViewById(R.id.fragment_hourly_weather_rv_recycler_weekly);
-            weeklyRecycler.setLayoutManager(new LinearLayoutManager(context));
-            WeeklyAdapter weeklyAdapter = new WeeklyAdapter(weatherArray, context);
-            weeklyRecycler.setAdapter(weeklyAdapter);
-
-
-        return view;
+        return view
     }
 
-    public void setContext(Context context) {
-        this.context = context;
-    }
+    val adapter: HourlyAdapter? = hourlyRecycler?.adapter as HourlyAdapter?
 
-    public HourlyAdapter getAdapter(){
-        return (HourlyAdapter)this.hourlyRecycler.getAdapter();
-    }
-
-    public WeeklyAdapter getWeekAdapter(){
-        return (WeeklyAdapter)this.weeklyRecycler.getAdapter();
-    }
-
-    public ArrayList<HourlyWeather> getHourlyWeatherArray() {
-        return this.hourlyWeather;
-    }
-
-    public ArrayList<WeeklyWeather> getWeeklyWeatherArray() {
-        return this.weatherArray;
-    }
-
-    public TextView getText() {
-        return text;
-    }
-
-    public LinearLayout getLayout() {
-        return layout;
-    }
+    val weekAdapter: WeeklyAdapter? = weeklyRecycler?.adapter as WeeklyAdapter?
 }

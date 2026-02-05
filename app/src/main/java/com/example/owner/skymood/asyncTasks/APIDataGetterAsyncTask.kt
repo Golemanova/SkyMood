@@ -1,171 +1,210 @@
-package com.example.owner.skymood.asyncTasks;
+package com.example.owner.skymood.asyncTasks
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ImageView;
-
-import androidx.fragment.app.Fragment;
-
-import com.example.owner.skymood.MainActivity;
-import com.example.owner.skymood.R;
-import com.example.owner.skymood.fragments.CurrentWeatherFragment;
-import com.example.owner.skymood.model.LocationPreference;
-import com.example.owner.skymood.model.SearchedLocation;
-import com.example.owner.skymood.model.SearchedLocationManager;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Scanner;
+import android.content.Context
+import android.os.AsyncTask
+import android.util.Log
+import android.widget.ImageView
+import androidx.fragment.app.Fragment
+import com.example.owner.skymood.MainActivity
+import com.example.owner.skymood.R
+import com.example.owner.skymood.R.drawable
+import com.example.owner.skymood.fragments.CurrentWeatherFragment
+import com.example.owner.skymood.model.LocationPreference
+import com.example.owner.skymood.model.SearchedLocation
+import com.example.owner.skymood.model.SearchedLocationManager
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Scanner
+import kotlin.math.roundToInt
 
 /**
  * Created by Golemanovaa on 7.4.2016 г..
  */
-public class APIDataGetterAsyncTask extends AsyncTask<String, Void, Void> {
+class APIDataGetterAsyncTask(
+    private val fragment: Fragment,
+    private val context: Context,
+    private val weatherImage: ImageView
+) : AsyncTask<String?, Void?, Void?>() {
+    private var condition: String? = null
+    private var icon: String? = null
+    private var isNight = false
+    private var temp: String? = null
+    private var feelsLike: String? = null
+    private var maxTemp: String? = null
+    private var minTemp: String? = null
+    private var dateAndTime: String? = null
 
-    private String condition;
-    private String icon;
-    private String temp;
-    private String feelsLike;
-    private String maxTemp;
-    private String minTemp;
-    private String dateAndTime;
+    private val locPref: LocationPreference
+    private var city: String? = null
+    private var countryCode: String? = null
+    private var country: String? = null
 
-    private Fragment fragment;
-    private Context context;
-    private ImageView weatherImage;
-    private LocationPreference locPref;
-    private String city;
-    private String countryCode;
-    private String country;
+    var manager: SearchedLocationManager
+    var activity: MainActivity
 
-    SearchedLocationManager manager;
-    MainActivity activity;
-
-    public APIDataGetterAsyncTask(Fragment f, Context context, ImageView weatherImage) {
-
-        this.fragment = f;
-        this.context = context;
-        this.weatherImage = weatherImage;
-        this.locPref = LocationPreference.getInstance(context);
-        this.manager = SearchedLocationManager.getInstance(context);
-        activity = (MainActivity) context;
+    init {
+        this.locPref = LocationPreference.getInstance(context)
+        this.manager = SearchedLocationManager.getInstance(context)
+        activity = context as MainActivity
     }
 
-    @Override
-    protected Void doInBackground(String... params) {
-
-        countryCode = params[0];
-        city = params[1];
-        country = params[2];
+    @Deprecated("Deprecated in Java")
+    override fun doInBackground(vararg params: String?): Void? {
+        countryCode = params[0]
+        city = params[1]
+        country = params[2]
 
         try {
             //API 1
-            URL url = new URL("http://api.wunderground.com/api/" + CurrentWeatherFragment.API_KEY + "/conditions/q/" + countryCode + "/" + city + ".json");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
+            val url =
+                URL("https://api.weatherapi.com/v1" + "/current.json" + "?q=" + city + "&key=" + CurrentWeatherFragment.API_KEY)
 
-            Scanner sc = new Scanner(connection.getInputStream());
-            StringBuilder body = new StringBuilder();
+            Log.d("REQUEST", "APIDataGetter request: $url")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.connect()
+
+            val sc = Scanner(connection.getInputStream())
+            val body = StringBuilder()
             while (sc.hasNextLine()) {
-                body.append(sc.nextLine());
+                body.append(sc.nextLine())
             }
-            String info = body.toString();
-            Log.d("RESPONSE", "APIDataGetter response: " + info);
+            val info = body.toString()
+            Log.d("RESPONSE", "APIDataGetter response: $info")
 
-            JSONObject jsonData = new JSONObject(info);
-            JSONObject observation = (JSONObject) jsonData.get("current_observation");
-            condition = observation.getString("weather");
-            temp = observation.getString("temp_c");
-            feelsLike = "Feels like: " + observation.getString("feelslike_c") + "℃";
-            icon = observation.getString("icon");
+            val jsonData = JSONObject(info)
+            val location = jsonData.get("location") as JSONObject
+            city = location.getString("name")
+            country = location.getString("country")
 
-            //API 2
-            URL url2 = new URL("http://api.wunderground.com/api/" + CurrentWeatherFragment.API_KEY_TWO + "/forecast/q/" + countryCode + "/" + city + ".json");
-            HttpURLConnection connection2 = (HttpURLConnection) url2.openConnection();
-            connection2.connect();
+            val currentWeather = jsonData.get("current") as JSONObject
+            val weatherCondition = currentWeather.get("condition") as JSONObject
 
-            Scanner sc2 = new Scanner(connection2.getInputStream());
-            StringBuilder data = new StringBuilder();
-            while (sc2.hasNextLine()) {
-                data.append(sc2.nextLine());
-            }
-            String dataJson = data.toString();
-            JSONObject dataJsonObj = new JSONObject(dataJson);
-            JSONObject forecast = dataJsonObj.getJSONObject("forecast");
-            JSONObject simpleForecast = forecast.getJSONObject("simpleforecast");
-            JSONArray forecastDay = simpleForecast.getJSONArray("forecastday");
-            JSONObject day = (JSONObject) forecastDay.get(0);
-            JSONObject high = day.getJSONObject("high");
-            maxTemp = high.getString("celsius");
-            JSONObject low = day.getJSONObject("low");
-            minTemp = low.getString("celsius");
+            condition = weatherCondition.getString("text")
+            val currentTemp = currentWeather.getDouble("temp_c")
+            temp = currentTemp.roundToInt().toString()
 
-//            if(Double.parseDouble(temp) > Double.parseDouble(maxTemp)){
-//                Double max = Math.ceil(Double.parseDouble(temp));
-//                Integer maxTempInt = max.intValue();
-//                maxTemp = maxTempInt.toString();
-//            }
+            val feelsLikeTemp = currentWeather.getDouble("feelslike_c")
+            feelsLike = "Feels like: " + feelsLikeTemp.roundToInt() + "℃"
+            icon = weatherCondition.getInt("code").toString()
+            isNight = weatherCondition.getString("icon").contains("night")
 
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            maxTemp = "10"
+            minTemp = "-3"
+            country = ""
+            countryCode = ""
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
-        return null;
+        return null
     }
 
-    @Override
-    protected void onPreExecute() {
-
-        ((CurrentWeatherFragment) fragment).apiDataGetterAsyncTaskOnPreExecute();
+    @Deprecated("Deprecated in Java")
+    override fun onPreExecute() {
+        (fragment as CurrentWeatherFragment).apiDataGetterAsyncTaskOnPreExecute()
     }
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
+    @Deprecated("Deprecated in Java")
+    override fun onPostExecute(aVoid: Void?) {
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.DATE, 0)
+        val format = SimpleDateFormat("HH:mm, dd.MM.yyyy")
+        dateAndTime = format.format(cal.getTime())
+        val lastUpdate = "Last update: $dateAndTime"
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 0);
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm, dd.MM.yyyy");
-        dateAndTime = format.format(cal.getTime());
-        String lastUpdate = "Last update: " + dateAndTime;
-
-        Context con = weatherImage.getContext();
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int id;
         if (icon == null) {
-            weatherImage.setImageResource(R.drawable.icon_not_available);
+            weatherImage.setImageResource(R.drawable.icon_not_available)
         } else {
-            if (hour >= 6 && hour <= 19) {
-                id = context.getResources().getIdentifier(icon, "drawable", con.getPackageName());
-                ((MainActivity) context).changeBackground(MainActivity.DAY);
-            } else {
-                icon = icon + "_night";
-                id = context.getResources().getIdentifier(icon, "drawable", con.getPackageName());
-                ((MainActivity) context).changeBackground(MainActivity.NIGHT);
-            }
-            weatherImage.setImageResource(id);
+            weatherImage.setImageResource(getImageResource(icon!!.toInt(), isNight))
         }
-        activity.setInfo(city, countryCode, minTemp, maxTemp, dateAndTime);
+
+        if (isNight) {
+            (context as MainActivity).changeBackground(MainActivity.NIGHT)
+        } else {
+            (context as MainActivity).changeBackground(MainActivity.DAY)
+        }
+        activity.setInfo(city, countryCode, minTemp, maxTemp, dateAndTime)
         if (temp != null && icon != null) {
-            if (locPref.isSetLocation() && city.equals(locPref.getCity()) && countryCode.equals(locPref.getCountryCode())) {
+            if (locPref.isSetLocation && city == locPref.city && countryCode == locPref.countryCode) {
                 //insert in shared prefs
-                locPref.setPreferredLocation(city, country, countryCode, icon, temp, minTemp, maxTemp, condition, feelsLike, lastUpdate);
+                locPref.setPreferredLocation(
+                    city = city,
+                    country = country,
+                    countryCode = countryCode,
+                    icon = icon,
+                    temperature = temp,
+                    minTemp = minTemp,
+                    maxTemp = maxTemp,
+                    condition = condition,
+                    feelsLike = feelsLike,
+                    lastUpdate = lastUpdate
+                )
             } else {
                 //insert into DB
-                SearchedLocation loc = new SearchedLocation(city, temp, condition, country, countryCode, maxTemp, minTemp, lastUpdate, icon, feelsLike);
-                manager.insertSearchedLocation(loc);
+                val loc = SearchedLocation(
+                    city = city,
+                    temp = temp,
+                    condition = condition,
+                    country = country,
+                    code = countryCode,
+                    max = maxTemp,
+                    min = minTemp,
+                    lastUpdate = lastUpdate,
+                    icon = icon,
+                    feelsLike = feelsLike
+                )
+                manager.insertSearchedLocation(loc)
             }
         }
 
-
-        ((CurrentWeatherFragment) fragment).apiDataGetterAsyncTaskOnPostExecute(temp, condition, feelsLike, minTemp, maxTemp, dateAndTime, lastUpdate, city, country);
-
+        (fragment as CurrentWeatherFragment).apiDataGetterAsyncTaskOnPostExecute(
+            temp = temp,
+            condition = condition,
+            feelsLike = feelsLike,
+            minTemp = minTemp,
+            maxTemp = maxTemp,
+            dateAndTime = dateAndTime,
+            lastUpdate = lastUpdate,
+            cityToDisplay = city,
+            country = country
+        )
     }
 
+    private fun getImageResource(code: Int, isNight: Boolean) = when (code) {
+        1000 -> if (isNight) drawable.sunny_night else drawable.sunny
+
+        1003 -> if (isNight) drawable.partlycloudy_night else drawable.partlycloudy
+
+        1006 -> if (isNight) drawable.mostlycloudy_night else drawable.mostlycloudy
+
+        1009 -> if (isNight) drawable.cloudy_night else drawable.cloudy
+
+        1030, 1135, 1147 -> if (isNight) drawable.fog_night else drawable.fog
+
+        1063 -> if (isNight) drawable.chancerain_night else drawable.chancerain
+
+        1072, 1066 -> if (isNight) drawable.chancesnow_night else drawable.chancesnow
+
+        1069 -> if (isNight) drawable.chancesleet_night else drawable.chancesleet
+
+        1273, 1276, 1279, 1282, 1087 -> if (isNight) drawable.tstorms_night else drawable.tstorms
+
+        1114, 1210, 1213, 1216, 1219, 1222, 1225,
+        1237, 1255, 1258, 1261, 1264, 1171, 1117 -> if (isNight) drawable.snow_night else drawable.snow
+
+        1150, 1168, 1153 -> if (isNight) drawable.hazy_night else drawable.hazy
+
+        1180, 1186, 1198, 1189, 1192, 1201,
+        1240, 1243, 1246, 1183 -> if (isNight) drawable.rain_night else drawable.rain
+
+        1207, 1249, 1252, 1204 -> if (isNight) drawable.sleet_night else drawable.sleet
+
+        else -> drawable.icon_not_available
+    }
 }

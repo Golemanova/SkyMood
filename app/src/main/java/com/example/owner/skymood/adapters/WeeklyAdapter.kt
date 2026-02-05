@@ -1,49 +1,32 @@
-package com.example.owner.skymood.adapters;
+package com.example.owner.skymood.adapters
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.owner.skymood.R;
-import com.example.owner.skymood.model.WeeklyWeather;
-
-import java.util.ArrayList;
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.owner.skymood.R
+import com.example.owner.skymood.model.WeeklyWeather
 
 /**
  * Created by owner on 05/04/2016.
  */
-public class WeeklyAdapter extends RecyclerView.Adapter<HourlyWeekViewHolder> {
+class WeeklyAdapter(
+    private val weathers: ArrayList<WeeklyWeather>, private val context: Context?
+) : RecyclerView.Adapter<HourlyWeekViewHolder?>() {
 
-    private ArrayList<WeeklyWeather> weathers;
-    private Context context;
-
-    public WeeklyAdapter(ArrayList<WeeklyWeather> weathers, Context context) {
-        this.weathers = weathers;
-        this.context = context;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyWeekViewHolder {
+        val inflater = LayoutInflater.from(context)
+        val view = inflater.inflate(R.layout.row_week, parent, false)
+        return HourlyWeekViewHolder(view)
     }
 
-
-    @Override
-    public HourlyWeekViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.row_week, parent, false);
-        return new HourlyWeekViewHolder(view);
+    override fun onBindViewHolder(holder: HourlyWeekViewHolder, position: Int) {
+        val weather = weathers[position]
+        holder.icon!!.setImageBitmap(weather.icon)
+        holder.temp!!.text = weather.max + " / " + weather.min + "°"
+        holder.condition!!.text = weather.condition
+        holder.hour!!.text = weather.day
     }
 
-    @Override
-    public void onBindViewHolder(HourlyWeekViewHolder holder, int position) {
-        WeeklyWeather weather = weathers.get(position);
-        holder.getIcon().setImageBitmap(weather.getIcon());
-        holder.getTemp().setText(weather.getMax() + " / " + weather.getMin()+"°");
-        holder.getCondition().setText(weather.getCondition());
-        holder.getHour().setText(weather.getDay());
-    }
-
-    @Override
-    public int getItemCount() {
-        return weathers.size();
-    }
+    override fun getItemCount() = weathers.size
 }

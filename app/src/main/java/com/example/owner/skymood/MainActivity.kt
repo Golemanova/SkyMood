@@ -1,213 +1,196 @@
-package com.example.owner.skymood;
+package com.example.owner.skymood
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.viewpager.widget.ViewPager
+import com.example.owner.skymood.adapters.CustomPagerAdapter
+import com.example.owner.skymood.asyncTasks.APIDataGetterAsyncTask
+import com.example.owner.skymood.asyncTasks.GetHourlyTask
+import com.example.owner.skymood.asyncTasks.GetMoreInfoTask
+import com.example.owner.skymood.asyncTasks.GetWeeklyTask
+import com.example.owner.skymood.fragments.CurrentWeatherFragment
+import com.example.owner.skymood.fragments.HourlyWeatherFragment
+import com.example.owner.skymood.fragments.ICommunicator
+import com.example.owner.skymood.fragments.MoreInfoFragment
+import com.example.owner.skymood.model.SearchedLocation
+import kotlin.system.exitProcess
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
+class MainActivity : AppCompatActivity(), ICommunicator {
+    private lateinit var pager: ViewPager
+    lateinit var toolbar: Toolbar
+        private set
+    private lateinit var layout: LinearLayout
+    private lateinit var adapter: CustomPagerAdapter
+    private val handler: Handler = Handler()
+    private var lastClick: Long = 0
 
-import com.example.owner.skymood.adapters.CustomPagerAdapter;
-import com.example.owner.skymood.asyncTasks.APIDataGetterAsyncTask;
-import com.example.owner.skymood.asyncTasks.GetHourlyTask;
-import com.example.owner.skymood.asyncTasks.GetMoreInfoTask;
-import com.example.owner.skymood.asyncTasks.GetWeeklyTask;
-import com.example.owner.skymood.fragments.CurrentWeatherFragment;
-import com.example.owner.skymood.fragments.HourlyWeatherFragment;
-import com.example.owner.skymood.fragments.ICommunicator;
-import com.example.owner.skymood.fragments.MoreInfoFragment;
-import com.example.owner.skymood.model.SearchedLocation;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-public class MainActivity extends AppCompatActivity implements ICommunicator {
-
-    public static final int REQUEST_CODE_SEARCHED_LOCATIONS = 5;
-    public static final int NUMBER_OF_PAGES = 3;
-    public static final String DAY = "day";
-    public static final String NIGHT = "night";
-    private static final int CURRENT_WEATHER_FRAGMENT_INDEX = 0;
-    private static final int HOURLY_WEATHER_FRAGMENT_INDEX = 1;
-    private static final int MORE_INFO_FRAGMENT_INDEX = 2;
-    private static final long BACK_BUTTON_MIN_INTERVAL = 1000L;
-    private static final long BACK_BUTTON_TOAST_DELAY = 1200L;
-
-    private ViewPager pager;
-    private Toolbar toolbar;
-    private LinearLayout layout;
-    private CustomPagerAdapter adapter;
-    private Handler handler = new Handler();
-    private long lastClick;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (pager.currentItem == CURRENT_WEATHER_FRAGMENT_INDEX) {
+                    onBack()
+                } else {
+                    pager.setCurrentItem(pager.currentItem - 1)
+                }
+            }
+        })
 
         //used for changing the background
-        layout = (LinearLayout) findViewById(R.id.activity_main_container);
+        layout = findViewById<View?>(R.id.activity_main_container) as LinearLayout
 
         //setting view_toolbar
-        toolbar = findViewById(R.id.main_activity_view_tool_bar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+        toolbar = findViewById(R.id.main_activity_view_tool_bar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         //setting view pager adapter
-        adapter = new CustomPagerAdapter(getSupportFragmentManager(), this);
-        pager = (ViewPager) findViewById(R.id.activity_main_view_pager);
-        pager.setOffscreenPageLimit(NUMBER_OF_PAGES);
-        pager.setAdapter(adapter);
+        adapter = CustomPagerAdapter(supportFragmentManager, this)
+        pager = findViewById<View?>(R.id.activity_main_view_pager) as ViewPager
+        pager.setOffscreenPageLimit(NUMBER_OF_PAGES)
+        pager.setAdapter(adapter)
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 
-    @Override
-    public void onBackPressed() {
-
-        super.onBackPressed();
-        if (pager.getCurrentItem() == CURRENT_WEATHER_FRAGMENT_INDEX) {
-            onBack();
-        } else {
-            pager.setCurrentItem(pager.getCurrentItem() - 1);
-        }
-    }
-
-    @Override
-    public void setInfo(String city, String code, String min, String max, String date) {
-
-        HourlyWeatherFragment fragment = (HourlyWeatherFragment) adapter.getItem(HOURLY_WEATHER_FRAGMENT_INDEX);
+    override fun setInfo(city: String?, code: String?, min: String?, max: String?, date: String?) {
+        val fragment = adapter.getItem(HOURLY_WEATHER_FRAGMENT_INDEX) as HourlyWeatherFragment
 
         //start get hourly task
-        GetHourlyTask getHour = new GetHourlyTask(this, fragment, fragment.getHourlyWeatherArray());
-        getHour.execute(city, code);
+        val getHour = GetHourlyTask(this, fragment, fragment.hourlyWeatherArray)
+        getHour.execute(city, code)
 
         // start get weekly task
-        GetWeeklyTask getWeek = new GetWeeklyTask(this, fragment, fragment.getWeeklyWeatherArray());
-        getWeek.execute(city, code);
+        val getWeek = GetWeeklyTask(this, fragment, fragment.weeklyWeatherArray)
+        getWeek.execute(city, code)
 
         // third fragment
-        MoreInfoFragment moreInfoFragment = (MoreInfoFragment) adapter.getItem(MORE_INFO_FRAGMENT_INDEX);
-        moreInfoFragment.setExternalInfo(city, code, date, min, max);
+        val moreInfoFragment = adapter.getItem(MORE_INFO_FRAGMENT_INDEX) as MoreInfoFragment
+        moreInfoFragment.setExternalInfo(city, code, date, min, max)
 
         //start get more info
-        GetMoreInfoTask infoTask = new GetMoreInfoTask(this, moreInfoFragment);
-        infoTask.execute(city, code);
+        val infoTask = GetMoreInfoTask(this, moreInfoFragment)
+        infoTask.execute(city, code)
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_main_item_sky_mood) {
-            //do nothing - we are already in this activity
-            return true;
-        } else if (itemId == R.id.menu_main_item_searched_locations) {
-            Intent searchedLocationsActivity = new Intent(this, SearchedLocationsActivity.class);
-            startActivityForResult(searchedLocationsActivity, REQUEST_CODE_SEARCHED_LOCATIONS);
-            return true;
-        } else if (itemId == R.id.menu_main_item_my_locations) {
-            Intent myLocationsActivity = new Intent(this, MyLocationsActivity.class);
-            startActivity(myLocationsActivity);
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId = item.itemId
+        return when (itemId) {
+            R.id.menu_main_item_sky_mood -> {
+                //do nothing - we are already in this activity
+                true
+            }
+
+            R.id.menu_main_item_searched_locations -> {
+                val searchedLocationsActivity = Intent(this, SearchedLocationsActivity::class.java)
+                startActivityForResult(searchedLocationsActivity, REQUEST_CODE_SEARCHED_LOCATIONS)
+                true
+            }
+
+            R.id.menu_main_item_my_locations -> {
+                val myLocationsActivity = Intent(this, MyLocationsActivity::class.java)
+                startActivity(myLocationsActivity)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SEARCHED_LOCATIONS && resultCode == Activity.RESULT_OK) {
-            onSearchedLocationResult(data);
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SEARCHED_LOCATIONS && resultCode == RESULT_OK) {
+            onSearchedLocationResult(data)
         }
     }
 
-    @Override
-    protected void onStop() {
-
-        super.onStop();
-        if (handler != null) {
-            handler.removeCallbacksAndMessages(null);
-        }
+    override fun onStop() {
+        super.onStop()
+        handler.removeCallbacksAndMessages(null)
     }
 
-    public HourlyWeatherFragment getHourlyFragment() {
+    val hourlyFragment: HourlyWeatherFragment
+        get() = adapter.getItem(HOURLY_WEATHER_FRAGMENT_INDEX) as HourlyWeatherFragment
 
-        return (HourlyWeatherFragment) adapter.getItem(HOURLY_WEATHER_FRAGMENT_INDEX);
+    fun changeBackground(partOfDay: String) {
+        val isNight = partOfDay == NIGHT
+        val background = if (isNight) R.drawable.background_night else R.drawable.background_day
+        layout.setBackgroundResource(background)
     }
 
-    public Toolbar getToolbar() {
-
-        return this.toolbar;
-    }
-
-    public void changeBackground(String partOfDay) {
-
-        boolean isNight = partOfDay.equals(NIGHT);
-        int background = isNight ? R.drawable.background_night : R.drawable.background_day;
-        layout.setBackgroundResource(background);
-    }
-
-    private void onBack() {
-
-        long currentClick = System.currentTimeMillis();
-        long clickInterval = currentClick - lastClick;
+    private fun onBack() {
+        val currentClick = System.currentTimeMillis()
+        val clickInterval = currentClick - lastClick
 
         if (clickInterval > BACK_BUTTON_MIN_INTERVAL) {
-            lastClick = currentClick;
-            final Toast toast = Toast.makeText(this, R.string.lbl_press_back_btn_again_to_exit, Toast.LENGTH_LONG);
-            toast.show();
+            lastClick = currentClick
+            val toast =
+                Toast.makeText(this, R.string.lbl_press_back_btn_again_to_exit, Toast.LENGTH_LONG)
+            toast.show()
 
-            handler.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    toast.cancel();
-                }
-            }, BACK_BUTTON_TOAST_DELAY);
+            handler.postDelayed({ toast.cancel() }, BACK_BUTTON_TOAST_DELAY)
         } else {
-            this.finish();
-            System.exit(0);
+            this.finish()
+            exitProcess(0)
         }
     }
 
-    private void onSearchedLocationResult(Intent data) {
-
+    private fun onSearchedLocationResult(data: Intent?) {
         if (data == null) {
-            return;
+            return
         }
 
-        String city = data.getStringExtra(SearchedLocationsActivity.CITY_DATA_TAG);
-        String country = data.getStringExtra(SearchedLocationsActivity.COUNTRY_DATA_TAG);
-        String countryCode = data.getStringExtra(SearchedLocationsActivity.COUNTRY_CODE_DATA_TAG);
-        SearchedLocation searchedLocation = data.getParcelableExtra(SearchedLocationsActivity.SEARCHED_LOCATION_OBJECT_DATA_TAG);
+        val city = data.getStringExtra(SearchedLocationsActivity.CITY_DATA_TAG)
+        val country = data.getStringExtra(SearchedLocationsActivity.COUNTRY_DATA_TAG)
+        val countryCode = data.getStringExtra(SearchedLocationsActivity.COUNTRY_CODE_DATA_TAG)
+        val searchedLocation =
+            data.getParcelableExtra<SearchedLocation?>(SearchedLocationsActivity.SEARCHED_LOCATION_OBJECT_DATA_TAG)
 
-        CurrentWeatherFragment fragment = (CurrentWeatherFragment) adapter.getItem(CURRENT_WEATHER_FRAGMENT_INDEX);
-        if (fragment.isOnline()) {
-            ImageView weatherImage = fragment.getWeatherImage();
-            APIDataGetterAsyncTask task = new APIDataGetterAsyncTask(fragment, this, weatherImage);
-            task.execute(countryCode, city, country);
+        val fragment = adapter.getItem(CURRENT_WEATHER_FRAGMENT_INDEX) as CurrentWeatherFragment
+        if (fragment.isOnline) {
+            val weatherImage = fragment.weatherImage
+            val task = APIDataGetterAsyncTask(fragment, this, weatherImage)
+            task.execute(countryCode, city, country)
         } else if (searchedLocation != null) {
-            fragment.setInfoData(city, country, searchedLocation.getIcon(), searchedLocation.getTemp(),
-                    searchedLocation.getMin(), searchedLocation.getMax(), searchedLocation.getCondition(),
-                    searchedLocation.getFeelsLike(), searchedLocation.getLastUpdate());
+            fragment.setInfoData(
+                city,
+                country,
+                searchedLocation.icon,
+                searchedLocation.temp,
+                searchedLocation.min,
+                searchedLocation.max,
+                searchedLocation.condition,
+                searchedLocation.feelsLike,
+                searchedLocation.lastUpdate
+            )
         } else {
-            Toast.makeText(this, R.string.lbl_something_went_wrong, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.lbl_something_went_wrong, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    companion object {
+        const val REQUEST_CODE_SEARCHED_LOCATIONS: Int = 5
+        const val NUMBER_OF_PAGES: Int = 3
+        const val DAY: String = "day"
+        const val NIGHT: String = "night"
+        private const val CURRENT_WEATHER_FRAGMENT_INDEX = 0
+        private const val HOURLY_WEATHER_FRAGMENT_INDEX = 1
+        private const val MORE_INFO_FRAGMENT_INDEX = 2
+        private const val BACK_BUTTON_MIN_INTERVAL = 1000L
+        private const val BACK_BUTTON_TOAST_DELAY = 1200L
     }
 }

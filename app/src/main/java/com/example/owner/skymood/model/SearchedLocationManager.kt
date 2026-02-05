@@ -1,37 +1,30 @@
-package com.example.owner.skymood.model;
+package com.example.owner.skymood.model
 
-import android.content.Context;
-
-import com.example.owner.skymood.model.DAO.SearchedLocationsDAO;
-
-import java.util.ArrayList;
+import android.content.Context
+import com.example.owner.skymood.model.DAO.SearchedLocationsDAO
 
 /**
  * Created by owner on 05/04/2016.
  */
-public class SearchedLocationManager {
-    private static SearchedLocationManager ourInstance;
-    SearchedLocationsDAO locationsDAO;
+class SearchedLocationManager private constructor(context: Context) {
+    var locationsDAO: SearchedLocationsDAO = SearchedLocationsDAO.getInstance(context.applicationContext)
 
-    public static SearchedLocationManager getInstance(Context context) {
+    val allSearchedLocations: ArrayList<SearchedLocation>
+        get() = locationsDAO.allSearchedLocations
 
-        if (ourInstance == null)
-            ourInstance = new SearchedLocationManager(context);
-        return ourInstance;
-    }
+    fun insertSearchedLocation(location: SearchedLocation) =
+        locationsDAO.insertSearchedLocation(location)
 
-    private SearchedLocationManager(Context context) {
+    companion object {
+        // @Volatile guarantees that writes to this field are immediately visible to other threads.
+        @Volatile
+        private var instance: SearchedLocationManager? = null
 
-        locationsDAO = SearchedLocationsDAO.getInstance(context);
-    }
-
-    public ArrayList<SearchedLocation> getAllSearchedLocations() {
-
-        return locationsDAO.getAllSearchedLocations();
-    }
-
-    public long insertSearchedLocation(SearchedLocation location) {
-
-        return locationsDAO.insertSearchedLocation(location);
+        fun getInstance(context: Context): SearchedLocationManager {
+            // The double-checked lock prevents multiple instances from being created in a multi-threaded environment.
+            return instance ?: synchronized(this) {
+                instance ?: SearchedLocationManager(context).also { instance = it }
+            }
+        }
     }
 }

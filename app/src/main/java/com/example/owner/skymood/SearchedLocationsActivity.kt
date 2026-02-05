@@ -1,129 +1,120 @@
-package com.example.owner.skymood;
+package com.example.owner.skymood
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.example.owner.skymood.model.SearchedLocation
+import com.example.owner.skymood.model.SearchedLocationManager
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+class SearchedLocationsActivity : AppCompatActivity(), View.OnClickListener {
 
-import com.example.owner.skymood.model.SearchedLocation;
-import com.example.owner.skymood.model.SearchedLocationManager;
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_searched_locations)
 
-import java.util.ArrayList;
-
-public class SearchedLocationsActivity extends AppCompatActivity implements View.OnClickListener {
-
-    public static final String CITY_DATA_TAG = "city_data_tag";
-    public static final String COUNTRY_DATA_TAG = "country_data_tag";
-    public static final String COUNTRY_CODE_DATA_TAG = "country_code_data_tag";
-    public static final String SEARCHED_LOCATION_OBJECT_DATA_TAG = "searched_location_object_data_tag";
-    private static final int LOCATION_BUTTONS_NUMBER = 5;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_searched_locations);
-
-        SearchedLocationManager manager = SearchedLocationManager.getInstance(this);
-        ArrayList<SearchedLocation> locations = manager.getAllSearchedLocations();
+        val manager = SearchedLocationManager.getInstance(this)
+        val locations = manager.allSearchedLocations
 
         //setting toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_searched_locations_view_tool_bar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+        val toolbar =
+            findViewById<View?>(R.id.activity_searched_locations_view_tool_bar) as Toolbar?
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         //initializing buttons
-        initializeLocationButtons(locations);
+        initializeLocationButtons(locations)
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.menu_main_item_sky_mood -> {
+            val mainActivity = Intent(this, MainActivity::class.java)
+            startActivity(mainActivity)
+            true
+        }
 
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_main_item_sky_mood) {
-            Intent mainActivity = new Intent(this, MainActivity.class);
-            startActivity(mainActivity);
-            return true;
-        } else if (itemId == R.id.menu_main_item_searched_locations) {
+        R.id.menu_main_item_searched_locations -> {
             //do nothing = we are already in this activity
-            return true;
-        } else if (itemId == R.id.menu_main_item_my_locations) {
-            Intent myLocationsActivity = new Intent(this, MyLocationsActivity.class);
-            startActivity(myLocationsActivity);
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+            true
+        }
+
+        R.id.menu_main_item_my_locations -> {
+            val myLocationsActivity = Intent(this, MyLocationsActivity::class.java)
+            startActivity(myLocationsActivity)
+            true
+        }
+
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun onClick(locationButton: View) {
+        val location = locationButton.tag as SearchedLocation
+        val city = location.city
+        val country = location.country
+        val countryCode = location.code
+
+        val returnIntent = Intent()
+        returnIntent.putExtra(CITY_DATA_TAG, city)
+        returnIntent.putExtra(COUNTRY_DATA_TAG, country)
+        returnIntent.putExtra(COUNTRY_CODE_DATA_TAG, countryCode)
+        returnIntent.putExtra(SEARCHED_LOCATION_OBJECT_DATA_TAG, location)
+
+        setResult(RESULT_OK, returnIntent)
+        finish()
+    }
+
+    private fun initializeLocationButtons(locations: java.util.ArrayList<SearchedLocation>?) {
+        val locationButtons = this.locationButtonsAndSetOnClickListener
+
+        if (locations == null || locations.isEmpty() || locationButtons.isEmpty()) {
+            return
+        }
+
+        locationButtons.forEachIndexed { i, _ ->
+            val location = locationButtons[i]
+            val searchedLocation = locations[i]
+            location.visibility = View.VISIBLE
+            location.text = searchedLocation.city + ", " + searchedLocation.country
+            location.tag = searchedLocation
         }
     }
 
-    @Override
-    public void onClick(View locationButton) {
+    private val locationButtonsAndSetOnClickListener: ArrayList<Button>
+        get() {
+            val locationButtons: java.util.ArrayList<Button> =
+                java.util.ArrayList<Button>(LOCATION_BUTTONS_NUMBER)
+            setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_one)
+            setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_two)
+            setUpLocationButton(
+                locationButtons,
+                R.id.activity_searched_locations_btn_location_three
+            )
+            setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_four)
+            setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_five)
 
-        SearchedLocation location = (SearchedLocation) locationButton.getTag();
-        String city = location.getCity();
-        String country = location.getCountry();
-        String countryCode = location.getCode();
-
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra(CITY_DATA_TAG, city);
-        returnIntent.putExtra(COUNTRY_DATA_TAG, country);
-        returnIntent.putExtra(COUNTRY_CODE_DATA_TAG, countryCode);
-        returnIntent.putExtra(SEARCHED_LOCATION_OBJECT_DATA_TAG, location);
-
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
-    }
-
-    private void initializeLocationButtons(ArrayList<SearchedLocation> locations) {
-
-        ArrayList<Button> locationButtons = getLocationButtonsAndSetOnClickListener();
-
-        if (locations == null || locations.size() <= 0
-                || locationButtons == null || locationButtons.size() <= 0) {
-            return;
+            return locationButtons
         }
-        for (int i = 0; i < locations.size() && i < locationButtons.size(); i++) {
-            Button location = locationButtons.get(i);
-            SearchedLocation searchedLocation = locations.get(i);
-            location.setVisibility(View.VISIBLE);
-            location.setText(searchedLocation.getCity() + ", " + searchedLocation.getCountry());
-            location.setTag(searchedLocation);
-        }
+
+    private fun setUpLocationButton(locationButtons: java.util.ArrayList<Button>, buttonId: Int) {
+        val locationBtn = findViewById<View?>(buttonId) as Button
+        locationBtn.setOnClickListener(this)
+        locationButtons.add(locationBtn)
     }
 
-    private ArrayList<Button> getLocationButtonsAndSetOnClickListener() {
-
-        ArrayList<Button> locationButtons = new ArrayList<>(LOCATION_BUTTONS_NUMBER);
-        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_one);
-        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_two);
-        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_three);
-        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_four);
-        setUpLocationButton(locationButtons, R.id.activity_searched_locations_btn_location_five);
-
-        return locationButtons;
-    }
-
-    private void setUpLocationButton(ArrayList<Button> locationButtons, int buttonId) {
-
-        Button locationBtn = (Button) findViewById(buttonId);
-        locationBtn.setOnClickListener(this);
-        locationButtons.add(locationBtn);
+    companion object {
+        const val CITY_DATA_TAG: String = "city_data_tag"
+        const val COUNTRY_DATA_TAG: String = "country_data_tag"
+        const val COUNTRY_CODE_DATA_TAG: String = "country_code_data_tag"
+        const val SEARCHED_LOCATION_OBJECT_DATA_TAG: String = "searched_location_object_data_tag"
+        private const val LOCATION_BUTTONS_NUMBER = 5
     }
 }
