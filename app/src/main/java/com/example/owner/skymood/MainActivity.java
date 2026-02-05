@@ -4,15 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.owner.skymood.adapters.CustomPagerAdapter;
 import com.example.owner.skymood.asyncTasks.APIDataGetterAsyncTask;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
         layout = (LinearLayout) findViewById(R.id.activity_main_container);
 
         //setting view_toolbar
-        toolbar = (Toolbar) findViewById(R.id.main_activity_view_tool_bar);
+        toolbar = findViewById(R.id.main_activity_view_tool_bar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
     @Override
     public void onBackPressed() {
 
+        super.onBackPressed();
         if (pager.getCurrentItem() == CURRENT_WEATHER_FRAGMENT_INDEX) {
             onBack();
         } else {
@@ -109,28 +111,26 @@ public class MainActivity extends AppCompatActivity implements ICommunicator {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.menu_main_item_sky_mood:
-                //do nothing - we are already in this activity
-                return true;
-            case R.id.menu_main_item_searched_locations:
-                Intent searchedLocationsActivity = new Intent(this, SearchedLocationsActivity.class);
-                startActivityForResult(searchedLocationsActivity, REQUEST_CODE_SEARCHED_LOCATIONS);
-                return true;
-            case R.id.menu_main_item_my_locations:
-                Intent myLocationsActivity = new Intent(this, MyLocationsActivity.class);
-                startActivity(myLocationsActivity);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (itemId == R.id.menu_main_item_sky_mood) {
+            //do nothing - we are already in this activity
+            return true;
+        } else if (itemId == R.id.menu_main_item_searched_locations) {
+            Intent searchedLocationsActivity = new Intent(this, SearchedLocationsActivity.class);
+            startActivityForResult(searchedLocationsActivity, REQUEST_CODE_SEARCHED_LOCATIONS);
+            return true;
+        } else if (itemId == R.id.menu_main_item_my_locations) {
+            Intent myLocationsActivity = new Intent(this, MyLocationsActivity.class);
+            startActivity(myLocationsActivity);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SEARCHED_LOCATIONS && resultCode == Activity.RESULT_OK) {
             onSearchedLocationResult(data);
         }

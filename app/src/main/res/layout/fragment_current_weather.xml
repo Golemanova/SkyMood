@@ -61,7 +61,7 @@
             android:gravity="end"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatSpinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/fragment_current_weather_view_spinner_location"
                 android:layout_width="wrap_content"

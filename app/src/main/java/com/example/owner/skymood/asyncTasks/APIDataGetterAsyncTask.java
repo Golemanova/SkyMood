@@ -2,9 +2,10 @@ package com.example.owner.skymood.asyncTasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.ImageView;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.owner.skymood.MainActivity;
 import com.example.owner.skymood.R;
