@@ -13,7 +13,7 @@ import com.example.owner.skymood.fragments.MoreInfoFragment
  * Created by Golemanovaa on 4.4.2016 г..
  */
 class CustomPagerAdapter(
-    fm: FragmentManager, private val context: Context?
+    fm: FragmentManager
 ) : FragmentStatePagerAdapter(fm) {
     private val fragmentsArray: Array<Fragment> = arrayOf(
         CurrentWeatherFragment(),

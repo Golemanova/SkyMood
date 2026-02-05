@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Build
-import android.util.Log
 import android.widget.RemoteViews
 import com.example.owner.skymood.R
 import com.example.owner.skymood.R.drawable
@@ -19,6 +18,7 @@ import java.lang.reflect.Field
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Scanner
+import kotlin.math.roundToInt
 
 /**
  * Created by Golemanovaa on 10.4.2016 г..
@@ -65,10 +65,7 @@ class MyWidgedProvider : AppWidgetProvider() {
         } else {
             // iterate through all of our widgets (in case the user has placed multiple widgets)
             for (widgetId in appWidgetIds) {
-                val remoteViews = RemoteViews(
-                    context.getPackageName(),
-                    R.layout.widget_layout
-                )
+                val remoteViews = RemoteViews(context.packageName, R.layout.widget_layout)
                 if (!pref.hasNull()) {
                     remoteViews.setTextViewText(R.id.widget_layout_tv_city, city)
                     remoteViews.setTextViewText(R.id.widget_layout_tv_country, country)
@@ -93,7 +90,7 @@ class MyWidgedProvider : AppWidgetProvider() {
 
                 //update when the update button is clicked
                 val intent = Intent(context, MyWidgedProvider::class.java)
-                intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
+                intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
                 //the widgets that should be updated (all of the app widgets)
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
 
@@ -112,12 +109,6 @@ class MyWidgedProvider : AppWidgetProvider() {
                 appWidgetManager.updateAppWidget(widgetId, remoteViews)
             }
         }
-    }
-
-    fun setInfo(city: String?, country: String?, countryCode: String?) {
-        Companion.city = city
-        Companion.country = country
-        Companion.countryCode = countryCode
     }
 
     class WidgedService : IntentService("WidgedService") {
@@ -142,7 +133,7 @@ class MyWidgedProvider : AppWidgetProvider() {
 
                 val condition = weatherCondition.getString("text")
                 val currentTemp = currentWeather.getDouble("temp_c")
-                val temp = Math.round(currentTemp).toString()
+                val temp = currentTemp.roundToInt().toString()
 
 
                 val icon = weatherCondition.getInt("code")
@@ -150,11 +141,11 @@ class MyWidgedProvider : AppWidgetProvider() {
 
                 val iconId = getImageResource(icon, isNight)
 
-                val remoteV = RemoteViews(this.getPackageName(), R.layout.widget_layout)
+                val remoteV = RemoteViews(this.packageName, R.layout.widget_layout)
                 remoteV.setTextViewText(R.id.widget_layout_tv_city, city)
                 remoteV.setTextViewText(R.id.widget_layout_tv_country, country)
                 remoteV.setTextViewText(R.id.widget_layout_tv_condition, condition)
-                remoteV.setTextViewText(R.id.widged_layout_tv_degree, temp + "℃")
+                remoteV.setTextViewText(R.id.widged_layout_tv_degree, "$temp℃")
                 remoteV.setImageViewResource(R.id.widget_layout_iv_icon, iconId)
 
 

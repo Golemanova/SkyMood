@@ -97,7 +97,7 @@ class MyLocationDAO private constructor(context: Context) : IMyLocationDAO {
         val id = db.delete(
             DatabaseHelper.MY_LOCATIONS,
             DatabaseHelper.CITY + " = ? AND " + DatabaseHelper.COUNTRY + " = ?",
-            arrayOf<String?>(location.city, location.country)
+            arrayOf(location.city, location.country)
         ).toLong()
         db.close()
         return id
@@ -108,7 +108,7 @@ class MyLocationDAO private constructor(context: Context) : IMyLocationDAO {
             val db = helper.readableDatabase
             val c = db.query(
                 DatabaseHelper.MY_LOCATIONS,
-                arrayOf<String>(DatabaseHelper.LOCATION),
+                arrayOf(DatabaseHelper.LOCATION),
                 null,
                 null,
                 null,

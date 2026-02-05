@@ -63,8 +63,8 @@ class GetWeeklyTask(
                 val icon = obj.getString("icon")
 
                 val id =
-                    context.getResources().getIdentifier(icon, "drawable", context.getPackageName())
-                val iconImage = BitmapFactory.decodeResource(context.getResources(), id)
+                    context.resources.getIdentifier(icon, "drawable", context.packageName)
+                val iconImage = BitmapFactory.decodeResource(context.resources, id)
 
                 weeklyWeather.add(WeeklyWeather(day, min, max, condition, iconImage))
             }

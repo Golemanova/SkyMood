@@ -24,6 +24,7 @@
         android:layout_height="35dp"
         android:layout_gravity="end"
         android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/icon_add_favourite"
         tools:ignore="ContentDescription" />
 

@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         //setting view pager adapter
-        adapter = CustomPagerAdapter(supportFragmentManager, this)
+        adapter = CustomPagerAdapter(supportFragmentManager)
         pager = findViewById<View?>(R.id.activity_main_view_pager) as ViewPager
         pager.setOffscreenPageLimit(NUMBER_OF_PAGES)
         pager.setAdapter(adapter)
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), ICommunicator {
         moreInfoFragment.setExternalInfo(city, code, date, min, max)
 
         //start get more info
-        val infoTask = GetMoreInfoTask(this, moreInfoFragment)
+        val infoTask = GetMoreInfoTask(moreInfoFragment)
         infoTask.execute(city, code)
     }
 

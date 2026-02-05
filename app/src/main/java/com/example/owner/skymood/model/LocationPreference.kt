@@ -9,13 +9,11 @@ import android.content.SharedPreferences
 class LocationPreference private constructor(context: Context) {
     private val pref: SharedPreferences
     private val editor: SharedPreferences.Editor
-    private val widged: MyWidgedProvider
     var PRIVATE_MODE: Int = 0
 
     init {
         pref = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE)
         editor = pref.edit()
-        this.widged = MyWidgedProvider()
     }
 
     fun setPreferredLocation(
@@ -41,7 +39,7 @@ class LocationPreference private constructor(context: Context) {
         editor.putString(FEELS_LIKE, feelsLike)
         editor.putString(LAST_UPDATE, lastUpdate)
         editor.commit()
-        widged.setInfo(city, country, countryCode)
+        MyWidgedProvider.setInfo(city, country, countryCode)
     }
 
     val isSetLocation: Boolean
