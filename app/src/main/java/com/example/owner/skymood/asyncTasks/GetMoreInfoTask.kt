@@ -17,8 +17,10 @@ import java.util.Scanner
 /**
  * Created by owner on 11/04/2016.
  */
-class GetMoreInfoTask(private val context: Context?, private val fragment: MoreInfoFragment) :
-    AsyncTask<String?, Void?, Void?>() {
+class GetMoreInfoTask(
+    private val fragment: MoreInfoFragment
+) : AsyncTask<String?, Void?, Void?>() {
+
     private var dayTxt: String? = null
     private var tempTxt: String? = null
     private var feelsTxt: String? = null

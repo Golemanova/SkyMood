@@ -6,6 +6,7 @@ import com.example.owner.skymood.model.DatabaseHelper
 import com.example.owner.skymood.model.SearchedLocation
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 /**
  * Created by owner on 05/04/2016.
@@ -132,9 +133,9 @@ class SearchedLocationsDAO private constructor(context: Context) : ISearchedLoca
         val selection = DatabaseHelper.CITY + " = ?"
         val c = db.query(
             DatabaseHelper.LAST_SEARCHED,
-            arrayOf<String>(DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY),
+            arrayOf(DatabaseHelper.SEARCHED_ID, DatabaseHelper.CITY),
             selection,
-            arrayOf<String?>(city),
+            arrayOf(city),
             null,
             null,
             null
@@ -160,7 +161,7 @@ class SearchedLocationsDAO private constructor(context: Context) : ISearchedLoca
         values.put(DatabaseHelper.MAX_TEMP, location.max)
         values.put(DatabaseHelper.MIN_TEMP, location.min)
         values.put(DatabaseHelper.LAST_UPDATE, location.lastUpdate)
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val strDate = sdf.format(Date())
         values.put(DatabaseHelper.DATE, strDate)
         values.put(DatabaseHelper.ICON, location.icon)
@@ -172,7 +173,7 @@ class SearchedLocationsDAO private constructor(context: Context) : ISearchedLoca
     }
 
     override fun updateLocation(id: Long, location: SearchedLocation): Long {
-        val db = helper.getWritableDatabase()
+        val db = helper.writableDatabase
         val values = ContentValues()
         values.put(DatabaseHelper.CITY, location.city)
         values.put(DatabaseHelper.TEMP, location.temp)
@@ -182,7 +183,7 @@ class SearchedLocationsDAO private constructor(context: Context) : ISearchedLoca
         values.put(DatabaseHelper.MAX_TEMP, location.max)
         values.put(DatabaseHelper.MIN_TEMP, location.min)
         values.put(DatabaseHelper.LAST_UPDATE, location.lastUpdate)
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val strDate = sdf.format(Date())
         values.put(DatabaseHelper.DATE, strDate)
         values.put(DatabaseHelper.ICON, location.icon)

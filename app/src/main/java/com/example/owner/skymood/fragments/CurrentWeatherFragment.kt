@@ -19,6 +19,7 @@ import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import com.example.owner.skymood.MainActivity
 import com.example.owner.skymood.R
@@ -162,7 +163,7 @@ class CurrentWeatherFragment : Fragment() {
 
         citySearchButton.setOnClickListener {
             if (isOnline) {
-                if (writeCityEditText.visibility == View.GONE) {
+                if (writeCityEditText.isGone) {
                     changeVisibility(View.GONE)
 
                     val slide: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
@@ -202,7 +203,7 @@ class CurrentWeatherFragment : Fragment() {
             if (isOnline) {
                 findLocation()
             } else {
-                Toast.makeText(getContext(), "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -325,13 +326,13 @@ class CurrentWeatherFragment : Fragment() {
             }
             val con = weatherImage.context
             weatherImage.setImageResource(
-                context!!.resources.getIdentifier(locPref.icon, "drawable", con.getPackageName())
+                requireContext().resources.getIdentifier(locPref.icon, "drawable", con.packageName)
             )
         }
 
     val isOnline: Boolean
         get() {
-            val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val cm = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
             return netInfo != null && netInfo.isConnectedOrConnecting
         }

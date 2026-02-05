@@ -76,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toStartOf="@+id/fragment_current_weather_iv_gps_search"
                 android:clickable="true"
+                android:focusable="true"
                 android:src="@drawable/icon_sync"/>
 
             <ImageView
@@ -84,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toStartOf="@+id/fragment_current_weather_iv_city_search"
                 android:clickable="true"
+                android:focusable="true"
                 android:src="@drawable/icon_location"/>
 
             <ImageView
@@ -93,6 +95,7 @@
                 android:layout_alignParentEnd="true"
                 android:adjustViewBounds="true"
                 android:clickable="true"
+                android:focusable="true"
                 android:src="@drawable/icon_search"/>
 
             <AutoCompleteTextView

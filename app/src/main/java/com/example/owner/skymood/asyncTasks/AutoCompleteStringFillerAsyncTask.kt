@@ -1,6 +1,5 @@
 package com.example.owner.skymood.asyncTasks
 
-import android.R
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
@@ -65,7 +64,7 @@ class AutoCompleteStringFillerAsyncTask(
     @Deprecated("Deprecated in Java")
     override fun onPostExecute(aVoid: Void?) {
         val adapterAutoComplete: ArrayAdapter<String> =
-            ArrayAdapter(context, R.layout.simple_list_item_1, autoCompleteNames.toList())
+            ArrayAdapter(context, android.R.layout.simple_list_item_1, autoCompleteNames.toList())
         fragment.autoCompleteStringFillerAsyncTaskOnPostExecute(adapterAutoComplete)
     }
 }

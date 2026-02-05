@@ -71,6 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
             android:text="@string/lbl_what_is_the_sky_mood"
             android:textSize="15sp" />

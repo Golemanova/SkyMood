@@ -19,6 +19,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import java.util.Scanner
 import kotlin.math.roundToInt
 
@@ -39,19 +40,13 @@ class APIDataGetterAsyncTask(
     private var minTemp: String? = null
     private var dateAndTime: String? = null
 
-    private val locPref: LocationPreference
+    private val locPref: LocationPreference = LocationPreference.getInstance(context)
     private var city: String? = null
     private var countryCode: String? = null
     private var country: String? = null
 
-    var manager: SearchedLocationManager
-    var activity: MainActivity
-
-    init {
-        this.locPref = LocationPreference.getInstance(context)
-        this.manager = SearchedLocationManager.getInstance(context)
-        activity = context as MainActivity
-    }
+    var manager: SearchedLocationManager = SearchedLocationManager.getInstance(context)
+    var activity: MainActivity = context as MainActivity
 
     @Deprecated("Deprecated in Java")
     override fun doInBackground(vararg params: String?): Void? {
@@ -114,12 +109,12 @@ class APIDataGetterAsyncTask(
     override fun onPostExecute(aVoid: Void?) {
         val cal = Calendar.getInstance()
         cal.add(Calendar.DATE, 0)
-        val format = SimpleDateFormat("HH:mm, dd.MM.yyyy")
+        val format = SimpleDateFormat("HH:mm, dd.MM.yyyy", Locale.getDefault())
         dateAndTime = format.format(cal.getTime())
         val lastUpdate = "Last update: $dateAndTime"
 
         if (icon == null) {
-            weatherImage.setImageResource(R.drawable.icon_not_available)
+            weatherImage.setImageResource(drawable.icon_not_available)
         } else {
             weatherImage.setImageResource(getImageResource(icon!!.toInt(), isNight))
         }

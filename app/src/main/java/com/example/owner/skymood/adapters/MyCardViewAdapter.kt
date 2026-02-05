@@ -87,7 +87,7 @@ class MyCardViewAdapter(
 
             erase.setOnClickListener {
                 val position = adapterPosition
-                manager.deleteMyLocation(data.get(position))
+                manager.deleteMyLocation(data[position])
                 removeAt(position)
                 if (position < lastCheckedPosition) {
                     lastCheckedPosition--
