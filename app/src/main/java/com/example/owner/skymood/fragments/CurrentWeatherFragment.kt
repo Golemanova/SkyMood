@@ -13,44 +13,35 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.owner.skymood.MainActivity
 import com.example.owner.skymood.R
-import com.example.owner.skymood.asyncTasks.APIDataGetterAsyncTask
+import com.example.owner.skymood.R.drawable
 import com.example.owner.skymood.asyncTasks.AutoCompleteStringFillerAsyncTask
 import com.example.owner.skymood.asyncTasks.FindLocationAsyncTask
 import com.example.owner.skymood.asyncTasks.GetHourlyTask
 import com.example.owner.skymood.asyncTasks.GetWeeklyTask
+import com.example.owner.skymood.databinding.FragmentCurrentWeatherBinding
 import com.example.owner.skymood.model.LocationPreference
 import com.example.owner.skymood.model.MyLocation
 import com.example.owner.skymood.model.MyLocationManager
+import com.example.owner.skymood.model.SearchedLocation
+import com.example.owner.skymood.model.SearchedLocationManager
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class CurrentWeatherFragment : Fragment() {
-    private lateinit var temperature: TextView
-    private lateinit var condition: TextView
-    private lateinit var feelsLike: TextView
-    private lateinit var lastUpdate: TextView
-    private lateinit var countryTextView: TextView
-    private lateinit var minTempTextView: TextView
-    private lateinit var maxTempTextView: TextView
-    lateinit var weatherImage: ImageView
-    private lateinit var addImage: ImageView
-    private lateinit var syncButton: ImageView
-    private lateinit var locationSearchButton: ImageView
-    private lateinit var citySearchButton: ImageView
-    private lateinit var writeCityEditText: AutoCompleteTextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var chosenCityTextView: TextView
-    private lateinit var spinner: Spinner
 
+    private lateinit var binding: FragmentCurrentWeatherBinding
+
+    lateinit var weatherImage: ImageView
+
+    private lateinit var addImage: ImageView
     private var city: String? = null
     private var country: String? = null
     private var countryCode: String? = "0"
@@ -59,55 +50,23 @@ class CurrentWeatherFragment : Fragment() {
     private var keyboard: InputMethodManager? = null
     private lateinit var locPref: LocationPreference
     private lateinit var manager: MyLocationManager
+    private lateinit var searchedLocationManager: SearchedLocationManager
 
-    private fun initViews(rootView: ViewGroup) {
-        syncButton =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_iv_sync) as ImageView
-        locationSearchButton =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_iv_gps_search) as ImageView
-        citySearchButton =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_iv_city_search) as ImageView
-        writeCityEditText =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_actv_search_city) as AutoCompleteTextView
-        temperature =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_tv_temperature) as TextView
-        countryTextView =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_tv_country) as TextView
-        condition =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_tv_condition) as TextView
-        minTempTextView =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_tv_min_temp) as TextView
-        maxTempTextView =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_tv_max_temp) as TextView
-        feelsLike =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_tv_feels_like) as TextView
-        lastUpdate =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_tv_last_update) as TextView
-        weatherImage =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_iv_weather_state) as ImageView
-        chosenCityTextView =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_tv_chosen_city) as TextView
-        progressBar =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_view_progress_bar) as ProgressBar
-        spinner =
-            rootView.findViewById<View?>(R.id.fragment_current_weather_view_spinner_location) as Spinner
-
-        val toolbar = (requireActivity() as MainActivity).toolbar
-        addImage = toolbar.findViewById<View?>(R.id.view_toolbar_iv_add_favourite) as ImageView
-    }
+    private val viewModel: CurrentWeatherViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val rootView =
-            inflater.inflate(R.layout.fragment_current_weather, container, false) as ViewGroup
+        binding = FragmentCurrentWeatherBinding.inflate(inflater, container, false)
+        weatherImage = binding.fragmentCurrentWeatherIvWeatherState
 
         locPref = LocationPreference.getInstance(requireContext())
         manager = MyLocationManager.getInstance(requireContext())
+        searchedLocationManager = SearchedLocationManager.getInstance(requireContext())
 
-        //initializing components
-        initViews(rootView)
+        val toolbar = (requireActivity() as MainActivity).toolbar
+        addImage = toolbar.findViewById(R.id.view_toolbar_iv_add_favourite)
 
         //setting background
         setBackground()
@@ -123,61 +82,59 @@ class CurrentWeatherFragment : Fragment() {
         citiesSpinner.addAll(manager.allStringLocations)
         val adapter: ArrayAdapter<*> =
             ArrayAdapter<Any?>(requireContext(), R.layout.view_spinner, citiesSpinner.toList())
-        spinner.adapter = adapter
-        spinner.setSelection(1)
+        binding.fragmentCurrentWeatherViewSpinnerLocation.adapter = adapter
+        binding.fragmentCurrentWeatherViewSpinnerLocation.setSelection(1)
 
         //listeners
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                if ((parent?.getItemAtPosition(position))?.equals("My Locations") == false) {
-                    if (isOnline) {
-                        val locationsString = parent.getItemAtPosition(position) as String
-                        val location = locationsString.split(",")
-                        val city = if (location.isNotEmpty()) location[0] else ""
-                        if (location.size > 1) country = location[0].trim()
-                        setCity(city, country)
+        binding.fragmentCurrentWeatherViewSpinnerLocation.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                ) {
+                    if ((parent?.getItemAtPosition(position))?.equals("My Locations") == false) {
+                        if (isOnline) {
+                            val locationsString = parent.getItemAtPosition(position) as String
+                            val location = locationsString.split(",")
+                            val city = if (location.isNotEmpty()) location[0] else ""
+                            if (location.size > 1) country = location[1].trim()
+                            setCity(city, country)
 
-                        //countryCode from  DB
-                        val task = APIDataGetterAsyncTask(
-                            this@CurrentWeatherFragment,
-                            requireContext(),
-                            weatherImage
-                        )
-                        task.execute(countryCode, city, country)
-                    } else {
-                        Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT)
-                            .show()
+                            viewModel.fetchWeather(city, API_KEY)
+                        } else {
+                            Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
                     }
-
+                    binding.fragmentCurrentWeatherViewSpinnerLocation.setSelection(0)
                 }
-                spinner.setSelection(0)
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    // do nothing
+                }
             }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                // do nothing
-            }
-        }
 
-
-        citySearchButton.setOnClickListener {
+        binding.fragmentCurrentWeatherIvCitySearch.setOnClickListener {
             if (isOnline) {
-                if (writeCityEditText.isGone) {
+                if (binding.fragmentCurrentWeatherActvSearchCity.isGone) {
                     changeVisibility(View.GONE)
 
                     val slide: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
                     slide.duration = 1000
-                    writeCityEditText.startAnimation(slide)
-                    writeCityEditText.visibility = View.VISIBLE
-                    writeCityEditText.setFocusable(true)
-                    writeCityEditText.requestFocus()
+                    binding.fragmentCurrentWeatherActvSearchCity.startAnimation(slide)
+                    binding.fragmentCurrentWeatherActvSearchCity.visibility = View.VISIBLE
+                    binding.fragmentCurrentWeatherActvSearchCity.isFocusable = true
+                    binding.fragmentCurrentWeatherActvSearchCity.requestFocus()
 
                     keyboard = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    keyboard?.showSoftInput(writeCityEditText, 0)
+                    keyboard?.showSoftInput(binding.fragmentCurrentWeatherActvSearchCity, 0)
                 } else {
-                    writeCityEditText.visibility = View.GONE
-                    keyboard?.hideSoftInputFromWindow(writeCityEditText.windowToken, 0)
+                    binding.fragmentCurrentWeatherActvSearchCity.visibility = View.GONE
+                    keyboard?.hideSoftInputFromWindow(
+                        binding.fragmentCurrentWeatherActvSearchCity.windowToken,
+                        0
+                    )
                     changeVisibility(View.VISIBLE)
                 }
             } else {
@@ -185,41 +142,41 @@ class CurrentWeatherFragment : Fragment() {
             }
         }
 
-        syncButton.setOnClickListener {
-            if (isOnline) {
-                val task =
-                    APIDataGetterAsyncTask(
-                        this@CurrentWeatherFragment,
-                        requireContext(),
-                        weatherImage
-                    )
-                task.execute(countryCode, city, country)
+        binding.fragmentCurrentWeatherIvSync.setOnClickListener {
+            if (isOnline && city != null) {
+                viewModel.fetchWeather(city!!, API_KEY)
             } else {
-                Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
-        locationSearchButton.setOnClickListener {
+        binding.fragmentCurrentWeatherIvGpsSearch.setOnClickListener {
             if (isOnline) {
                 findLocation()
             } else {
-                Toast.makeText(requireContext(), "NO INTERNET CONNECTION", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "NO INTERNET CONNECTION", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
-        writeCityEditText.setOnEditorActionListener { _, _, _ ->
-            if (!writeCityEditText.text.toString().isEmpty() && writeCityEditText.text.toString()
+        binding.fragmentCurrentWeatherActvSearchCity.setOnEditorActionListener { _, _, _ ->
+            if (binding.fragmentCurrentWeatherActvSearchCity.text.toString()
+                    .isNotEmpty() && binding.fragmentCurrentWeatherActvSearchCity.text.toString()
                     .contains(",")
             ) {
-                val location = writeCityEditText.text.toString()
+                val location = binding.fragmentCurrentWeatherActvSearchCity.text.toString()
                 val parts: Array<String?> =
                     location.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 val city = parts[0]
                 country = parts[1]!!.trim { it <= ' ' }
                 getWeatherInfoByCity(city, country)
-            } else if (writeCityEditText.text.toString() == "") {
-                writeCityEditText.visibility = View.GONE
-                keyboard!!.hideSoftInputFromWindow(writeCityEditText.windowToken, 0)
+            } else if (binding.fragmentCurrentWeatherActvSearchCity.text.toString() == "") {
+                binding.fragmentCurrentWeatherActvSearchCity.visibility = View.GONE
+                keyboard!!.hideSoftInputFromWindow(
+                    binding.fragmentCurrentWeatherActvSearchCity.windowToken,
+                    0
+                )
                 changeVisibility(View.VISIBLE)
             } else {
                 Toast.makeText(
@@ -227,15 +184,21 @@ class CurrentWeatherFragment : Fragment() {
                     "You must specify a fragment_current_weather_tv_country",
                     Toast.LENGTH_SHORT
                 ).show()
-                writeCityEditText.visibility = View.GONE
-                keyboard?.hideSoftInputFromWindow(writeCityEditText.windowToken, 0)
+                binding.fragmentCurrentWeatherActvSearchCity.visibility = View.GONE
+                keyboard?.hideSoftInputFromWindow(
+                    binding.fragmentCurrentWeatherActvSearchCity.windowToken,
+                    0
+                )
                 changeVisibility(View.VISIBLE)
             }
-            keyboard?.hideSoftInputFromWindow(writeCityEditText.windowToken, 0)
+            keyboard?.hideSoftInputFromWindow(
+                binding.fragmentCurrentWeatherActvSearchCity.windowToken,
+                0
+            )
             false
         }
 
-        writeCityEditText.addTextChangedListener(object : TextWatcher {
+        binding.fragmentCurrentWeatherActvSearchCity.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -243,21 +206,20 @@ class CurrentWeatherFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                val chars = writeCityEditText.text.toString().length
+                val chars = binding.fragmentCurrentWeatherActvSearchCity.text.toString().length
                 if (chars >= 3) {
                     val filler =
                         AutoCompleteStringFillerAsyncTask(
                             this@CurrentWeatherFragment,
                             requireContext()
                         )
-                    filler.execute(writeCityEditText.text.toString())
+                    filler.execute(binding.fragmentCurrentWeatherActvSearchCity.text.toString())
                 }
             }
         })
 
         //logic
         if (this.isOnline) {
-            val task = APIDataGetterAsyncTask(this, requireContext(), weatherImage)
             val fr = (context as MainActivity).hourlyFragment
             val hourTask = GetHourlyTask(requireContext(), fr, fr.hourlyWeatherArray)
             val weeklyTask = GetWeeklyTask(requireContext(), fr, fr.weeklyWeatherArray)
@@ -267,7 +229,7 @@ class CurrentWeatherFragment : Fragment() {
                 setCity(locPref.city, locPref.country)
                 countryCode = locPref.countryCode
                 country = locPref.country
-                task.execute(countryCode, city, country)
+                viewModel.fetchWeather(city!!, API_KEY)
                 hourTask.execute(city, countryCode)
                 weeklyTask.execute(city, countryCode)
             } else {
@@ -286,7 +248,7 @@ class CurrentWeatherFragment : Fragment() {
                 countryCode = locPref.countryCode
                 this.weatherInfoFromSharedPref
             } else {
-                feelsLike.text = "Please connect to Internet"
+                binding.fragmentCurrentWeatherTvFeelsLike.text = "Please connect to Internet"
             }
         }
 
@@ -304,35 +266,122 @@ class CurrentWeatherFragment : Fragment() {
                 }
             }
         }
-        return rootView
+        return binding.root
     } // end of onCreate
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.fragmentCurrentWeatherTvChosenCity.visibility = View.GONE
+                binding.fragmentCurrentWeatherTvCountry.visibility = View.GONE
+                binding.fragmentCurrentWeatherViewProgressBar.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.weatherData.observe(viewLifecycleOwner) {
+            binding.fragmentCurrentWeatherViewProgressBar.visibility = View.GONE
+            binding.fragmentCurrentWeatherTvChosenCity.visibility = View.VISIBLE
+            binding.fragmentCurrentWeatherTvChosenCity.text = it.location.name
+            binding.fragmentCurrentWeatherTvCountry.visibility = View.VISIBLE
+            binding.fragmentCurrentWeatherTvCountry.text = country
+            addImage.visibility = View.VISIBLE
+
+            //TODO should come from somewhere else
+            val maxTemp = "10"
+            val minTemp = "-3"
+
+            val cal = Calendar.getInstance()
+            cal.add(Calendar.DATE, 0)
+            val format = SimpleDateFormat("HH:mm, dd.MM.yyyy", Locale.getDefault())
+            val dateAndTime = format.format(cal.getTime())
+            val lastUpdate = "Last update: $dateAndTime"
+
+
+            binding.fragmentCurrentWeatherTvTemperature.text = "${it.current.tempC}°"
+            binding.fragmentCurrentWeatherTvCondition.text = it.current.condition.text
+            binding.fragmentCurrentWeatherTvFeelsLike.text = "Feels like: ${it.current.feelsLikeC}°"
+            binding.fragmentCurrentWeatherTvMinTemp.text = "⬇$minTemp°"
+            binding.fragmentCurrentWeatherTvMaxTemp.text = "⬆$maxTemp°"
+            binding.fragmentCurrentWeatherTvLastUpdate.text =lastUpdate
+
+            val isNight = it.current.condition.icon.contains("night")
+            weatherImage.setImageResource(
+                getImageResource(
+                    it.current.condition.code,
+                    isNight
+                )
+            )
+
+            val mainActivity = requireActivity() as MainActivity
+            mainActivity.changeBackground(if (isNight) MainActivity.NIGHT else MainActivity.DAY)
+
+            mainActivity.setInfo(city, countryCode, minTemp, maxTemp, dateAndTime)
+            if (locPref.isSetLocation && city == locPref.city && countryCode == locPref.countryCode) {
+                //insert in shared prefs
+                locPref.setPreferredLocation(
+                    city = city,
+                    country = country,
+                    countryCode = countryCode,
+                    icon = it.current.condition.code.toString(),
+                    temperature = it.current.tempC.toString(),
+                    minTemp = minTemp,
+                    maxTemp = maxTemp,
+                    condition = it.current.condition.text,
+                    feelsLike = it.current.feelsLikeC.toString(),
+                    lastUpdate = it.current.feelsLikeC.toString()
+                )
+            } else {
+                //insert into DB
+                val loc = SearchedLocation(
+                    city = city,
+                    temp = it.current.tempC.toString(),
+                    condition = it.current.condition.text,
+                    country = country,
+                    code = countryCode,
+                    max = maxTemp,
+                    min = minTemp,
+                    lastUpdate = lastUpdate,
+                    icon = it.current.condition.code.toString(),
+                    feelsLike = it.current.feelsLikeC.toString()
+                )
+                searchedLocationManager.insertSearchedLocation(loc)
+            }
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) {
+            binding.fragmentCurrentWeatherTvFeelsLike.text = "Sorry, something went wrong."
+            binding.fragmentCurrentWeatherTvLastUpdate.text = it
+        }
+    }
 
     val weatherInfoFromSharedPref: Unit
         get() {
-            chosenCityTextView.visibility = View.VISIBLE
-            chosenCityTextView.text = locPref.city
-            countryTextView.text = country
-            temperature.text = locPref.temperature + "°"
-            minTempTextView.text = "⬇" + locPref.minTemp + "°"
-            maxTempTextView.text = "⬆" + locPref.maxTemp + "°"
-            condition.text = locPref.condition
-            feelsLike.text = locPref.feelsLike
-            lastUpdate.text = locPref.lastUpdate
+            binding.fragmentCurrentWeatherTvChosenCity.visibility = View.VISIBLE
+            binding.fragmentCurrentWeatherTvChosenCity.text = locPref.city
+            binding.fragmentCurrentWeatherTvCountry.text = country
+            binding.fragmentCurrentWeatherTvTemperature.text = locPref.temperature + "°"
+            binding.fragmentCurrentWeatherTvMinTemp.text = "⬇" + locPref.minTemp + "°"
+            binding.fragmentCurrentWeatherTvMaxTemp.text = "⬆" + locPref.maxTemp + "°"
+            binding.fragmentCurrentWeatherTvCondition.text = locPref.condition
+            binding.fragmentCurrentWeatherTvFeelsLike.text = locPref.feelsLike
+            binding.fragmentCurrentWeatherTvLastUpdate.text = locPref.lastUpdate
 
             if (locPref.icon!!.contains("night")) {
                 (context as MainActivity).changeBackground(MainActivity.NIGHT)
             } else {
                 (context as MainActivity).changeBackground(MainActivity.DAY)
             }
-            val con = weatherImage.context
-            weatherImage.setImageResource(
+            val con = binding.fragmentCurrentWeatherIvWeatherState.context
+            binding.fragmentCurrentWeatherIvWeatherState.setImageResource(
                 requireContext().resources.getIdentifier(locPref.icon, "drawable", con.packageName)
             )
         }
 
     val isOnline: Boolean
         get() {
-            val cm = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val cm =
+                requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
             return netInfo != null && netInfo.isConnectedOrConnecting
         }
@@ -343,63 +392,19 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     fun getWeatherInfoByCity(city: String?, country: String?) {
-        if (city != null && !city.isEmpty()) {
+        if (city != null && city.isNotEmpty()) {
             setCity(city, country)
-            writeCityEditText.setText("")
-            writeCityEditText.visibility = View.GONE
-            spinner.visibility = View.VISIBLE
-            syncButton.visibility = View.VISIBLE
-            locationSearchButton.visibility = View.VISIBLE
-            val task = APIDataGetterAsyncTask(this, requireContext(), weatherImage)
-            task.execute(countryCode, city, country)
-        }
-    }
-
-    fun apiDataGetterAsyncTaskOnPreExecute() {
-        chosenCityTextView.visibility = View.GONE
-        countryTextView.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
-    }
-
-    fun apiDataGetterAsyncTaskOnPostExecute(
-        temp: String?,
-        condition: String?,
-        feelsLike: String?,
-        minTemp: String?,
-        maxTemp: String?,
-        dateAndTime: String?,
-        lastUpdate: String?,
-        cityToDisplay: String?,
-        country: String?
-    ) {
-        this.progressBar.visibility = View.GONE
-        this.chosenCityTextView.visibility = View.VISIBLE
-        this.chosenCityTextView.text = cityToDisplay
-        this.countryTextView.visibility = View.VISIBLE
-        this.countryTextView.text = country
-        this.addImage.visibility = View.VISIBLE
-
-        if (temp != null) {
-            this.temperature.text = "$temp°"
-            this.condition.text = condition
-            this.feelsLike.text = feelsLike
-            this.minTempTextView.text = "⬇$minTemp°"
-            this.maxTempTextView.text = "⬆$maxTemp°"
-            this.lastUpdate.text = lastUpdate
-        } else {
-            this.temperature.text = ""
-            this.condition.text = ""
-            this.lastUpdate.text = ""
-            this.maxTempTextView.text = ""
-            this.minTempTextView.text = ""
-            this.feelsLike.text = "Sorry, there is no information."
-            this.lastUpdate.text =
-                "This location does not exist\nor you have weak internet connection"
+            binding.fragmentCurrentWeatherActvSearchCity.setText("")
+            binding.fragmentCurrentWeatherActvSearchCity.visibility = View.GONE
+            binding.fragmentCurrentWeatherViewSpinnerLocation.visibility = View.VISIBLE
+            binding.fragmentCurrentWeatherIvSync.visibility = View.VISIBLE
+            binding.fragmentCurrentWeatherIvGpsSearch.visibility = View.VISIBLE
+            viewModel.fetchWeather(city, API_KEY)
         }
     }
 
     fun autoCompleteStringFillerAsyncTaskOnPostExecute(adapterAutoComplete: ArrayAdapter<*>?) {
-        this.writeCityEditText.setAdapter<ArrayAdapter<*>?>(adapterAutoComplete)
+        binding.fragmentCurrentWeatherActvSearchCity.setAdapter(adapterAutoComplete)
     }
 
     fun setCities(cities: HashMap<String?, String?>) {
@@ -407,15 +412,19 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     fun findLocation() {
-        val findLocation = FindLocationAsyncTask(this, requireContext(), weatherImage)
+        val findLocation = FindLocationAsyncTask(
+            this,
+            requireContext(),
+            binding.fragmentCurrentWeatherIvWeatherState
+        )
         findLocation.execute()
     }
 
     fun changeVisibility(visibility: Int) {
-        spinner.visibility = visibility
-        syncButton.visibility = visibility
-        locationSearchButton.visibility = visibility
-        weatherImage.adjustViewBounds = true
+        binding.fragmentCurrentWeatherViewSpinnerLocation.visibility = visibility
+        binding.fragmentCurrentWeatherIvSync.visibility = visibility
+        binding.fragmentCurrentWeatherIvGpsSearch.visibility = visibility
+        binding.fragmentCurrentWeatherIvWeatherState.adjustViewBounds = true
     }
 
     private fun setBackground() {
@@ -436,20 +445,56 @@ class CurrentWeatherFragment : Fragment() {
         feelsLike: String?,
         lastUpdate: String?
     ) {
-        this.chosenCityTextView.visibility = View.VISIBLE
-        this.chosenCityTextView.text = city
-        this.countryTextView.text = country
-        this.temperature.text = "$temp°"
-        this.minTempTextView.text = "⬇$minTemp°"
-        this.maxTempTextView.text = "⬆$maxTemp°"
-        this.condition.text = condition
-        this.feelsLike.text = feelsLike
-        this.lastUpdate.text = lastUpdate
+        binding.fragmentCurrentWeatherTvChosenCity.visibility = View.VISIBLE
+        binding.fragmentCurrentWeatherTvChosenCity.text = city
+        binding.fragmentCurrentWeatherTvCountry.text = country
+        binding.fragmentCurrentWeatherTvTemperature.text = "$temp°"
+        binding.fragmentCurrentWeatherTvMinTemp.text = "⬇$minTemp°"
+        binding.fragmentCurrentWeatherTvMaxTemp.text = "⬆$maxTemp°"
+        binding.fragmentCurrentWeatherTvCondition.text = condition
+        binding.fragmentCurrentWeatherTvFeelsLike.text = feelsLike
+        binding.fragmentCurrentWeatherTvLastUpdate.text = lastUpdate
 
-        val con = weatherImage.context
-        weatherImage.setImageResource(
+        val con = binding.fragmentCurrentWeatherIvWeatherState.context
+        binding.fragmentCurrentWeatherIvWeatherState.setImageResource(
             requireContext().resources.getIdentifier(icon, "drawable", con.packageName)
         )
+    }
+
+    fun updateWeatherInfo(city: String) {
+        viewModel.fetchWeather(city, API_KEY)
+    }
+
+    private fun getImageResource(code: Int, isNight: Boolean) = when (code) {
+        1000 -> if (isNight) drawable.sunny_night else drawable.sunny
+
+        1003 -> if (isNight) drawable.partlycloudy_night else drawable.partlycloudy
+
+        1006 -> if (isNight) drawable.mostlycloudy_night else drawable.mostlycloudy
+
+        1009 -> if (isNight) drawable.cloudy_night else drawable.cloudy
+
+        1030, 1135, 1147 -> if (isNight) drawable.fog_night else drawable.fog
+
+        1063 -> if (isNight) drawable.chancerain_night else drawable.chancerain
+
+        1072, 1066 -> if (isNight) drawable.chancesnow_night else drawable.chancesnow
+
+        1069 -> if (isNight) drawable.chancesleet_night else drawable.chancesleet
+
+        1273, 1276, 1279, 1282, 1087 -> if (isNight) drawable.tstorms_night else drawable.tstorms
+
+        1114, 1210, 1213, 1216, 1219, 1222, 1225,
+        1237, 1255, 1258, 1261, 1264, 1171, 1117 -> if (isNight) drawable.snow_night else drawable.snow
+
+        1150, 1168, 1153 -> if (isNight) drawable.hazy_night else drawable.hazy
+
+        1180, 1186, 1198, 1189, 1192, 1201,
+        1240, 1243, 1246, 1183 -> if (isNight) drawable.rain_night else drawable.rain
+
+        1207, 1249, 1252, 1204 -> if (isNight) drawable.sleet_night else drawable.sleet
+
+        else -> drawable.icon_not_available
     }
 
     companion object {
@@ -459,3 +504,4 @@ class CurrentWeatherFragment : Fragment() {
         private const val NIGHT_HOUR = 19
     }
 }
+

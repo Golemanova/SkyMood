@@ -39,8 +39,8 @@ class GetMoreInfoTask(
     @Deprecated("Deprecated in Java")
     override fun onPreExecute() {
         super.onPreExecute()
-        fragment.progress.visibility = View.VISIBLE
-        fragment.layout.visibility = View.GONE
+//        fragment.progress.visibility = View.VISIBLE
+//        fragment.layout.visibility = View.GONE
     }
 
     @Deprecated("Deprecated in Java")
@@ -131,8 +131,8 @@ class GetMoreInfoTask(
             moonIlluminatedTxt
         )
         fragment.setData()
-        fragment.progress.visibility = View.GONE
-        fragment.layout.visibility = View.VISIBLE
+//        fragment.progress.visibility = View.GONE
+//        fragment.layout.visibility = View.VISIBLE
     }
 
     companion object {

@@ -5,18 +5,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.viewpager.widget.ViewPager
 import com.example.owner.skymood.adapters.CustomPagerAdapter
-import com.example.owner.skymood.asyncTasks.APIDataGetterAsyncTask
 import com.example.owner.skymood.asyncTasks.GetHourlyTask
 import com.example.owner.skymood.asyncTasks.GetMoreInfoTask
 import com.example.owner.skymood.asyncTasks.GetWeeklyTask
+import com.example.owner.skymood.databinding.ActivityMainBinding
 import com.example.owner.skymood.fragments.CurrentWeatherFragment
 import com.example.owner.skymood.fragments.HourlyWeatherFragment
 import com.example.owner.skymood.fragments.ICommunicator
@@ -25,41 +22,38 @@ import com.example.owner.skymood.model.SearchedLocation
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity(), ICommunicator {
-    private lateinit var pager: ViewPager
+    private lateinit var binding: ActivityMainBinding
+
     lateinit var toolbar: Toolbar
         private set
-    private lateinit var layout: LinearLayout
     private lateinit var adapter: CustomPagerAdapter
     private val handler: Handler = Handler()
     private var lastClick: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (pager.currentItem == CURRENT_WEATHER_FRAGMENT_INDEX) {
+                if (binding.activityMainViewPager.currentItem == CURRENT_WEATHER_FRAGMENT_INDEX) {
                     onBack()
                 } else {
-                    pager.setCurrentItem(pager.currentItem - 1)
+                    binding.activityMainViewPager.setCurrentItem(binding.activityMainViewPager.currentItem - 1)
                 }
             }
         })
 
-        //used for changing the background
-        layout = findViewById<View?>(R.id.activity_main_container) as LinearLayout
-
         //setting view_toolbar
-        toolbar = findViewById(R.id.main_activity_view_tool_bar)
+        toolbar = binding.mainActivityViewToolBar.root as Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         //setting view pager adapter
         adapter = CustomPagerAdapter(supportFragmentManager)
-        pager = findViewById<View?>(R.id.activity_main_view_pager) as ViewPager
-        pager.setOffscreenPageLimit(NUMBER_OF_PAGES)
-        pager.setAdapter(adapter)
+        binding.activityMainViewPager.setOffscreenPageLimit(NUMBER_OF_PAGES)
+        binding.activityMainViewPager.setAdapter(adapter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -129,7 +123,7 @@ class MainActivity : AppCompatActivity(), ICommunicator {
     fun changeBackground(partOfDay: String) {
         val isNight = partOfDay == NIGHT
         val background = if (isNight) R.drawable.background_night else R.drawable.background_day
-        layout.setBackgroundResource(background)
+        binding.activityMainContainer.setBackgroundResource(background)
     }
 
     private fun onBack() {
@@ -161,10 +155,8 @@ class MainActivity : AppCompatActivity(), ICommunicator {
             data.getParcelableExtra<SearchedLocation?>(SearchedLocationsActivity.SEARCHED_LOCATION_OBJECT_DATA_TAG)
 
         val fragment = adapter.getItem(CURRENT_WEATHER_FRAGMENT_INDEX) as CurrentWeatherFragment
-        if (fragment.isOnline) {
-            val weatherImage = fragment.weatherImage
-            val task = APIDataGetterAsyncTask(fragment, this, weatherImage)
-            task.execute(countryCode, city, country)
+        if (fragment.isOnline && city != null) {
+            fragment.updateWeatherInfo(city)
         } else if (searchedLocation != null) {
             fragment.setInfoData(
                 city,

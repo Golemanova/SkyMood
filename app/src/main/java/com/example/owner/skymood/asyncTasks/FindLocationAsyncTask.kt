@@ -53,11 +53,7 @@ class FindLocationAsyncTask(
 
     @Deprecated("Deprecated in Java")
     override fun onPostExecute(aVoid: Void?) {
-        fragment.setCity(city, country)
-        val task = APIDataGetterAsyncTask(fragment, context, weatherImage)
-
-        //get current weather
-        task.execute(countryCode, city, country)
+        fragment.updateWeatherInfo(city!!)
         val fr = (context as MainActivity).hourlyFragment
 
         //get 24 hours forecast
