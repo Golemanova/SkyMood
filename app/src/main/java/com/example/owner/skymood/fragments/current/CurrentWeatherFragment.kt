@@ -1,4 +1,4 @@
-package com.example.owner.skymood.fragments
+package com.example.owner.skymood.fragments.current
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -20,20 +20,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.owner.skymood.MainActivity
 import com.example.owner.skymood.R
-import com.example.owner.skymood.R.drawable
 import com.example.owner.skymood.asyncTasks.AutoCompleteStringFillerAsyncTask
 import com.example.owner.skymood.asyncTasks.FindLocationAsyncTask
 import com.example.owner.skymood.asyncTasks.GetHourlyTask
 import com.example.owner.skymood.asyncTasks.GetWeeklyTask
 import com.example.owner.skymood.databinding.FragmentCurrentWeatherBinding
+import com.example.owner.skymood.fragments.current.CurrentWeatherViewModel
 import com.example.owner.skymood.model.LocationPreference
 import com.example.owner.skymood.model.MyLocation
 import com.example.owner.skymood.model.MyLocationManager
 import com.example.owner.skymood.model.SearchedLocation
 import com.example.owner.skymood.model.SearchedLocationManager
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class CurrentWeatherFragment : Fragment() {
 
@@ -61,9 +59,9 @@ class CurrentWeatherFragment : Fragment() {
         binding = FragmentCurrentWeatherBinding.inflate(inflater, container, false)
         weatherImage = binding.fragmentCurrentWeatherIvWeatherState
 
-        locPref = LocationPreference.getInstance(requireContext())
-        manager = MyLocationManager.getInstance(requireContext())
-        searchedLocationManager = SearchedLocationManager.getInstance(requireContext())
+        locPref = LocationPreference.Companion.getInstance(requireContext())
+        manager = MyLocationManager.Companion.getInstance(requireContext())
+        searchedLocationManager = SearchedLocationManager.Companion.getInstance(requireContext())
 
         val toolbar = (requireActivity() as MainActivity).toolbar
         addImage = toolbar.findViewById(R.id.view_toolbar_iv_add_favourite)
@@ -99,7 +97,7 @@ class CurrentWeatherFragment : Fragment() {
                             if (location.size > 1) country = location[1].trim()
                             setCity(city, country)
 
-                            viewModel.fetchWeather(city, API_KEY)
+                            viewModel.fetchWeather(city)
                         } else {
                             Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT)
                                 .show()
@@ -144,7 +142,7 @@ class CurrentWeatherFragment : Fragment() {
 
         binding.fragmentCurrentWeatherIvSync.setOnClickListener {
             if (isOnline && city != null) {
-                viewModel.fetchWeather(city!!, API_KEY)
+                viewModel.fetchWeather(city!!)
             } else {
                 Toast.makeText(context, "NO INTERNET CONNECTION", Toast.LENGTH_SHORT)
                     .show()
@@ -229,7 +227,7 @@ class CurrentWeatherFragment : Fragment() {
                 setCity(locPref.city, locPref.country)
                 countryCode = locPref.countryCode
                 country = locPref.country
-                viewModel.fetchWeather(city!!, API_KEY)
+                viewModel.fetchWeather(city!!)
                 hourTask.execute(city, countryCode)
                 weeklyTask.execute(city, countryCode)
             } else {
@@ -282,68 +280,50 @@ class CurrentWeatherFragment : Fragment() {
         viewModel.weatherData.observe(viewLifecycleOwner) {
             binding.fragmentCurrentWeatherViewProgressBar.visibility = View.GONE
             binding.fragmentCurrentWeatherTvChosenCity.visibility = View.VISIBLE
-            binding.fragmentCurrentWeatherTvChosenCity.text = it.location.name
+            binding.fragmentCurrentWeatherTvChosenCity.text = it.cityName
             binding.fragmentCurrentWeatherTvCountry.visibility = View.VISIBLE
-            binding.fragmentCurrentWeatherTvCountry.text = country
+            binding.fragmentCurrentWeatherTvCountry.text = it.country
             addImage.visibility = View.VISIBLE
 
-            //TODO should come from somewhere else
-            val maxTemp = "10"
-            val minTemp = "-3"
-
-            val cal = Calendar.getInstance()
-            cal.add(Calendar.DATE, 0)
-            val format = SimpleDateFormat("HH:mm, dd.MM.yyyy", Locale.getDefault())
-            val dateAndTime = format.format(cal.getTime())
-            val lastUpdate = "Last update: $dateAndTime"
-
-
-            binding.fragmentCurrentWeatherTvTemperature.text = "${it.current.tempC}°"
-            binding.fragmentCurrentWeatherTvCondition.text = it.current.condition.text
-            binding.fragmentCurrentWeatherTvFeelsLike.text = "Feels like: ${it.current.feelsLikeC}°"
-            binding.fragmentCurrentWeatherTvMinTemp.text = "⬇$minTemp°"
-            binding.fragmentCurrentWeatherTvMaxTemp.text = "⬆$maxTemp°"
-            binding.fragmentCurrentWeatherTvLastUpdate.text =lastUpdate
-
-            val isNight = it.current.condition.icon.contains("night")
-            weatherImage.setImageResource(
-                getImageResource(
-                    it.current.condition.code,
-                    isNight
-                )
-            )
+            binding.fragmentCurrentWeatherTvTemperature.text = it.tempC
+            binding.fragmentCurrentWeatherTvCondition.text = it.conditionText
+            binding.fragmentCurrentWeatherTvFeelsLike.text = it.feelsLikeC
+            binding.fragmentCurrentWeatherTvMinTemp.text = it.minTempC
+            binding.fragmentCurrentWeatherTvMaxTemp.text = it.maxTempC
+            binding.fragmentCurrentWeatherTvLastUpdate.text = it.lastUpdate
+            weatherImage.setImageResource(it.imageRes)
 
             val mainActivity = requireActivity() as MainActivity
-            mainActivity.changeBackground(if (isNight) MainActivity.NIGHT else MainActivity.DAY)
+            mainActivity.changeBackground(if (it.isNight) MainActivity.Companion.NIGHT else MainActivity.Companion.DAY)
 
-            mainActivity.setInfo(city, countryCode, minTemp, maxTemp, dateAndTime)
+            mainActivity.setInfo(it.cityName, countryCode, it.minTempC, it.maxTempC, it.lastUpdate)
             if (locPref.isSetLocation && city == locPref.city && countryCode == locPref.countryCode) {
                 //insert in shared prefs
                 locPref.setPreferredLocation(
-                    city = city,
-                    country = country,
+                    city = it.cityName,
+                    country = it.country,
                     countryCode = countryCode,
-                    icon = it.current.condition.code.toString(),
-                    temperature = it.current.tempC.toString(),
-                    minTemp = minTemp,
-                    maxTemp = maxTemp,
-                    condition = it.current.condition.text,
-                    feelsLike = it.current.feelsLikeC.toString(),
-                    lastUpdate = it.current.feelsLikeC.toString()
+                    icon = it.imageRes.toString(),
+                    temperature = it.tempC,
+                    minTemp = it.minTempC,
+                    maxTemp = it.maxTempC,
+                    condition = it.conditionText,
+                    feelsLike = it.feelsLikeC,
+                    lastUpdate = it.lastUpdate
                 )
             } else {
                 //insert into DB
                 val loc = SearchedLocation(
-                    city = city,
-                    temp = it.current.tempC.toString(),
-                    condition = it.current.condition.text,
-                    country = country,
+                    city = it.cityName,
+                    temp = it.tempC,
+                    condition = it.conditionText,
+                    country = it.country,
                     code = countryCode,
-                    max = maxTemp,
-                    min = minTemp,
-                    lastUpdate = lastUpdate,
-                    icon = it.current.condition.code.toString(),
-                    feelsLike = it.current.feelsLikeC.toString()
+                    max = it.maxTempC,
+                    min = it.minTempC,
+                    lastUpdate = it.lastUpdate,
+                    icon = it.imageRes.toString(),
+                    feelsLike = it.feelsLikeC
                 )
                 searchedLocationManager.insertSearchedLocation(loc)
             }
@@ -360,17 +340,17 @@ class CurrentWeatherFragment : Fragment() {
             binding.fragmentCurrentWeatherTvChosenCity.visibility = View.VISIBLE
             binding.fragmentCurrentWeatherTvChosenCity.text = locPref.city
             binding.fragmentCurrentWeatherTvCountry.text = country
-            binding.fragmentCurrentWeatherTvTemperature.text = locPref.temperature + "°"
-            binding.fragmentCurrentWeatherTvMinTemp.text = "⬇" + locPref.minTemp + "°"
-            binding.fragmentCurrentWeatherTvMaxTemp.text = "⬆" + locPref.maxTemp + "°"
+            binding.fragmentCurrentWeatherTvTemperature.text = locPref.temperature
+            binding.fragmentCurrentWeatherTvMinTemp.text = locPref.minTemp
+            binding.fragmentCurrentWeatherTvMaxTemp.text = locPref.maxTemp
             binding.fragmentCurrentWeatherTvCondition.text = locPref.condition
             binding.fragmentCurrentWeatherTvFeelsLike.text = locPref.feelsLike
             binding.fragmentCurrentWeatherTvLastUpdate.text = locPref.lastUpdate
 
             if (locPref.icon!!.contains("night")) {
-                (context as MainActivity).changeBackground(MainActivity.NIGHT)
+                (context as MainActivity).changeBackground(MainActivity.Companion.NIGHT)
             } else {
-                (context as MainActivity).changeBackground(MainActivity.DAY)
+                (context as MainActivity).changeBackground(MainActivity.Companion.DAY)
             }
             val con = binding.fragmentCurrentWeatherIvWeatherState.context
             binding.fragmentCurrentWeatherIvWeatherState.setImageResource(
@@ -399,7 +379,7 @@ class CurrentWeatherFragment : Fragment() {
             binding.fragmentCurrentWeatherViewSpinnerLocation.visibility = View.VISIBLE
             binding.fragmentCurrentWeatherIvSync.visibility = View.VISIBLE
             binding.fragmentCurrentWeatherIvGpsSearch.visibility = View.VISIBLE
-            viewModel.fetchWeather(city, API_KEY)
+            viewModel.fetchWeather(city)
         }
     }
 
@@ -430,7 +410,7 @@ class CurrentWeatherFragment : Fragment() {
     private fun setBackground() {
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         val isDay = hour in MORNING_HOUR..NIGHT_HOUR
-        val partOfDay = if (isDay) MainActivity.DAY else MainActivity.NIGHT
+        val partOfDay = if (isDay) MainActivity.Companion.DAY else MainActivity.Companion.NIGHT
         (context as MainActivity).changeBackground(partOfDay)
     }
 
@@ -462,46 +442,11 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     fun updateWeatherInfo(city: String) {
-        viewModel.fetchWeather(city, API_KEY)
-    }
-
-    private fun getImageResource(code: Int, isNight: Boolean) = when (code) {
-        1000 -> if (isNight) drawable.sunny_night else drawable.sunny
-
-        1003 -> if (isNight) drawable.partlycloudy_night else drawable.partlycloudy
-
-        1006 -> if (isNight) drawable.mostlycloudy_night else drawable.mostlycloudy
-
-        1009 -> if (isNight) drawable.cloudy_night else drawable.cloudy
-
-        1030, 1135, 1147 -> if (isNight) drawable.fog_night else drawable.fog
-
-        1063 -> if (isNight) drawable.chancerain_night else drawable.chancerain
-
-        1072, 1066 -> if (isNight) drawable.chancesnow_night else drawable.chancesnow
-
-        1069 -> if (isNight) drawable.chancesleet_night else drawable.chancesleet
-
-        1273, 1276, 1279, 1282, 1087 -> if (isNight) drawable.tstorms_night else drawable.tstorms
-
-        1114, 1210, 1213, 1216, 1219, 1222, 1225,
-        1237, 1255, 1258, 1261, 1264, 1171, 1117 -> if (isNight) drawable.snow_night else drawable.snow
-
-        1150, 1168, 1153 -> if (isNight) drawable.hazy_night else drawable.hazy
-
-        1180, 1186, 1198, 1189, 1192, 1201,
-        1240, 1243, 1246, 1183 -> if (isNight) drawable.rain_night else drawable.rain
-
-        1207, 1249, 1252, 1204 -> if (isNight) drawable.sleet_night else drawable.sleet
-
-        else -> drawable.icon_not_available
+        viewModel.fetchWeather(city)
     }
 
     companion object {
-        const val API_KEY: String = "5229b753f41a4812b74165454260402"
-
         private const val MORNING_HOUR = 6
         private const val NIGHT_HOUR = 19
     }
 }
-

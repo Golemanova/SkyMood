@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.widget.ImageView
 import com.example.owner.skymood.MainActivity
-import com.example.owner.skymood.fragments.CurrentWeatherFragment
+import com.example.owner.skymood.fragments.current.CurrentWeatherFragment
 
 /**
  * Created by Golemanovaa on 8.4.2016 г..

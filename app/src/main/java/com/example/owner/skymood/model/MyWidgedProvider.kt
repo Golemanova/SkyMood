@@ -12,7 +12,7 @@ import android.os.Build
 import android.widget.RemoteViews
 import com.example.owner.skymood.R
 import com.example.owner.skymood.R.drawable
-import com.example.owner.skymood.fragments.CurrentWeatherFragment
+import com.example.owner.skymood.fragments.current.CurrentWeatherFragment
 import org.json.JSONObject
 import java.lang.reflect.Field
 import java.net.HttpURLConnection
@@ -116,7 +116,7 @@ class MyWidgedProvider : AppWidgetProvider() {
         override fun onHandleIntent(intent: Intent?) {
             try {
                 val url =
-                    URL("https://api.weatherapi.com/v1" + "/current.json" + "?q=" + city + "&key=" + CurrentWeatherFragment.API_KEY)
+                    URL("https://api.weatherapi.com/v1/current.json?q=$city&key=5229b753f41a4812b74165454260402")
                 val connection = url.openConnection() as HttpURLConnection
                 connection.connect()
 

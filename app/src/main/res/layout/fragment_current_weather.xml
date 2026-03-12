@@ -5,7 +5,7 @@
               android:layout_margin="10dp"
               android:background="@color/foreground"
               android:orientation="vertical"
-              tools:context="com.example.owner.skymood.fragments.CurrentWeatherFragment"
+              tools:context="com.example.owner.skymood.fragments.current.CurrentWeatherFragment"
               tools:ignore="ContentDescription">
 
     <LinearLayout

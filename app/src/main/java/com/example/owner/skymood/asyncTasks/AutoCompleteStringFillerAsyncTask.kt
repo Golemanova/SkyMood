@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import android.widget.ArrayAdapter
-import com.example.owner.skymood.fragments.CurrentWeatherFragment
+import com.example.owner.skymood.fragments.current.CurrentWeatherFragment
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException

@@ -1,4 +1,4 @@
-package com.example.owner.skymood.data
+package com.example.owner.skymood.data.responses
 
 import com.google.gson.annotations.SerializedName
 

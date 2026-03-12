@@ -14,7 +14,7 @@ import com.example.owner.skymood.asyncTasks.GetHourlyTask
 import com.example.owner.skymood.asyncTasks.GetMoreInfoTask
 import com.example.owner.skymood.asyncTasks.GetWeeklyTask
 import com.example.owner.skymood.databinding.ActivityMainBinding
-import com.example.owner.skymood.fragments.CurrentWeatherFragment
+import com.example.owner.skymood.fragments.current.CurrentWeatherFragment
 import com.example.owner.skymood.fragments.HourlyWeatherFragment
 import com.example.owner.skymood.fragments.ICommunicator
 import com.example.owner.skymood.fragments.MoreInfoFragment
