@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.util.Log
 import androidx.fragment.app.Fragment
-import com.example.owner.skymood.fragments.HourlyWeatherFragment
+import com.example.owner.skymood.fragments.hourly.HourlyWeatherFragment
 import com.example.owner.skymood.model.WeeklyWeather
 import org.json.JSONArray
 import org.json.JSONException

@@ -9,5 +9,5 @@ data class HourlyWeather(
     val hour: String?,
     val condition: String?,
     val temp: String?,
-    val icon: Bitmap?
+    val icon: Int?
 )

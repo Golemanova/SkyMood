@@ -16,6 +16,9 @@ object WeatherRepository {
     // In-memory cache for forecast responses, keyed by location string.
     private val _forecastCache = MutableStateFlow<Map<String, ForecastResponse>>(emptyMap())
 
+    private var lastLocation: String = ""
+
+
     /**
      * Returns a [Flow] of [ForecastResponse] for the specified [location].
      *
@@ -30,6 +33,7 @@ object WeatherRepository {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getForecast(location: String, skipCache: Boolean = false): Flow<ForecastResponse> {
         return flow {
+            lastLocation = location
             val currentCache = _forecastCache.value[location]
             if (currentCache == null || skipCache) {
                 val networkResponse = apiService.getForecast(location)
@@ -41,5 +45,9 @@ object WeatherRepository {
             _forecastCache
                 .mapNotNull { it[location] }
         }.distinctUntilChanged()
+    }
+
+    fun getLastLocationForecast(): Flow<ForecastResponse>{
+        return getForecast(lastLocation)
     }
 }

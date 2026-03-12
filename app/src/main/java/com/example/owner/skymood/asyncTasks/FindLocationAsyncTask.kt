@@ -56,10 +56,6 @@ class FindLocationAsyncTask(
         fragment.updateWeatherInfo(city!!)
         val fr = (context as MainActivity).hourlyFragment
 
-        //get 24 hours forecast
-        val hourTask = GetHourlyTask(context, fr, fr.hourlyWeatherArray)
-        hourTask.execute(city, countryCode)
-
         //get 7 days forecast
         val weeklyTask = GetWeeklyTask(context, fr, fr.weeklyWeatherArray)
         weeklyTask.execute(city, countryCode)

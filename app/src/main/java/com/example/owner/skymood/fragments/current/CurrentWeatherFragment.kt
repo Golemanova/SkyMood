@@ -22,7 +22,6 @@ import com.example.owner.skymood.MainActivity
 import com.example.owner.skymood.R
 import com.example.owner.skymood.asyncTasks.AutoCompleteStringFillerAsyncTask
 import com.example.owner.skymood.asyncTasks.FindLocationAsyncTask
-import com.example.owner.skymood.asyncTasks.GetHourlyTask
 import com.example.owner.skymood.asyncTasks.GetWeeklyTask
 import com.example.owner.skymood.databinding.FragmentCurrentWeatherBinding
 import com.example.owner.skymood.fragments.current.CurrentWeatherViewModel
@@ -36,8 +35,6 @@ import java.util.Calendar
 class CurrentWeatherFragment : Fragment() {
 
     private lateinit var binding: FragmentCurrentWeatherBinding
-
-    lateinit var weatherImage: ImageView
 
     private lateinit var addImage: ImageView
     private var city: String? = null
@@ -57,7 +54,6 @@ class CurrentWeatherFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCurrentWeatherBinding.inflate(inflater, container, false)
-        weatherImage = binding.fragmentCurrentWeatherIvWeatherState
 
         locPref = LocationPreference.Companion.getInstance(requireContext())
         manager = MyLocationManager.Companion.getInstance(requireContext())
@@ -219,7 +215,6 @@ class CurrentWeatherFragment : Fragment() {
         //logic
         if (this.isOnline) {
             val fr = (context as MainActivity).hourlyFragment
-            val hourTask = GetHourlyTask(requireContext(), fr, fr.hourlyWeatherArray)
             val weeklyTask = GetWeeklyTask(requireContext(), fr, fr.weeklyWeatherArray)
 
             //first: check shared prefs
@@ -228,7 +223,6 @@ class CurrentWeatherFragment : Fragment() {
                 countryCode = locPref.countryCode
                 country = locPref.country
                 viewModel.fetchWeather(city!!)
-                hourTask.execute(city, countryCode)
                 weeklyTask.execute(city, countryCode)
             } else {
                 //API autoIP
@@ -291,7 +285,7 @@ class CurrentWeatherFragment : Fragment() {
             binding.fragmentCurrentWeatherTvMinTemp.text = it.minTempC
             binding.fragmentCurrentWeatherTvMaxTemp.text = it.maxTempC
             binding.fragmentCurrentWeatherTvLastUpdate.text = it.lastUpdate
-            weatherImage.setImageResource(it.imageRes)
+            binding.fragmentCurrentWeatherIvWeatherState.setImageResource(it.imageRes)
 
             val mainActivity = requireActivity() as MainActivity
             mainActivity.changeBackground(if (it.isNight) MainActivity.Companion.NIGHT else MainActivity.Companion.DAY)

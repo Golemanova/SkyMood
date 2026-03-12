@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.example.owner.skymood.MainActivity
 import com.example.owner.skymood.fragments.current.CurrentWeatherFragment
-import com.example.owner.skymood.fragments.HourlyWeatherFragment
+import com.example.owner.skymood.fragments.hourly.HourlyWeatherFragment
 import com.example.owner.skymood.fragments.MoreInfoFragment
 
 /**

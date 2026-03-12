@@ -7,7 +7,7 @@
     android:background="@drawable/background_current_weather_header"
     android:padding="10dp"
     android:orientation="vertical"
-    tools:context="com.example.owner.skymood.fragments.HourlyWeatherFragment">
+    tools:context="com.example.owner.skymood.fragments.hourly.HourlyWeatherFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_hourly_weather_rv_recycler_hourly"

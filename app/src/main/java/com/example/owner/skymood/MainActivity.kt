@@ -10,12 +10,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.owner.skymood.adapters.CustomPagerAdapter
-import com.example.owner.skymood.asyncTasks.GetHourlyTask
 import com.example.owner.skymood.asyncTasks.GetMoreInfoTask
 import com.example.owner.skymood.asyncTasks.GetWeeklyTask
 import com.example.owner.skymood.databinding.ActivityMainBinding
 import com.example.owner.skymood.fragments.current.CurrentWeatherFragment
-import com.example.owner.skymood.fragments.HourlyWeatherFragment
+import com.example.owner.skymood.fragments.hourly.HourlyWeatherFragment
 import com.example.owner.skymood.fragments.ICommunicator
 import com.example.owner.skymood.fragments.MoreInfoFragment
 import com.example.owner.skymood.model.SearchedLocation
@@ -63,10 +62,6 @@ class MainActivity : AppCompatActivity(), ICommunicator {
 
     override fun setInfo(city: String?, code: String?, min: String?, max: String?, date: String?) {
         val fragment = adapter.getItem(HOURLY_WEATHER_FRAGMENT_INDEX) as HourlyWeatherFragment
-
-        //start get hourly task
-        val getHour = GetHourlyTask(this, fragment, fragment.hourlyWeatherArray)
-        getHour.execute(city, code)
 
         // start get weekly task
         val getWeek = GetWeeklyTask(this, fragment, fragment.weeklyWeatherArray)

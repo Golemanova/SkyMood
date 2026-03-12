@@ -39,7 +39,7 @@ fun ForecastResponse.toCurrentWeatherData(): CurrentWeatherData {
     )
 }
 
-private fun Int.getImageResource(isNight: Boolean) = when (this) {
+fun Int.getImageResource(isNight: Boolean) = when (this) {
     1000 -> if (isNight) drawable.sunny_night else drawable.sunny
 
     1003 -> if (isNight) drawable.partlycloudy_night else drawable.partlycloudy
