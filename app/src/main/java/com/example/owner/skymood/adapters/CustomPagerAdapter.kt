@@ -26,9 +26,9 @@ class CustomPagerAdapter(
     override fun getCount(): Int = MainActivity.NUMBER_OF_PAGES
 
     override fun getPageTitle(position: Int) = when (position) {
-        0 -> "\uD83C\uDF08 CURRENT"
+        0 -> "\uD83C\uDF08 Current"
         1 -> "⛅ Hourly&Weekly"
-        2 -> "⚡ MORE INFO"
+        2 -> "⚡ More info"
         else -> ""
     }
 }

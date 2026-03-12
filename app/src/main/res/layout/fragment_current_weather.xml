@@ -1,12 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_margin="10dp"
-              android:background="@color/foreground"
-              android:orientation="vertical"
-              tools:context="com.example.owner.skymood.fragments.current.CurrentWeatherFragment"
-              tools:ignore="ContentDescription">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:background="@drawable/background_current_weather_header"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context="com.example.owner.skymood.fragments.current.CurrentWeatherFragment"
+    tools:ignore="ContentDescription">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +19,7 @@
             android:id="@+id/fragment_current_weather_view_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -38,7 +39,7 @@
                 android:shadowRadius="3"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="20sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/fragment_current_weather_tv_country"
@@ -51,7 +52,7 @@
                 android:shadowDy="2"
                 android:shadowRadius="3"
                 android:textColor="@color/colorPrimaryText"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
         </LinearLayout>
 
         <RelativeLayout
@@ -62,13 +63,13 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatSpinner
-                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:id="@+id/fragment_current_weather_view_spinner_location"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_toStartOf="@+id/fragment_current_weather_iv_sync"
-                android:gravity="start"/>
+                android:gravity="start" />
 
             <ImageView
                 android:id="@+id/fragment_current_weather_iv_sync"
@@ -77,7 +78,7 @@
                 android:layout_toStartOf="@+id/fragment_current_weather_iv_gps_search"
                 android:clickable="true"
                 android:focusable="true"
-                android:src="@drawable/icon_sync"/>
+                android:src="@drawable/icon_sync" />
 
             <ImageView
                 android:id="@+id/fragment_current_weather_iv_gps_search"
@@ -86,7 +87,7 @@
                 android:layout_toStartOf="@+id/fragment_current_weather_iv_city_search"
                 android:clickable="true"
                 android:focusable="true"
-                android:src="@drawable/icon_location"/>
+                android:src="@drawable/icon_location" />
 
             <ImageView
                 android:id="@+id/fragment_current_weather_iv_city_search"
@@ -96,7 +97,7 @@
                 android:adjustViewBounds="true"
                 android:clickable="true"
                 android:focusable="true"
-                android:src="@drawable/icon_search"/>
+                android:src="@drawable/icon_search" />
 
             <AutoCompleteTextView
                 android:id="@+id/fragment_current_weather_actv_search_city"
@@ -109,7 +110,7 @@
                 android:imeOptions="actionGo"
                 android:lines="1"
                 android:maxLength="30"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -120,7 +121,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -148,7 +149,7 @@
                 android:shadowRadius="3"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="70sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -166,7 +167,7 @@
                     android:shadowDy="2"
                     android:shadowRadius="3"
                     android:textColor="@color/colorAccent"
-                    android:textSize="17sp"/>
+                    android:textSize="17sp" />
 
                 <TextView
                     android:id="@+id/fragment_current_weather_tv_min_temp"
@@ -178,7 +179,7 @@
                     android:shadowDy="2"
                     android:shadowRadius="3"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="17sp"/>
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
@@ -194,7 +195,7 @@
             android:shadowDy="2"
             android:shadowRadius="3"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/fragment_current_weather_tv_feels_like"
@@ -206,7 +207,7 @@
             android:shadowDy="2"
             android:shadowRadius="3"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -220,6 +221,6 @@
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="3"
-        android:textColor="@color/colorPrimaryText"/>
+        android:textColor="@color/colorPrimaryText" />
 
 </LinearLayout>

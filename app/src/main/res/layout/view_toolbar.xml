@@ -3,7 +3,7 @@
     android:id="@+id/view_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/foreground"
+    android:background="@drawable/background_current_weather_header"
     android:elevation="4dp"
     android:minHeight="?attr/actionBarSize"
     android:titleTextColor="@color/colorPrimaryText"

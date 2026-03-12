@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.*
 
 /**
  * Repository that handles weather data fetching and caching.
- * Singleton implementation using a Kotlin object.
+ *
  */
 object WeatherRepository {
 
